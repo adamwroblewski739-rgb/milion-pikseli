@@ -3,11 +3,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Million Pixels</title>
 <style>
 :root {
-  color-scheme: dark;
   --bg: #080b18;
   --panel: #12182b;
   --border: #293454;
@@ -18,50 +17,38 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: radial-gradient(ellipse at top, #20234c 0%, #080b18 65%);
+  min-height: 100vh;
   color: var(--text);
   font-family: Inter, Arial, sans-serif;
-  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #20234c, #080b18 65%);
 }
-header {
-  text-align: center;
-  padding: 30px 16px 18px;
-}
+header { text-align: center; padding: 30px 16px 18px; }
 header h1 {
-  font-size: clamp(30px, 5vw, 52px);
   margin: 0 0 10px;
+  font-size: clamp(30px, 5vw, 52px);
   letter-spacing: -1.5px;
   background: linear-gradient(90deg, #f0abfc, #a78bfa, #67e8f9);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-header p {
-  color: var(--muted);
-  margin: 0;
-  line-height: 1.6;
-}
-main {
-  width: min(1200px, 96%);
-  margin: 0 auto 40px;
-}
+header p { color: var(--muted); margin: 0; line-height: 1.6; }
+main { width: min(1200px, 96%); margin: 0 auto 40px; }
 .panel {
-  background: rgba(18, 24, 43, .94);
+  background: rgba(18,24,43,.94);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 18px;
   margin-bottom: 16px;
   box-shadow: 0 12px 40px #0003;
 }
-.toolbar {
+.toolbar, .color-control {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
-button, input {
-  font: inherit;
-}
+button, input { font: inherit; }
 button {
   color: var(--text);
   background: #252d4c;
@@ -70,9 +57,7 @@ button {
   border-radius: 9px;
   cursor: pointer;
 }
-button:hover {
-  background: #343e66;
-}
+button:hover { background: #343e66; }
 button:focus-visible, input:focus-visible {
   outline: 2px solid #c4b5fd;
   outline-offset: 2px;
@@ -81,12 +66,7 @@ button:focus-visible, input:focus-visible {
   color: var(--muted);
   min-width: 66px;
   text-align: center;
-}
-.color-control {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  font-variant-numeric: tabular-nums;
 }
 #colorPicker {
   width: 46px;
@@ -97,29 +77,22 @@ button:focus-visible, input:focus-visible {
 }
 #hexColor {
   width: 105px;
-  background: #0b1020;
+  padding: 10px;
   color: white;
+  background: #0b1020;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 10px;
   text-transform: uppercase;
 }
-.swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
+.swatches { display: flex; flex-wrap: wrap; gap: 7px; }
 .swatch {
   width: 26px;
   height: 26px;
-  border-radius: 7px;
   padding: 0;
+  border-radius: 7px;
   border: 2px solid #ffffff55;
 }
-.swatch.active {
-  outline: 2px solid white;
-  outline-offset: 2px;
-}
+.swatch.active { outline: 2px solid white; outline-offset: 2px; }
 .board-frame {
   background: #080b18;
   border: 1px solid #3c4770;
@@ -138,14 +111,14 @@ button:focus-visible, input:focus-visible {
 .board-heading strong { font-size: 15px; }
 .board-heading span { color: var(--muted); font-size: 13px; }
 .viewport {
+  position: relative;
   width: 100%;
   height: min(68vh, 620px);
   min-height: 300px;
   overflow: auto;
-  background-color: #080b18;
-  background-image:
-    radial-gradient(ellipse at center, #20244a88, transparent 70%);
   overscroll-behavior: contain;
+  background-color: #080b18;
+  background-image: radial-gradient(ellipse at center, #20244a88, transparent 70%);
   scrollbar-color: #56628e #11162a;
   cursor: crosshair;
 }
@@ -154,7 +127,7 @@ button:focus-visible, input:focus-visible {
   width: 600px;
   height: 500px;
   max-width: none;
-  touch-action: pan-x pan-y;
+  touch-action: none;
 }
 .hint {
   color: var(--muted);
@@ -168,35 +141,18 @@ button:focus-visible, input:focus-visible {
   gap: 12px;
 }
 .stat {
+  min-width: 0;
   background: #0c1122;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 15px;
-  min-width: 0;
 }
-.stat .label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.stat .value {
-  font-size: 22px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-.status {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.6;
-}
+.stat .label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.stat .value { font-size: 22px; font-weight: 700; overflow-wrap: anywhere; }
+.status { font-size: 13px; color: var(--muted); line-height: 1.6; overflow-wrap: anywhere; }
 .status.error { color: #fca5a5; }
 .status.success { color: #86efac; }
-footer {
-  text-align: center;
-  color: #8d98b9;
-  font-size: 12px;
-  padding: 10px 16px 30px;
-}
+footer { text-align: center; color: #8d98b9; font-size: 12px; padding: 10px 16px 30px; }
 @media (max-width: 600px) {
   .panel { padding: 12px; }
   .toolbar { gap: 8px; }
@@ -217,12 +173,12 @@ footer {
   <section class="panel">
     <div class="toolbar">
       <button id="zoomOut" type="button" aria-label="Zoom out">−</button>
-      <span class="zoom-label" id="zoomLabel">100%</span>
+      <span id="zoomLabel" class="zoom-label">100%</span>
       <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
       <button id="resetZoom" type="button">Reset zoom</button>
       <button id="centerBoard" type="button">Center board</button>
     </div>
-    <p class="hint">Use the mouse wheel or the zoom buttons. At 150% zoom and above, the grid shows individual pixels.</p>
+    <p class="hint">Use the mouse wheel over the canvas to zoom. From 150% zoom, the grid shows individual pixels.</p>
   </section>
 
   <section class="panel">
@@ -241,36 +197,19 @@ footer {
         <span>600 × 500 pixels · 300,000 total</span>
       </div>
       <div class="viewport" id="viewport">
-        <canvas id="pixelCanvas" width="600" height="500"
-          aria-label="Interactive pixel canvas"></canvas>
+        <canvas id="pixelCanvas" width="600" height="500" aria-label="Interactive pixel canvas"></canvas>
       </div>
     </div>
-    <p class="hint">
-      Click and drag to select a rectangular area. The selection shows the number
-      of pixels and the estimated price. This demo previews color changes locally;
-      it does not purchase pixels or save edits to the database.
-    </p>
+    <p class="hint">Click and drag to select a rectangular area. Color previews are local only and are not saved to the database.</p>
   </section>
 
   <section class="panel">
     <h2 style="font-size:18px;margin:0 0 14px">Selection details</h2>
     <div class="stats">
-      <div class="stat">
-        <div class="label">Selection size</div>
-        <div class="value" id="selectionSize">0 × 0</div>
-      </div>
-      <div class="stat">
-        <div class="label">Selected pixels</div>
-        <div class="value" id="selectedCount">0</div>
-      </div>
-      <div class="stat">
-        <div class="label">Price estimate</div>
-        <div class="value" id="priceEstimate">0.00 PLN</div>
-      </div>
-      <div class="stat">
-        <div class="label">Pixels with saved colors</div>
-        <div class="value" id="coloredCount">0</div>
-      </div>
+      <div class="stat"><div class="label">Selection size</div><div class="value" id="selectionSize">0 × 0</div></div>
+      <div class="stat"><div class="label">Selected pixels</div><div class="value" id="selectedCount">0</div></div>
+      <div class="stat"><div class="label">Price estimate</div><div class="value" id="priceEstimate">0.00 PLN</div></div>
+      <div class="stat"><div class="label">Pixels with saved colors</div><div class="value" id="coloredCount">0</div></div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
       <button id="applyColor" type="button">Preview color on selection</button>
@@ -284,14 +223,11 @@ footer {
   </section>
 </main>
 
-<footer>
-  Million Pixels · Interactive canvas demo · Prices shown in PLN
-</footer>
+<footer>Million Pixels · Interactive canvas demo · Prices shown in PLN</footer>
 
 <script>
 'use strict';
 
-// Supabase project configuration
 const SUPABASE_URL = 'https://lailqxqyzymiwlhxrzzw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn';
 
@@ -312,13 +248,12 @@ let selectedColor = '#ff4fd8';
 let selection = null;
 let dragStart = null;
 let isDragging = false;
-let lastPointer = null;
 
 const palette = [
-  '#ff4fd8', '#ff5f6d', '#ff9f43', '#ffe66d',
-  '#7bed9f', '#2ee6d6', '#54a0ff', '#5f6fff',
-  '#a78bfa', '#ffffff', '#d1d5db', '#111827',
-  '#000000', '#7f1d1d', '#166534', '#1e3a8a'
+  '#ff4fd8','#ff5f6d','#ff9f43','#ffe66d',
+  '#7bed9f','#2ee6d6','#54a0ff','#5f6fff',
+  '#a78bfa','#ffffff','#d1d5db','#111827',
+  '#000000','#7f1d1d','#166534','#1e3a8a'
 ];
 
 function setStatus(message, type = '') {
@@ -329,22 +264,6 @@ function setStatus(message, type = '') {
 
 function pixelKey(x, y) {
   return y * WIDTH + x;
-}
-
-function hexToRgb(hex) {
-  const value = hex.replace('#', '');
-  return {
-    r: parseInt(value.slice(0, 2), 16),
-    g: parseInt(value.slice(2, 4), 16),
-    b: parseInt(value.slice(4, 6), 16)
-  };
-}
-
-function rgbToHex(r, g, b) {
-  return '#' + [r, g, b]
-    .map(v => Math.max(0, Math.min(255, Math.round(v)))
-      .toString(16).padStart(2, '0'))
-    .join('');
 }
 
 function setColor(color) {
@@ -373,29 +292,25 @@ function renderSwatches() {
 }
 
 function drawBackground() {
-  // Neon sunset gradient
   const sky = ctx.createLinearGradient(0, 0, 0, HEIGHT);
   sky.addColorStop(0, '#11153b');
   sky.addColorStop(0.34, '#59276f');
   sky.addColorStop(0.62, '#e85b8b');
   sky.addColorStop(0.82, '#ffb36b');
   sky.addColorStop(1, '#25184c');
-
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Atmospheric glow
   const glow = ctx.createRadialGradient(300, 230, 10, 300, 230, 230);
-  glow.addColorStop(0, 'rgba(255,190,125,0.65)');
+  glow.addColorStop(0, 'rgba(255,190,125,.65)');
   glow.addColorStop(1, 'rgba(255,90,190,0)');
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Sun
   ctx.save();
   ctx.shadowColor = '#ffb2cb';
   ctx.shadowBlur = 25;
-  const sun = ctx.createLinearGradient(0, 130, 0, 290);
+  const sun = ctx.createLinearGradient(0, 140, 0, 290);
   sun.addColorStop(0, '#fff0a8');
   sun.addColorStop(1, '#ff6a9c');
   ctx.fillStyle = sun;
@@ -404,88 +319,75 @@ function drawBackground() {
   ctx.fill();
   ctx.restore();
 
-  // Sun stripes
+  // Horizontal gaps create the striped sunset effect.
   ctx.save();
   ctx.globalCompositeOperation = 'destination-out';
-  for (let y = 220; y < 286; y += 13) {
-    ctx.fillRect(220, y, 160, 5);
-  }
+  for (let y = 220; y < 286; y += 13) ctx.fillRect(220, y, 160, 5);
   ctx.restore();
 
-  // Distant mountains
   ctx.fillStyle = '#39306f';
   ctx.beginPath();
-  ctx.moveTo(0, 335);
-  ctx.lineTo(95, 240);
-  ctx.lineTo(160, 305);
-  ctx.lineTo(250, 225);
-  ctx.lineTo(360, 330);
-  ctx.lineTo(455, 255);
-  ctx.lineTo(600, 345);
-  ctx.lineTo(600, 500);
-  ctx.lineTo(0, 500);
+  ctx.moveTo(0,335);
+  ctx.lineTo(95,240);
+  ctx.lineTo(160,305);
+  ctx.lineTo(250,225);
+  ctx.lineTo(360,330);
+  ctx.lineTo(455,255);
+  ctx.lineTo(600,345);
+  ctx.lineTo(600,500);
+  ctx.lineTo(0,500);
   ctx.closePath();
   ctx.fill();
 
-  // Foreground mountains
   ctx.fillStyle = '#171b3e';
   ctx.beginPath();
-  ctx.moveTo(0, 390);
-  ctx.lineTo(105, 315);
-  ctx.lineTo(185, 390);
-  ctx.lineTo(305, 300);
-  ctx.lineTo(405, 390);
-  ctx.lineTo(505, 320);
-  ctx.lineTo(600, 385);
-  ctx.lineTo(600, 500);
-  ctx.lineTo(0, 500);
+  ctx.moveTo(0,390);
+  ctx.lineTo(105,315);
+  ctx.lineTo(185,390);
+  ctx.lineTo(305,300);
+  ctx.lineTo(405,390);
+  ctx.lineTo(505,320);
+  ctx.lineTo(600,385);
+  ctx.lineTo(600,500);
+  ctx.lineTo(0,500);
   ctx.closePath();
   ctx.fill();
 
-  // Subtle neon horizon
-  ctx.strokeStyle = 'rgba(255,150,220,0.7)';
+  ctx.strokeStyle = 'rgba(255,150,220,.7)';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(0, 388);
-  ctx.lineTo(WIDTH, 388);
+  ctx.moveTo(0,388);
+  ctx.lineTo(WIDTH,388);
   ctx.stroke();
 }
 
 function drawSavedPixels() {
-  // Draw individual pixel colors from Supabase.
   for (const [key, color] of savedPixels) {
-    const x = key % WIDTH;
-    const y = Math.floor(key / WIDTH);
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, 1, 1);
+    ctx.fillRect(key % WIDTH, Math.floor(key / WIDTH), 1, 1);
   }
-
-  // Local-only preview edits are shown on top of saved pixels.
   for (const [key, color] of previewPixels) {
-    const x = key % WIDTH;
-    const y = Math.floor(key / WIDTH);
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, 1, 1);
+    ctx.fillRect(key % WIDTH, Math.floor(key / WIDTH), 1, 1);
   }
 }
 
 function drawPixelGrid() {
-  // Adaptive pixel grid:
-  // At low zoom, draw a subtle grid every 10 pixels.
-  // From 150% zoom, draw every individual pixel boundary.
+  // At low zoom, show a subtle 10-pixel grid.
+  // From 150% zoom, show every individual pixel boundary.
   const cell = zoom >= 150 ? 1 : 10;
 
   ctx.save();
   ctx.beginPath();
 
   if (zoom >= 400) {
-    ctx.strokeStyle = 'rgba(5, 8, 25, 0.85)';
+    ctx.strokeStyle = 'rgba(5,8,25,.85)';
     ctx.lineWidth = 0.45;
   } else if (zoom >= 150) {
-    ctx.strokeStyle = 'rgba(5, 8, 25, 0.75)';
+    ctx.strokeStyle = 'rgba(5,8,25,.75)';
     ctx.lineWidth = 0.3;
   } else {
-    ctx.strokeStyle = 'rgba(230, 238, 255, 0.7)';
+    ctx.strokeStyle = 'rgba(230,238,255,.7)';
     ctx.lineWidth = 0.5;
   }
 
@@ -493,7 +395,6 @@ function drawPixelGrid() {
     ctx.moveTo(x, 0);
     ctx.lineTo(x, HEIGHT);
   }
-
   for (let y = 0; y <= HEIGHT; y += cell) {
     ctx.moveTo(0, y);
     ctx.lineTo(WIDTH, y);
@@ -501,37 +402,6 @@ function drawPixelGrid() {
 
   ctx.stroke();
   ctx.restore();
-}
-
-function drawSelection() {
-  if (!selection) return;
-
-  const left = Math.min(selection.x1, selection.x2);
-  const top = Math.min(selection.y1, selection.y2);
-  const right = Math.max(selection.x1, selection.x2);
-  const bottom = Math.max(selection.y1, selection.y2);
-
-  ctx.save();
-  ctx.fillStyle = 'rgba(167, 139, 250, 0.18)';
-  ctx.fillRect(left, top, right - left + 1, bottom - top + 1);
-
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = Math.max(1 / zoom * 100, 0.7);
-  ctx.setLineDash([3, 2]);
-  ctx.strokeRect(
-    left + 0.5, top + 0.5,
-    right - left, bottom - top
-  );
-  ctx.restore();
-}
-
-function draw() {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  drawBackground();
-  drawSavedPixels();
-  drawPixelGrid();
-  drawSelection();
-  updateStats();
 }
 
 function selectionBounds() {
@@ -544,10 +414,23 @@ function selectionBounds() {
   };
 }
 
+function drawSelection() {
+  const b = selectionBounds();
+  if (!b) return;
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(167,139,250,.18)';
+  ctx.fillRect(b.left, b.top, b.right-b.left+1, b.bottom-b.top+1);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1 / (zoom / 100);
+  ctx.setLineDash([3, 2]);
+  ctx.strokeRect(b.left + 0.5, b.top + 0.5, b.right-b.left, b.bottom-b.top);
+  ctx.restore();
+}
+
 function selectedPixelCount() {
   const b = selectionBounds();
-  if (!b) return 0;
-  return (b.right - b.left + 1) * (b.bottom - b.top + 1);
+  return b ? (b.right-b.left+1) * (b.bottom-b.top+1) : 0;
 }
 
 function updateStats() {
@@ -558,114 +441,102 @@ function updateStats() {
     document.getElementById('selectedCount').textContent = '0';
     document.getElementById('priceEstimate').textContent = '0.00 PLN';
   } else {
-    const w = b.right - b.left + 1;
-    const h = b.bottom - b.top + 1;
-    const count = w * h;
+    const w = b.right-b.left+1;
+    const h = b.bottom-b.top+1;
+    const count = w*h;
     document.getElementById('selectionSize').textContent = `${w} × ${h}`;
-    document.getElementById('selectedCount').textContent =
-      count.toLocaleString('en-US');
+    document.getElementById('selectedCount').textContent = count.toLocaleString('en-US');
     document.getElementById('priceEstimate').textContent =
-      (count * PRICE_PER_PIXEL).toLocaleString('en-US', {
+      (count*PRICE_PER_PIXEL).toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }) + ' PLN';
   }
 
-  const combined = new Set([...savedPixels.keys(), ...previewPixels.keys()]);
   document.getElementById('coloredCount').textContent =
-    combined.size.toLocaleString('en-US');
+    new Set([...savedPixels.keys(), ...previewPixels.keys()]).size.toLocaleString('en-US');
+}
+
+function draw() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  drawBackground();
+  drawSavedPixels();
+  drawPixelGrid();
+  drawSelection();
+  updateStats();
 }
 
 function canvasPoint(event) {
   const rect = canvas.getBoundingClientRect();
-  const x = Math.floor((event.clientX - rect.left) * WIDTH / rect.width);
-  const y = Math.floor((event.clientY - rect.top) * HEIGHT / rect.height);
-
   return {
-    x: Math.max(0, Math.min(WIDTH - 1, x)),
-    y: Math.max(0, Math.min(HEIGHT - 1, y))
+    x: Math.max(0, Math.min(WIDTH-1, Math.floor((event.clientX-rect.left) * WIDTH / rect.width))),
+    y: Math.max(0, Math.min(HEIGHT-1, Math.floor((event.clientY-rect.top) * HEIGHT / rect.height)))
   };
 }
 
+// Reliable zoom function: update the CSS display size, redraw the grid,
+// and preserve the point under the cursor where possible.
 function setZoom(nextZoom, anchor = null) {
   const next = Math.max(50, Math.min(800, nextZoom));
   if (next === zoom) return;
 
   const oldZoom = zoom;
-  const oldScrollLeft = viewport.scrollLeft;
-  const oldScrollTop = viewport.scrollTop;
-  const oldRect = viewport.getBoundingClientRect();
+  const oldLeft = viewport.scrollLeft;
+  const oldTop = viewport.scrollTop;
+  const viewportRect = viewport.getBoundingClientRect();
 
-  let anchorX = oldRect.width / 2;
-  let anchorY = oldRect.height / 2;
+  const anchorX = anchor ? anchor.x - viewportRect.left : viewport.clientWidth / 2;
+  const anchorY = anchor ? anchor.y - viewportRect.top : viewport.clientHeight / 2;
 
-  if (anchor) {
-    anchorX = anchor.x - oldRect.left;
-    anchorY = anchor.y - oldRect.top;
-  }
-
-  const contentX = oldScrollLeft + anchorX;
-  const contentY = oldScrollTop + anchorY;
-  const ratio = next / oldZoom;
+  const contentX = oldLeft + anchorX;
+  const contentY = oldTop + anchorY;
+  const scale = next / oldZoom;
 
   zoom = next;
+
   canvas.style.width = (WIDTH * zoom / 100) + 'px';
   canvas.style.height = (HEIGHT * zoom / 100) + 'px';
+
   document.getElementById('zoomLabel').textContent = zoom + '%';
 
   draw();
 
-  viewport.scrollLeft = contentX * ratio - anchorX;
-  viewport.scrollTop = contentY * ratio - anchorY;
+  viewport.scrollLeft = Math.max(0, contentX * scale - anchorX);
+  viewport.scrollTop = Math.max(0, contentY * scale - anchorY);
 }
 
-document.getElementById('zoomIn').addEventListener('click', () => {
-  setZoom(zoom + 50);
-});
-
-document.getElementById('zoomOut').addEventListener('click', () => {
-  setZoom(zoom - 50);
-});
-
-document.getElementById('resetZoom').addEventListener('click', () => {
-  setZoom(100);
-});
+document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom + 50));
+document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom - 50));
+document.getElementById('resetZoom').addEventListener('click', () => setZoom(100));
 
 document.getElementById('centerBoard').addEventListener('click', () => {
   viewport.scrollLeft = Math.max(0, (canvas.offsetWidth - viewport.clientWidth) / 2);
   viewport.scrollTop = Math.max(0, (canvas.offsetHeight - viewport.clientHeight) / 2);
 });
 
+// Mouse wheel over the canvas zooms in and out without requiring Ctrl.
 viewport.addEventListener('wheel', event => {
-  if (event.ctrlKey || event.metaKey) {
-    event.preventDefault();
-    setZoom(zoom + (event.deltaY < 0 ? 25 : -25), {
-      x: event.clientX,
-      y: event.clientY
-    });
-  }
+  event.preventDefault();
+  const direction = event.deltaY < 0 ? 1 : -1;
+  setZoom(zoom + direction * 25, { x: event.clientX, y: event.clientY });
 }, { passive: false });
 
 canvas.addEventListener('pointerdown', event => {
   if (event.button !== 0) return;
+  event.preventDefault();
+
   const point = canvasPoint(event);
   dragStart = point;
-  lastPointer = point;
   isDragging = true;
-  selection = {
-    x1: point.x, y1: point.y,
-    x2: point.x, y2: point.y
-  };
+  selection = { x1: point.x, y1: point.y, x2: point.x, y2: point.y };
+
   canvas.setPointerCapture(event.pointerId);
   draw();
 });
 
 canvas.addEventListener('pointermove', event => {
-  if (!isDragging) return;
+  if (!isDragging || !dragStart) return;
   const point = canvasPoint(event);
-  if (lastPointer && point.x === lastPointer.x && point.y === lastPointer.y) return;
-  lastPointer = point;
-
   selection = {
     x1: dragStart.x,
     y1: dragStart.y,
@@ -675,14 +546,12 @@ canvas.addEventListener('pointermove', event => {
   draw();
 });
 
-function endSelection() {
+function stopDragging() {
   isDragging = false;
   dragStart = null;
-  lastPointer = null;
 }
-
-canvas.addEventListener('pointerup', endSelection);
-canvas.addEventListener('pointercancel', endSelection);
+canvas.addEventListener('pointerup', stopDragging);
+canvas.addEventListener('pointercancel', stopDragging);
 
 document.getElementById('colorPicker').addEventListener('input', event => {
   setColor(event.target.value);
@@ -690,11 +559,8 @@ document.getElementById('colorPicker').addEventListener('input', event => {
 
 document.getElementById('hexColor').addEventListener('change', event => {
   const value = event.target.value.trim();
-  if (/^#[0-9a-fA-F]{6}$/.test(value)) {
-    setColor(value);
-  } else {
-    event.target.value = selectedColor.toUpperCase();
-  }
+  if (/^#[0-9a-fA-F]{6}$/.test(value)) setColor(value);
+  else event.target.value = selectedColor.toUpperCase();
 });
 
 document.getElementById('applyColor').addEventListener('click', () => {
@@ -711,10 +577,7 @@ document.getElementById('applyColor').addEventListener('click', () => {
   }
 
   draw();
-  setStatus(
-    'Color preview applied locally. These changes are not saved to Supabase.',
-    'success'
-  );
+  setStatus('Color preview applied locally. These changes are not saved to Supabase.', 'success');
 });
 
 document.getElementById('clearSelection').addEventListener('click', () => {
@@ -737,8 +600,7 @@ async function loadPixels() {
     });
 
     if (!response.ok) {
-      const message = await response.text();
-      throw new Error('HTTP ' + response.status + ': ' + message);
+      throw new Error('HTTP ' + response.status + ': ' + (await response.text()));
     }
 
     const rows = await response.json();
@@ -748,12 +610,8 @@ async function loadPixels() {
       const id = Number(row.pixel_id);
       const color = String(row.color || '');
 
-      if (
-        Number.isInteger(id) &&
-        id >= 0 &&
-        id < TOTAL_PIXELS &&
-        /^#[0-9a-fA-F]{6}$/.test(color)
-      ) {
+      if (Number.isInteger(id) && id >= 0 && id < TOTAL_PIXELS &&
+          /^#[0-9a-fA-F]{6}$/.test(color)) {
         savedPixels.set(id, color);
       }
     }
@@ -767,19 +625,16 @@ async function loadPixels() {
     console.error('Could not load pixels:', error);
     draw();
     setStatus(
-      'Could not load saved pixels from Supabase. Check the table, RLS policies and browser console. ' +
-      error.message,
+      'Could not load saved pixels from Supabase. Check the table and RLS policies. ' + error.message,
       'error'
     );
   }
 }
 
-renderSwatches();
-
-// Set the initial board size explicitly.
+// Initialise the board at 100% and set up the UI.
 canvas.style.width = WIDTH + 'px';
 canvas.style.height = HEIGHT + 'px';
-
+renderSwatches();
 draw();
 loadPixels();
 </script>
