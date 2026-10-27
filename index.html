@@ -2,858 +2,1019 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Million Pixels</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Million Pixels</title>
+  <meta name="description" content="Explore and select pixels on the Million Pixels canvas.">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-:root {
-  color-scheme: dark;
-  --panel: #12162a;
-  --border: #303752;
-  --text: #f4f6ff;
-  --muted: #a4abc5;
-  --cyan: #22d3ee;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--text);
-  background: radial-gradient(ellipse at top, #20234c, #090b18 58%);
-  font-family: Arial, Helvetica, sans-serif;
-}
-header { padding: 22px 16px 16px; text-align: center; }
-header h1 {
-  margin: 0;
-  font-size: clamp(26px, 4vw, 42px);
-  letter-spacing: 2px;
-  background: linear-gradient(90deg, #22d3ee, #c084fc, #fb7185);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-header p { margin: 8px 0 0; color: var(--muted); }
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b14;
+      --panel: #111827;
+      --border: #283449;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --cyan: #22d3ee;
+      --purple: #a78bfa;
+    }
 
-.layout {
-  width: min(1500px, calc(100% - 24px));
-  margin: 0 auto 32px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  gap: 14px;
-  align-items: start;
-}
-.panel {
-  min-width: 0;
-  padding: 14px;
-  background: rgba(18,22,42,.95);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 12px 35px #0003;
-}
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.toolbar-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-button, select, input { font: inherit; }
-button, select, input[type="number"] {
-  color: var(--text);
-  background: #202641;
-  border: 1px solid #414b6c;
-  border-radius: 8px;
-  padding: 9px 11px;
-}
-button { cursor: pointer; }
-button:hover { background: #343b60; border-color: var(--cyan); }
-button:focus-visible, select:focus-visible, input:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 2px;
-}
-button:disabled { opacity: .45; cursor: not-allowed; }
-.zoom-label { min-width: 54px; text-align: center; font-weight: bold; }
+    * { box-sizing: border-box; }
 
-.viewport {
-  width: 100%;
-  height: min(70vh, 760px);
-  min-height: 300px;
-  overflow: auto;
-  position: relative;
-  border: 1px solid #3d4564;
-  border-radius: 9px;
-  background: #070914;
-  overscroll-behavior: contain;
-}
-#canvasWrapper { position: relative; flex: none; }
-#pixelCanvas {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  image-rendering: pixelated;
-  cursor: crosshair;
-  touch-action: none;
-}
-#gridOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-#selectionOverlay {
-  position: absolute;
-  z-index: 3;
-  display: none;
-  pointer-events: none;
-  border: 2px solid #35f5ff;
-  outline: 1px solid #07101c;
-  background: rgba(53,245,255,.3);
-  box-shadow: inset 0 0 0 1px #fff, 0 0 6px #35f5ff;
-}
-#areaOverlay {
-  position: absolute;
-  z-index: 4;
-  display: none;
-  pointer-events: none;
-  border: 2px solid #fff;
-  outline: 2px solid #e879f9;
-  background: rgba(232,121,249,.18);
-  box-shadow: inset 0 0 0 1px #101329, 0 0 8px #e879f9;
-}
-.hint, .muted {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-}
-.hint { margin: 10px 2px 0; }
-.side-panel { display: flex; flex-direction: column; gap: 14px; }
-.panel h2 { font-size: 16px; margin: 0 0 12px; }
-.stat {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid #2b314a;
-  font-size: 13px;
-}
-.stat:last-child { border-bottom: 0; }
-.stat span:first-child { color: var(--muted); }
-.stat strong { text-align: right; overflow-wrap: anywhere; }
-.color-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
-#colorPicker {
-  width: 55px;
-  height: 40px;
-  padding: 2px;
-  border: 1px solid #596180;
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-}
-.primary {
-  width: 100%;
-  margin-top: 10px;
-  background: linear-gradient(100deg, #7c3aed, #9333ea);
-  border-color: #a855f7;
-  font-weight: bold;
-}
-#status {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background: #1b2037;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-.status-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: #fbbf24;
-}
-.status-dot.online { background: #4ade80; }
-.status-dot.offline { background: #fb7185; }
-.coordinates-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-  margin-top: 10px;
-}
-.coordinates-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.coordinates-form input { width: 100%; min-width: 0; }
-.coordinates-form button { grid-column: 1 / -1; }
-#coordinateMessage {
-  min-height: 18px;
-  margin-top: 9px;
-  color: var(--cyan);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.selection-readout {
-  margin-top: 10px;
-  padding: 11px;
-  border: 1px solid #333d60;
-  border-radius: 9px;
-  background: #0b1023;
-}
-.selection-readout strong {
-  display: block;
-  margin-top: 4px;
-  color: var(--cyan);
-  overflow-wrap: anywhere;
-}
-.button-row { display: flex; gap: 8px; margin-top: 8px; }
-.button-row button { flex: 1; }
-.legend {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 9px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.legend-box { width: 17px; height: 12px; border: 2px solid #35f5ff; }
-.legend-area { width: 17px; height: 12px; border: 2px solid #e879f9; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
 
-@media (max-width: 850px) {
-  .layout { grid-template-columns: 1fr; }
-  .side-panel {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-  .viewport { height: 60vh; }
-}
-@media (max-width: 480px) {
-  .layout { width: calc(100% - 12px); gap: 10px; }
-  .panel { padding: 10px; }
-  .toolbar { align-items: flex-start; }
-  .viewport { min-height: 260px; height: 55vh; }
-}
-</style>
+    body { min-height: 100vh; }
+
+    button, input, select { font: inherit; }
+
+    button {
+      border: 1px solid #3b4b63;
+      border-radius: 9px;
+      background: #1e293b;
+      color: white;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+
+    button:hover {
+      background: #334155;
+      border-color: #64748b;
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    input {
+      width: 100%;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid #3b4b63;
+      border-radius: 8px;
+      background: #0b1220;
+      color: white;
+    }
+
+    input:focus, button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      background: #0b1020;
+    }
+
+    .brand {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .brand span { color: var(--cyan); }
+
+    .header-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .main {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .art-panel, .sidebar {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .art-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 350px;
+    }
+
+    .art-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .art-heading h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .fit-label {
+      font-size: 12px;
+      color: var(--cyan);
+      white-space: nowrap;
+    }
+
+    /*
+      The artwork always fits inside the available viewport.
+      There is no manual zoom state to get stuck in.
+    */
+    .art-viewport {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background:
+        radial-gradient(ellipse at center, #172033 0%, #080b14 85%);
+    }
+
+    .canvas-wrap {
+      position: relative;
+      flex: 0 0 auto;
+      line-height: 0;
+      box-shadow: 0 0 30px #0008;
+      touch-action: pan-y;
+    }
+
+    #artCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    #gridOverlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, #07101d9c 1px, transparent 1px),
+        linear-gradient(to bottom, #07101d9c 1px, transparent 1px);
+      background-repeat: repeat;
+    }
+
+    #selectionOverlay {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      border: 2px solid var(--cyan);
+      background: #22d3ee2c;
+      box-shadow: inset 0 0 0 1px #07101d;
+      z-index: 2;
+    }
+
+    #selectionOverlay.multi {
+      border-color: var(--purple);
+      background: #a78bfa35;
+    }
+
+    .canvas-instructions {
+      padding: 9px 14px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .sidebar {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+
+    .section h3 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .coordinate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .button-row > button { flex: 1; }
+
+    .primary {
+      background: #0e7490;
+      border-color: #0891b2;
+    }
+
+    .primary:hover { background: #155e75; }
+
+    .danger {
+      background: #3b1d2a;
+      border-color: #713044;
+    }
+
+    .stat-card {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0b1220;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      margin-top: 5px;
+      font-size: 22px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .price { color: #67e8a5; }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="color"] {
+      width: 48px;
+      height: 40px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
+    .status {
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .status.ok { color: #6ee7b7; }
+    .status.error { color: #fca5a5; }
+    .status.loading { color: #fcd34d; }
+
+    footer {
+      padding: 13px 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 850px) {
+      .main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .art-panel { min-height: 55vh; }
+
+      .sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+
+      .section + .section {
+        border-top: none;
+        padding-top: 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      header { padding: 12px; }
+      .main { padding: 8px; gap: 8px; }
+      .sidebar { padding: 12px; gap: 14px; }
+      .art-panel { min-height: 45vh; }
+      .sidebar { grid-template-columns: minmax(0, 1fr); }
+      .header-note { max-width: 125px; }
+    }
+  </style>
 </head>
 
 <body>
-<header>
-  <h1>MILLION PIXELS</h1>
-  <p>Explore the canvas. Find a pixel. Mark an area.</p>
-</header>
-
-<main class="layout">
-  <section class="panel">
-    <div class="toolbar">
-      <div class="toolbar-group">
-        <button id="zoomOut" type="button" aria-label="Zoom out">−</button>
-        <span class="zoom-label" id="zoomLabel">Fit</span>
-        <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
-        <button id="fitButton" type="button">Fit to screen</button>
-      </div>
-      <div class="toolbar-group">
-        <label for="zoomSelect" class="muted">Zoom</label>
-        <select id="zoomSelect">
-          <option value="50">50%</option>
-          <option value="75">75%</option>
-          <option value="100">100%</option>
-          <option value="150">150%</option>
-          <option value="200">200%</option>
-          <option value="300">300%</option>
-          <option value="400">400%</option>
-          <option value="600">600%</option>
-          <option value="800">800%</option>
-        </select>
-      </div>
+<div class="app">
+  <header>
+    <div class="brand">MILLION <span>PIXELS</span></div>
+    <div class="header-note">
+      600 × 500 pixels<br>
+      0.50 PLN per pixel
     </div>
+  </header>
 
-    <div class="viewport" id="viewport">
-      <div id="canvasWrapper">
-        <canvas id="pixelCanvas" width="600" height="500"
-          aria-label="Pixel artwork canvas"></canvas>
-        <div id="gridOverlay" aria-hidden="true"></div>
-        <div id="selectionOverlay" aria-hidden="true"></div>
-        <div id="areaOverlay" aria-hidden="true"></div>
+  <main class="main">
+    <section class="art-panel">
+      <div class="art-heading">
+        <h2>Pixel canvas</h2>
+        <div class="fit-label">FIT TO SCREEN · AUTO</div>
       </div>
-    </div>
 
-    <div class="legend">
-      <span class="legend-box"></span><span>Selected pixel</span>
-      <span class="legend-area"></span><span>Selected area</span>
-    </div>
-    <p class="hint">
-      Click to select one pixel. Drag across the image to select a rectangular
-      area. The image initially fits the available width. Use the wheel to zoom;
-      hold Shift while scrolling to scroll normally.
-    </p>
-  </section>
-
-  <aside class="side-panel">
-    <section class="panel">
-      <h2>Selection</h2>
-      <div class="stat"><span>Canvas</span><strong>600 × 500</strong></div>
-      <div class="stat"><span>Total pixels</span><strong>300,000</strong></div>
-      <div class="stat"><span>Price per pixel</span><strong>0.50 PLN</strong></div>
-
-      <div class="selection-readout">
-        <span class="muted">Selected coordinates</span>
-        <strong id="selectionCoordinates">None</strong>
-        <span class="muted" id="selectionDimensions">Select a pixel or drag an area.</span>
-      </div>
-      <div class="stat"><span>Selected pixels</span><strong id="selectionCount">0</strong></div>
-      <div class="stat"><span>Estimated total</span><strong id="selectionPrice">0.00 PLN</strong></div>
-
-      <div class="button-row">
-        <button id="copyCoordinates" type="button" disabled>Copy coordinates</button>
-        <button id="clearSelection" type="button" disabled>Clear</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Go to coordinates</h2>
-      <p class="muted">Enter a pixel or define the corners of a rectangular area.</p>
-      <form id="coordinatesForm" class="coordinates-form">
-        <label for="x1">X start (0–599)
-          <input id="x1" type="number" min="0" max="599" step="1" value="300" required>
-        </label>
-        <label for="y1">Y start (0–499)
-          <input id="y1" type="number" min="0" max="499" step="1" value="250" required>
-        </label>
-        <label for="x2">X end (0–599)
-          <input id="x2" type="number" min="0" max="599" step="1" value="300" required>
-        </label>
-        <label for="y2">Y end (0–499)
-          <input id="y2" type="number" min="0" max="499" step="1" value="250" required>
-        </label>
-        <button class="primary" type="submit">Go to / select area</button>
-      </form>
-      <div id="coordinateMessage" role="status" aria-live="polite"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Choose a color</h2>
-      <div class="color-row">
-        <input id="colorPicker" type="color" value="#22d3ee" aria-label="Choose pixel color">
-        <div>
-          <strong id="colorLabel">#22D3EE</strong>
-          <div class="muted">Preview color</div>
+      <div class="art-viewport" id="artViewport">
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="artCanvas" width="600" height="500"></canvas>
+          <div id="gridOverlay"></div>
+          <div id="selectionOverlay"></div>
         </div>
       </div>
-      <button id="previewButton" type="button" class="primary">Preview selected pixel</button>
-      <p class="muted">
-        Color preview affects one pixel only. It does not save changes or process payments.
-      </p>
-    </section>
 
-    <section class="panel">
-      <h2>Project status</h2>
-      <p class="muted">Saved colors are loaded from Supabase when available.</p>
-      <div id="status" role="status" aria-live="polite">
-        <span class="status-dot"></span>Connecting to database…
+      <div class="canvas-instructions">
+        Click to select a pixel · Drag to select multiple pixels ·
+        The canvas automatically fits the screen
       </div>
     </section>
-  </aside>
-</main>
+
+    <aside class="sidebar">
+      <section class="section">
+        <h3>Navigate by coordinates</h3>
+        <div class="muted">
+          Coordinates start at the top-left corner. X: 0–599, Y: 0–499.
+        </div>
+
+        <div class="coordinate-grid">
+          <div class="field">
+            <label for="xStart">X start</label>
+            <input id="xStart" type="number" min="0" max="599" value="0">
+          </div>
+          <div class="field">
+            <label for="yStart">Y start</label>
+            <input id="yStart" type="number" min="0" max="499" value="0">
+          </div>
+          <div class="field">
+            <label for="xEnd">X end</label>
+            <input id="xEnd" type="number" min="0" max="599" value="0">
+          </div>
+          <div class="field">
+            <label for="yEnd">Y end</label>
+            <input id="yEnd" type="number" min="0" max="499" value="0">
+          </div>
+        </div>
+
+        <button class="primary" id="selectCoordinates">Select area</button>
+        <button id="fitButton">Fit to screen</button>
+        <div class="muted">
+          Fit to screen is always enabled. The canvas adjusts automatically
+          when the window or device orientation changes.
+        </div>
+      </section>
+
+      <section class="section">
+        <h3>Selection</h3>
+
+        <div class="stat-card">
+          <div class="stat-label">Coordinates</div>
+          <div class="stat-value" id="coordinatesValue">—</div>
+        </div>
+
+        <div class="coordinate-grid">
+          <div class="stat-card">
+            <div class="stat-label">Area size</div>
+            <div class="stat-value" id="sizeValue">0 × 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pixel count</div>
+            <div class="stat-value" id="countValue">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Estimated total price</div>
+          <div class="stat-value price" id="priceValue">0.00 PLN</div>
+        </div>
+
+        <div class="button-row">
+          <button id="copyButton">Copy coordinates</button>
+          <button class="danger" id="clearButton">Clear</button>
+        </div>
+        <div class="muted">
+          This is a selection and price estimate only. No payment is taken.
+        </div>
+      </section>
+
+      <section class="section">
+        <h3>Color preview</h3>
+        <div class="muted">
+          Choose a color to preview it on the top-left pixel of your selection.
+          This preview is local only and is not saved to the database.
+        </div>
+        <div class="color-row">
+          <input id="colorPicker" type="color" value="#ff4fd8" aria-label="Preview color">
+          <button id="previewButton">Preview color</button>
+        </div>
+        <button id="resetPreviewButton">Reset preview</button>
+      </section>
+
+      <section class="section">
+        <h3>Connection</h3>
+        <div class="status loading" id="connectionStatus">Connecting to Supabase…</div>
+      </section>
+    </aside>
+  </main>
+
+  <footer>
+    Million Pixels · 600 × 500 canvas · Prices shown in PLN
+  </footer>
+</div>
 
 <script>
 (() => {
   "use strict";
 
-  const SUPABASE_URL = "https://lailqxqyzymiwlhxrzzw.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
-
   const WIDTH = 600;
   const HEIGHT = 500;
+  const TOTAL_PIXELS = WIDTH * HEIGHT;
   const PRICE_PER_PIXEL = 0.50;
-  const MIN_ZOOM = 50;
-  const MAX_ZOOM = 800;
-  const ZOOM_STEPS = [50, 75, 100, 150, 200, 300, 400, 600, 800];
+
+  const SUPABASE_URL = "https://lailqxqyzymiwlhxrzzw.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
+
+  const canvas = document.getElementById("artCanvas");
+  const ctx = canvas.getContext("2d");
+  const viewport = document.getElementById("artViewport");
+  const wrap = document.getElementById("canvasWrap");
+  const grid = document.getElementById("gridOverlay");
+  const selectionOverlay = document.getElementById("selectionOverlay");
 
   const $ = id => document.getElementById(id);
-  const canvas = $("pixelCanvas");
-  const ctx = canvas.getContext("2d");
-  const wrapper = $("canvasWrapper");
-  const viewport = $("viewport");
-  const gridOverlay = $("gridOverlay");
-  const selectionOverlay = $("selectionOverlay");
-  const areaOverlay = $("areaOverlay");
 
-  let zoom = 100;
-  let selectedArea = null;
-  let previewPixel = null;
+  let scale = 1;
+  let selection = null;
   let dragStart = null;
-  let dragCurrent = null;
   let isDragging = false;
-  let userHasZoomed = false;
-  let savedColors = new Map();
+  let previewPixel = null;
+  let previewColor = null;
+  const savedColors = new Map();
 
-  const supabase = window.supabase
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
+  let supabase = null;
 
-  function setStatus(message, state = "loading") {
-    $("status").replaceChildren();
-    const dot = document.createElement("span");
-    dot.className = "status-dot " +
-      (state === "online" ? "online" : state === "offline" ? "offline" : "");
-    $("status").append(dot, document.createTextNode(message));
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  function isValidColor(value) {
-    return typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value);
+  function pixelId(x, y) {
+    return y * WIDTH + x;
   }
 
+  function validColor(color) {
+    return typeof color === "string" &&
+      /^#[0-9a-fA-F]{6}$/.test(color);
+  }
+
+  // Draw the background artwork at native pixel resolution.
   function drawArtwork() {
     const sky = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-    sky.addColorStop(0, "#130b35");
-    sky.addColorStop(.36, "#55236f");
-    sky.addColorStop(.59, "#f05a75");
-    sky.addColorStop(.76, "#ffb15c");
-    sky.addColorStop(1, "#13142f");
+    sky.addColorStop(0, "#160d3b");
+    sky.addColorStop(0.30, "#56266e");
+    sky.addColorStop(0.53, "#f15c8e");
+    sky.addColorStop(0.70, "#ffb36b");
+    sky.addColorStop(1, "#111a3c");
+
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    let seed = 48271;
+    // Stars
+    let seed = 123456;
     function random() {
       seed = (seed * 16807) % 2147483647;
       return (seed - 1) / 2147483646;
     }
 
-    for (let i = 0; i < 130; i++) {
+    for (let i = 0; i < 180; i++) {
       const x = Math.floor(random() * WIDTH);
-      const y = Math.floor(random() * 230);
-      ctx.fillStyle = `rgba(255,255,255,${.25 + random() * .7})`;
-      ctx.fillRect(x, y, 1, 1);
+      const y = Math.floor(random() * 220);
+      const size = random() > 0.8 ? 2 : 1;
+      ctx.fillStyle = random() > 0.5 ? "#ffffffaa" : "#b9d7ff99";
+      ctx.fillRect(x, y, size, size);
     }
 
-    const sunX = 420, sunY = 230, sunRadius = 78;
-    const glow = ctx.createRadialGradient(sunX, sunY, 8, sunX, sunY, 110);
-    glow.addColorStop(0, "rgba(255,236,153,.95)");
-    glow.addColorStop(.6, "rgba(255,130,112,.7)");
-    glow.addColorStop(1, "rgba(255,100,140,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(sunX - 115, sunY - 115, 230, 230);
+    // Sun
+    const sunX = 385;
+    const sunY = 245;
+    const sunR = 72;
 
-    ctx.fillStyle = "#ffdca1";
+    const glow = ctx.createRadialGradient(
+      sunX, sunY, 8, sunX, sunY, sunR + 25
+    );
+    glow.addColorStop(0, "#fff5b0");
+    glow.addColorStop(0.55, "#ffbd72");
+    glow.addColorStop(1, "#ff8a6a00");
+
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+    ctx.arc(sunX, sunY, sunR + 25, 0, Math.PI * 2);
     ctx.fill();
 
+    ctx.fillStyle = "#ffe9a5";
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Horizontal sunset stripes
     ctx.save();
     ctx.beginPath();
-    ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+    ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
     ctx.clip();
-    ctx.fillStyle = "#ffae8b";
-    for (let y = sunY - 12; y < sunY + 75; y += 15) {
-      ctx.fillRect(sunX - sunRadius, y, sunRadius * 2, 5);
+
+    for (let y = sunY - 55; y < sunY + 65; y += 13) {
+      ctx.fillStyle = "#f58b91";
+      ctx.fillRect(sunX - sunR, y, sunR * 2, 5);
     }
     ctx.restore();
 
+    // Distant mountains
+    ctx.fillStyle = "#31245d";
     ctx.beginPath();
-    ctx.moveTo(0,330); ctx.lineTo(75,250); ctx.lineTo(140,310);
-    ctx.lineTo(235,220); ctx.lineTo(335,325); ctx.lineTo(445,255);
-    ctx.lineTo(535,315); ctx.lineTo(600,270); ctx.lineTo(600,500);
-    ctx.lineTo(0,500); ctx.closePath();
-
-    const far = ctx.createLinearGradient(0,220,0,500);
-    far.addColorStop(0,"#56366e"); far.addColorStop(1,"#20254d");
-    ctx.fillStyle = far; ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(0,385); ctx.lineTo(100,310); ctx.lineTo(175,370);
-    ctx.lineTo(275,290); ctx.lineTo(385,390); ctx.lineTo(475,315);
-    ctx.lineTo(600,395); ctx.lineTo(600,500); ctx.lineTo(0,500);
+    ctx.moveTo(0, 335);
+    ctx.lineTo(95, 245);
+    ctx.lineTo(155, 300);
+    ctx.lineTo(235, 225);
+    ctx.lineTo(325, 330);
+    ctx.lineTo(420, 260);
+    ctx.lineTo(510, 320);
+    ctx.lineTo(600, 250);
+    ctx.lineTo(600, 500);
+    ctx.lineTo(0, 500);
     ctx.closePath();
+    ctx.fill();
 
-    const near = ctx.createLinearGradient(0,300,0,500);
-    near.addColorStop(0,"#282451"); near.addColorStop(1,"#080d24");
-    ctx.fillStyle = near; ctx.fill();
+    // Foreground mountains
+    const mountain = ctx.createLinearGradient(0, 300, 0, HEIGHT);
+    mountain.addColorStop(0, "#20234f");
+    mountain.addColorStop(1, "#080e25");
 
-    ctx.strokeStyle = "rgba(34,211,238,.75)";
-    ctx.lineWidth = 2;
+    ctx.fillStyle = mountain;
     ctx.beginPath();
-    ctx.moveTo(0,385); ctx.lineTo(100,310); ctx.lineTo(175,370);
-    ctx.lineTo(275,290); ctx.lineTo(385,390); ctx.lineTo(475,315);
-    ctx.lineTo(600,395); ctx.stroke();
+    ctx.moveTo(0, 390);
+    ctx.lineTo(105, 315);
+    ctx.lineTo(180, 380);
+    ctx.lineTo(290, 295);
+    ctx.lineTo(390, 385);
+    ctx.lineTo(490, 320);
+    ctx.lineTo(600, 395);
+    ctx.lineTo(600, 500);
+    ctx.lineTo(0, 500);
+    ctx.closePath();
+    ctx.fill();
 
-    const horizon = ctx.createLinearGradient(0,390,0,455);
-    horizon.addColorStop(0,"rgba(34,211,238,.18)");
-    horizon.addColorStop(1,"rgba(34,211,238,0)");
-    ctx.fillStyle = horizon; ctx.fillRect(0,390,WIDTH,65);
+    // Neon mountain highlights
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#6a8cff";
+    ctx.beginPath();
+    ctx.moveTo(0, 390);
+    ctx.lineTo(105, 315);
+    ctx.lineTo(180, 380);
+    ctx.stroke();
+
+    ctx.strokeStyle = "#c16cff";
+    ctx.beginPath();
+    ctx.moveTo(180, 380);
+    ctx.lineTo(290, 295);
+    ctx.lineTo(390, 385);
+    ctx.stroke();
+
+    ctx.strokeStyle = "#38d9f8";
+    ctx.beginPath();
+    ctx.moveTo(390, 385);
+    ctx.lineTo(490, 320);
+    ctx.lineTo(600, 395);
+    ctx.stroke();
+
+    // A subtle neon horizon
+    ctx.strokeStyle = "#f7a1d7aa";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 415);
+    ctx.lineTo(WIDTH, 415);
+    ctx.stroke();
   }
 
-  function redrawArtwork() {
+  function redraw() {
     drawArtwork();
 
-    for (const [key, color] of savedColors) {
-      const x = key % WIDTH;
-      const y = Math.floor(key / WIDTH);
-      if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, 1, 1);
-      }
+    // Database colors are drawn over the background artwork.
+    for (const [id, color] of savedColors) {
+      const x = id % WIDTH;
+      const y = Math.floor(id / WIDTH);
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, 1, 1);
     }
 
-    if (previewPixel) {
-      ctx.fillStyle = previewPixel.color;
-      ctx.fillRect(previewPixel.x, previewPixel.y, 1, 1);
+    // Preview is intentionally temporary and local.
+    if (previewPixel !== null && validColor(previewColor)) {
+      const x = previewPixel % WIDTH;
+      const y = Math.floor(previewPixel / WIDTH);
+      ctx.fillStyle = previewColor;
+      ctx.fillRect(x, y, 1, 1);
     }
   }
 
-  function updateGrid() {
-    const scale = zoom / 100;
-    const width = WIDTH * scale;
-    const height = HEIGHT * scale;
+  /*
+    Always fit the complete canvas to the visible viewport.
+    This function is called at startup, on resize and after orientation changes.
+  */
+  function fitToScreen() {
+    const availableWidth = Math.max(1, viewport.clientWidth - 16);
+    const availableHeight = Math.max(1, viewport.clientHeight - 16);
 
-    wrapper.style.width = `${width}px`;
-    wrapper.style.height = `${height}px`;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    gridOverlay.style.width = `${width}px`;
-    gridOverlay.style.height = `${height}px`;
+    scale = Math.max(
+      0.01,
+      Math.min(availableWidth / WIDTH, availableHeight / HEIGHT)
+    );
 
-    const step = zoom >= 100 ? scale : scale * 10;
-    const vertical =
-      `repeating-linear-gradient(to right, rgba(0,0,0,.85) 0px, rgba(0,0,0,.85) 1px, transparent 1px, transparent ${step}px)`;
-    const horizontal =
-      `repeating-linear-gradient(to bottom, rgba(0,0,0,.85) 0px, rgba(0,0,0,.85) 1px, transparent 1px, transparent ${step}px)`;
+    const displayWidth = WIDTH * scale;
+    const displayHeight = HEIGHT * scale;
 
-    gridOverlay.style.backgroundImage = `${vertical}, ${horizontal}`;
-    gridOverlay.style.backgroundSize = `${step}px ${step}px`;
+    wrap.style.width = `${displayWidth}px`;
+    wrap.style.height = `${displayHeight}px`;
 
-    $("zoomLabel").textContent = `${Math.round(zoom)}%`;
-    let option = [...$("zoomSelect").options].find(o => Number(o.value) === zoom);
-    if (!option) {
-      option = [...$("zoomSelect").options].find(o => Number(o.value) ===
-        ZOOM_STEPS.reduce((best, n) => Math.abs(n - zoom) < Math.abs(best - zoom) ? n : best, ZOOM_STEPS[0]));
-    }
-    $("zoomSelect").value = option ? option.value : "100";
+    grid.style.backgroundSize = `${scale}px ${scale}px`;
 
     updateSelectionOverlay();
   }
 
-  function updateSelectionOverlay() {
-    selectionOverlay.style.display = "none";
-    areaOverlay.style.display = "none";
-    if (!selectedArea) return;
-
-    const scale = zoom / 100;
-    const { x1, y1, x2, y2 } = selectedArea;
-    const left = Math.min(x1, x2);
-    const top = Math.min(y1, y2);
-    const right = Math.max(x1, x2);
-    const bottom = Math.max(y1, y2);
-    const width = right - left + 1;
-    const height = bottom - top + 1;
-
-    const isSingle = width === 1 && height === 1;
-    const overlay = isSingle ? selectionOverlay : areaOverlay;
-
-    overlay.style.display = "block";
-    overlay.style.left = `${left * scale}px`;
-    overlay.style.top = `${top * scale}px`;
-    overlay.style.width = `${width * scale}px`;
-    overlay.style.height = `${height * scale}px`;
-  }
-
-  function updateSelectionInfo() {
-    if (!selectedArea) {
-      $("selectionCoordinates").textContent = "None";
-      $("selectionDimensions").textContent = "Select a pixel or drag an area.";
-      $("selectionCount").textContent = "0";
-      $("selectionPrice").textContent = "0.00 PLN";
-      $("copyCoordinates").disabled = true;
-      $("clearSelection").disabled = true;
-      return;
-    }
-
-    const x1 = Math.min(selectedArea.x1, selectedArea.x2);
-    const y1 = Math.min(selectedArea.y1, selectedArea.y2);
-    const x2 = Math.max(selectedArea.x1, selectedArea.x2);
-    const y2 = Math.max(selectedArea.y1, selectedArea.y2);
-    const width = x2 - x1 + 1;
-    const height = y2 - y1 + 1;
-    const count = width * height;
-
-    $("selectionCoordinates").textContent =
-      `X: ${x1}–${x2}, Y: ${y1}–${y2}`;
-    $("selectionDimensions").textContent =
-      `${width} columns × ${height} rows`;
-    $("selectionCount").textContent = count.toLocaleString("en-US");
-    $("selectionPrice").textContent =
-      `${(count * PRICE_PER_PIXEL).toFixed(2)} PLN`;
-
-    $("copyCoordinates").disabled = false;
-    $("clearSelection").disabled = false;
-  }
-
-  function setSelection(x1, y1, x2 = x1, y2 = y1) {
-    selectedArea = { x1, y1, x2, y2 };
-    previewPixel = null;
-
-    $("x1").value = Math.min(x1, x2);
-    $("y1").value = Math.min(y1, y2);
-    $("x2").value = Math.max(x1, x2);
-    $("y2").value = Math.max(y1, y2);
-
-    updateSelectionInfo();
-    updateSelectionOverlay();
-    redrawArtwork();
-  }
-
-  function pointFromEvent(event) {
+  function getPoint(event) {
     const rect = canvas.getBoundingClientRect();
-    if (!rect.width || !rect.height) return null;
 
-    const x = Math.floor((event.clientX - rect.left) / rect.width * WIDTH);
-    const y = Math.floor((event.clientY - rect.top) / rect.height * HEIGHT);
+    const x = clamp(
+      Math.floor((event.clientX - rect.left) / rect.width * WIDTH),
+      0,
+      WIDTH - 1
+    );
 
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return null;
+    const y = clamp(
+      Math.floor((event.clientY - rect.top) / rect.height * HEIGHT),
+      0,
+      HEIGHT - 1
+    );
+
     return { x, y };
   }
 
-  function setZoom(nextZoom, preserveCenter = true) {
-    const next = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom));
-    const oldScale = zoom / 100;
-    const centerX = (viewport.scrollLeft + viewport.clientWidth / 2) / oldScale;
-    const centerY = (viewport.scrollTop + viewport.clientHeight / 2) / oldScale;
-
-    zoom = next;
-    updateGrid();
-
-    if (preserveCenter) {
-      const scale = zoom / 100;
-      viewport.scrollLeft = Math.max(0, centerX * scale - viewport.clientWidth / 2);
-      viewport.scrollTop = Math.max(0, centerY * scale - viewport.clientHeight / 2);
-    }
+  function normalizedSelection(a, b) {
+    return {
+      x1: Math.min(a.x, b.x),
+      y1: Math.min(a.y, b.y),
+      x2: Math.max(a.x, b.x),
+      y2: Math.max(a.y, b.y)
+    };
   }
 
-  function fitToScreen() {
-    const availableWidth = Math.max(1, viewport.clientWidth - 2);
-    // Fit the full width of the artwork into the visible viewport.
-    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, availableWidth / WIDTH * 100));
-    updateGrid();
-    viewport.scrollLeft = 0;
-    viewport.scrollTop = 0;
-    userHasZoomed = false;
+  function selectionStats() {
+    if (!selection) return null;
+
+    const width = selection.x2 - selection.x1 + 1;
+    const height = selection.y2 - selection.y1 + 1;
+
+    return {
+      width,
+      height,
+      count: width * height,
+      price: width * height * PRICE_PER_PIXEL
+    };
   }
 
-  function goToCoordinates(x1, y1, x2, y2) {
-    if (![x1, y1, x2, y2].every(Number.isInteger)) {
-      $("coordinateMessage").textContent = "Please enter whole-number coordinates.";
-      return;
-    }
-    if (x1 < 0 || x1 >= WIDTH || x2 < 0 || x2 >= WIDTH) {
-      $("coordinateMessage").textContent = "X coordinates must be between 0 and 599.";
-      return;
-    }
-    if (y1 < 0 || y1 >= HEIGHT || y2 < 0 || y2 >= HEIGHT) {
-      $("coordinateMessage").textContent = "Y coordinates must be between 0 and 499.";
+  function updateSelectionOverlay() {
+    if (!selection) {
+      selectionOverlay.style.display = "none";
       return;
     }
 
-    setSelection(x1, y1, x2, y2);
+    const left = selection.x1 * scale;
+    const top = selection.y1 * scale;
+    const width = (selection.x2 - selection.x1 + 1) * scale;
+    const height = (selection.y2 - selection.y1 + 1) * scale;
 
-    if (zoom < 200) setZoom(200, false);
-
-    const scale = zoom / 100;
-    const centerX = (Math.min(x1, x2) + Math.max(x1, x2) + 1) / 2 * scale;
-    const centerY = (Math.min(y1, y2) + Math.max(y1, y2) + 1) / 2 * scale;
-
-    viewport.scrollLeft = Math.max(0, centerX - viewport.clientWidth / 2);
-    viewport.scrollTop = Math.max(0, centerY - viewport.clientHeight / 2);
-
-    $("coordinateMessage").textContent = "Coordinates selected on the canvas.";
+    selectionOverlay.style.display = "block";
+    selectionOverlay.style.left = `${left}px`;
+    selectionOverlay.style.top = `${top}px`;
+    selectionOverlay.style.width = `${width}px`;
+    selectionOverlay.style.height = `${height}px`;
+    selectionOverlay.classList.toggle(
+      "multi",
+      selection.x1 !== selection.x2 || selection.y1 !== selection.y2
+    );
   }
 
-  canvas.addEventListener("pointerdown", event => {
-    const point = pointFromEvent(event);
-    if (!point) return;
+  function updateUI() {
+    if (!selection) {
+      $("coordinatesValue").textContent = "—";
+      $("sizeValue").textContent = "0 × 0";
+      $("countValue").textContent = "0";
+      $("priceValue").textContent = "0.00 PLN";
+      updateSelectionOverlay();
+      return;
+    }
 
-    isDragging = true;
-    dragStart = point;
-    dragCurrent = point;
-    canvas.setPointerCapture(event.pointerId);
-    setSelection(point.x, point.y);
-    event.preventDefault();
-  });
+    const stats = selectionStats();
 
-  canvas.addEventListener("pointermove", event => {
-    if (!isDragging || !dragStart) return;
-    const point = pointFromEvent(event);
-    if (!point) return;
+    $("coordinatesValue").textContent =
+      `(${selection.x1}, ${selection.y1}) – (${selection.x2}, ${selection.y2})`;
 
-    dragCurrent = point;
-    setSelection(dragStart.x, dragStart.y, point.x, point.y);
-  });
+    $("sizeValue").textContent = `${stats.width} × ${stats.height}`;
+    $("countValue").textContent = stats.count.toLocaleString("en-US");
+    $("priceValue").textContent =
+      `${stats.price.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })} PLN`;
 
-  function finishDrag() {
-    if (!isDragging || !dragStart || !dragCurrent) return;
-    isDragging = false;
-    setSelection(dragStart.x, dragStart.y, dragCurrent.x, dragCurrent.y);
-    dragStart = null;
-    dragCurrent = null;
+    $("xStart").value = selection.x1;
+    $("yStart").value = selection.y1;
+    $("xEnd").value = selection.x2;
+    $("yEnd").value = selection.y2;
+
+    updateSelectionOverlay();
   }
 
-  canvas.addEventListener("pointerup", finishDrag);
-  canvas.addEventListener("pointercancel", finishDrag);
-  canvas.addEventListener("lostpointercapture", finishDrag);
+  function setSelection(a, b = a) {
+    selection = normalizedSelection(a, b);
+    updateUI();
+  }
 
-  $("zoomIn").addEventListener("click", () => {
-    userHasZoomed = true;
-    setZoom(zoom + 50);
-  });
+  function clearSelection() {
+    selection = null;
+    previewPixel = null;
+    previewColor = null;
+    updateUI();
+    redraw();
+  }
 
-  $("zoomOut").addEventListener("click", () => {
-    userHasZoomed = true;
-    setZoom(zoom - 50);
-  });
+  function readCoordinates() {
+    const x1 = Number($("xStart").value);
+    const y1 = Number($("yStart").value);
+    const x2 = Number($("xEnd").value);
+    const y2 = Number($("yEnd").value);
 
-  $("zoomSelect").addEventListener("change", () => {
-    userHasZoomed = true;
-    setZoom(Number($("zoomSelect").value));
+    const values = [x1, y1, x2, y2];
+
+    if (values.some(value => !Number.isInteger(value))) {
+      alert("Please enter whole-number coordinates.");
+      return null;
+    }
+
+    if (
+      x1 < 0 || x1 >= WIDTH ||
+      x2 < 0 || x2 >= WIDTH ||
+      y1 < 0 || y1 >= HEIGHT ||
+      y2 < 0 || y2 >= HEIGHT
+    ) {
+      alert("Coordinates are outside the canvas.");
+      return null;
+    }
+
+    return normalizedSelection(
+      { x: x1, y: y1 },
+      { x: x2, y: y2 }
+    );
+  }
+
+  $("selectCoordinates").addEventListener("click", () => {
+    const result = readCoordinates();
+    if (!result) return;
+
+    selection = result;
+    updateUI();
   });
 
   $("fitButton").addEventListener("click", fitToScreen);
 
-  viewport.addEventListener("wheel", event => {
-    if (event.shiftKey) return;
-    event.preventDefault();
+  $("clearButton").addEventListener("click", clearSelection);
 
-    const rect = viewport.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-    const oldScale = zoom / 100;
-    const contentX = (viewport.scrollLeft + mouseX) / oldScale;
-    const contentY = (viewport.scrollTop + mouseY) / oldScale;
-
-    userHasZoomed = true;
-    setZoom(zoom + (event.deltaY < 0 ? 50 : -50), false);
-
-    const scale = zoom / 100;
-    viewport.scrollLeft = Math.max(0, contentX * scale - mouseX);
-    viewport.scrollTop = Math.max(0, contentY * scale - mouseY);
-  }, { passive: false });
-
-  $("coordinatesForm").addEventListener("submit", event => {
-    event.preventDefault();
-    const values = ["x1", "y1", "x2", "y2"].map(id => $(id).value.trim());
-
-    if (values.some(v => v === "")) {
-      $("coordinateMessage").textContent = "Fill in all four coordinate fields.";
+  $("copyButton").addEventListener("click", async () => {
+    if (!selection) {
+      alert("Select a pixel or an area first.");
       return;
     }
 
-    goToCoordinates(...values.map(Number));
-  });
-
-  $("copyCoordinates").addEventListener("click", async () => {
-    if (!selectedArea) return;
-
-    const x1 = Math.min(selectedArea.x1, selectedArea.x2);
-    const y1 = Math.min(selectedArea.y1, selectedArea.y2);
-    const x2 = Math.max(selectedArea.x1, selectedArea.x2);
-    const y2 = Math.max(selectedArea.y1, selectedArea.y2);
-    const text = `X: ${x1}-${x2}, Y: ${y1}-${y2}`;
+    const text =
+      `X: ${selection.x1}–${selection.x2}, ` +
+      `Y: ${selection.y1}–${selection.y2}`;
 
     try {
       await navigator.clipboard.writeText(text);
-      $("coordinateMessage").textContent = `Copied: ${text}`;
+      $("copyButton").textContent = "Copied!";
+      setTimeout(() => {
+        $("copyButton").textContent = "Copy coordinates";
+      }, 1500);
     } catch {
-      $("coordinateMessage").textContent = text;
+      prompt("Copy these coordinates:", text);
     }
-  });
-
-  $("clearSelection").addEventListener("click", () => {
-    selectedArea = null;
-    previewPixel = null;
-    updateSelectionInfo();
-    updateSelectionOverlay();
-    redrawArtwork();
-    $("coordinateMessage").textContent = "Selection cleared.";
-  });
-
-  $("colorPicker").addEventListener("input", () => {
-    $("colorLabel").textContent = $("colorPicker").value.toUpperCase();
   });
 
   $("previewButton").addEventListener("click", () => {
-    if (!selectedArea) {
-      setStatus("Select a pixel first.");
+    if (!selection) {
+      alert("Select a pixel or an area first.");
       return;
     }
 
-    // Preview changes only the first pixel of the selected area.
-    const x = Math.min(selectedArea.x1, selectedArea.x2);
-    const y = Math.min(selectedArea.y1, selectedArea.y2);
-    previewPixel = { x, y, color: $("colorPicker").value };
-    redrawArtwork();
-    updateSelectionOverlay();
-    setStatus("Local preview applied to the first pixel in the selection. Not saved.");
+    previewPixel = pixelId(selection.x1, selection.y1);
+    previewColor = $("colorPicker").value;
+    redraw();
   });
 
-  async function loadSavedPixels() {
-    if (!supabase) {
-      setStatus("Supabase library could not load. Artwork remains available.", "offline");
+  $("resetPreviewButton").addEventListener("click", () => {
+    previewPixel = null;
+    previewColor = null;
+    redraw();
+  });
+
+  // Click selects one pixel; dragging selects a rectangular area.
+  canvas.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+
+    event.preventDefault();
+    dragStart = getPoint(event);
+    isDragging = false;
+
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch (_) {}
+  });
+
+  canvas.addEventListener("pointermove", event => {
+    if (!dragStart) return;
+
+    const point = getPoint(event);
+
+    if (
+      point.x !== dragStart.x ||
+      point.y !== dragStart.y
+    ) {
+      isDragging = true;
+    }
+
+    if (isDragging) {
+      setSelection(dragStart, point);
+    }
+  });
+
+  function finishDrag(event) {
+    if (!dragStart) return;
+
+    const end = getPoint(event);
+    setSelection(dragStart, isDragging ? end : dragStart);
+
+    dragStart = null;
+    isDragging = false;
+  }
+
+  canvas.addEventListener("pointerup", finishDrag);
+  canvas.addEventListener("pointercancel", () => {
+    dragStart = null;
+    isDragging = false;
+  });
+
+  // Keep the canvas fitted to the screen at all times.
+  let resizeFrame = 0;
+
+  function scheduleFit() {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(fitToScreen);
+  }
+
+  window.addEventListener("resize", scheduleFit);
+  window.addEventListener("orientationchange", scheduleFit);
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(scheduleFit);
+    observer.observe(viewport);
+  }
+
+  // Load saved pixel colors from Supabase.
+  async function loadPixelColors() {
+    const status = $("connectionStatus");
+
+    if (!window.supabase) {
+      status.textContent = "Supabase library could not be loaded.";
+      status.className = "status error";
       return;
     }
 
-    setStatus("Loading saved pixels from Supabase…");
-
     try {
-      const { data, error } = await supabase
-        .from("pixel_state")
-        .select("pixel_id, color")
-        .limit(10000);
+      supabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
-      if (error) throw error;
+      status.textContent = "Loading saved pixel colors…";
+      status.className = "status loading";
 
-      savedColors.clear();
-      for (const row of data || []) {
-        const id = Number(row.pixel_id);
-        if (Number.isInteger(id) && id >= 0 && id < WIDTH * HEIGHT &&
-            isValidColor(row.color)) {
-          savedColors.set(id, row.color);
+      const pageSize = 1000;
+      let from = 0;
+      let totalLoaded = 0;
+
+      while (true) {
+        const { data, error } = await supabase
+          .from("pixel_state")
+          .select("pixel_id, color")
+          .order("pixel_id", { ascending: true })
+          .range(from, from + pageSize - 1);
+
+        if (error) throw error;
+
+        for (const row of data || []) {
+          const id = Number(row.pixel_id);
+
+          if (
+            Number.isInteger(id) &&
+            id >= 0 &&
+            id < TOTAL_PIXELS &&
+            validColor(row.color)
+          ) {
+            savedColors.set(id, row.color);
+          }
         }
+
+        totalLoaded += (data || []).length;
+
+        if (!data || data.length < pageSize) break;
+
+        from += pageSize;
       }
 
-      redrawArtwork();
-      setStatus(`Connected. Loaded ${savedColors.size} saved pixel colors.`, "online");
+      redraw();
+
+      status.textContent =
+        `Connected · ${totalLoaded.toLocaleString("en-US")} saved pixel records loaded.`;
+      status.className = "status ok";
     } catch (error) {
-      console.error("Supabase read error:", error);
-      setStatus("Could not load pixel_state. Check table permissions and SELECT policy.", "offline");
+      console.error("Supabase error:", error);
+      status.textContent =
+        "Could not load saved colors. Check the Supabase connection, table permissions and RLS policies.";
+      status.className = "status error";
     }
   }
 
-  // Start with the entire artwork fitted into the visible viewport.
-  redrawArtwork();
-  requestAnimationFrame(() => {
-    fitToScreen();
-    loadSavedPixels();
-  });
-
-  // Only auto-fit on resize if the visitor has not manually changed zoom.
-  window.addEventListener("resize", () => {
-    if (!userHasZoomed) fitToScreen();
-  });
+  // Initialize
+  drawArtwork();
+  fitToScreen();
+  updateUI();
+  loadPixelColors();
 })();
 </script>
 </body>
