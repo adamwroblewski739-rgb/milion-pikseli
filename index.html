@@ -1,16 +1,16 @@
 
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Milion Pikseli</title>
+<meta name="theme-color" content="#050a25">
+<title>Million Pixels — Create Your Mark</title>
 <style>
 :root {
   --bg: #050a25;
   --panel: #081333;
   --line: #193c91;
-  --purple: #792cff;
   --text: #f5f7ff;
   --muted: #bdcaf5;
 }
@@ -19,69 +19,44 @@ body {
   margin: 0;
   color: var(--text);
   font-family: Inter, "Segoe UI", Arial, sans-serif;
-  background:
-    radial-gradient(ellipse at 50% 30%, #15175a, transparent 55%),
-    #04091f;
+  background: radial-gradient(ellipse at 50% 30%, #15175a, transparent 55%), #04091f;
   min-height: 100vh;
 }
-header {
-  border-bottom: 1px solid #4430a5;
-  background: #050a25ee;
-}
+header { border-bottom: 1px solid #4430a5; background: #050a25ee; }
 .nav {
-  max-width: 1500px;
-  margin: auto;
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  max-width: 1500px; margin: auto; padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }
 .brand { display: flex; align-items: center; gap: 12px; }
-.logo {
-  font-size: 37px;
-  color: #32caff;
-  text-shadow: 0 0 18px #8d35ff;
-}
+.logo { font-size: 37px; color: #32caff; text-shadow: 0 0 18px #8d35ff; }
 .brand h2 { margin: 0; font-size: 24px; }
 .brand h2 span {
   background: linear-gradient(90deg, #c04cff, #19caff);
-  background-clip: text;
-  color: transparent;
+  background-clip: text; color: transparent;
 }
 .brand small { color: var(--muted); }
 nav { display: flex; gap: 8px; flex-wrap: wrap; }
 nav a {
-  color: #dce5ff;
-  text-decoration: none;
-  padding: 12px;
-  border-radius: 9px;
-  font-size: 14px;
+  color: #dce5ff; text-decoration: none; padding: 12px;
+  border-radius: 9px; font-size: 14px;
 }
-nav a:first-child, nav a:hover {
-  background: linear-gradient(110deg, #792cff, #5424e8);
-}
+nav a:first-child, nav a:hover { background: linear-gradient(110deg, #792cff, #5424e8); }
 main { max-width: 1500px; margin: auto; padding: 30px 24px; }
 .hero {
-  display: grid;
-  grid-template-columns: 1fr 1.7fr;
-  gap: 24px;
-  align-items: center;
-  margin-bottom: 28px;
+  display: grid; grid-template-columns: 1fr 1.7fr;
+  gap: 24px; align-items: center; margin-bottom: 28px;
 }
 .eyebrow { color: #9caaff; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
 h1 { font-size: clamp(34px, 4vw, 52px); margin: 8px 0; }
 .gradient {
   background: linear-gradient(90deg, #c052ff, #22c8ff);
-  background-clip: text;
-  color: transparent;
+  background-clip: text; color: transparent;
 }
 .hero p { color: var(--muted); line-height: 1.6; max-width: 500px; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .stat, .panel, .board-shell {
   background: linear-gradient(145deg, #091638, #060d2a);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  border: 1px solid var(--line); border-radius: 14px;
   box-shadow: 0 12px 30px #0003;
 }
 .stat { padding: 17px; min-height: 110px; }
@@ -89,19 +64,15 @@ h1 { font-size: clamp(34px, 4vw, 52px); margin: 8px 0; }
 .stat strong { display: block; font-size: 22px; margin: 8px 0 4px; }
 .stat small { color: var(--muted); }
 .layout {
-  display: grid;
-  grid-template-columns: 270px minmax(280px, 1fr) 290px;
-  gap: 20px;
-  align-items: start;
+  display: grid; grid-template-columns: 270px minmax(280px, 1fr) 290px;
+  gap: 20px; align-items: start;
 }
 .panel { overflow: hidden; }
 .section { padding: 18px; border-bottom: 1px solid #172d68; }
 .section:last-child { border-bottom: 0; }
 h3 { margin: 0 0 15px; font-size: 17px; }
 .color-picker {
-  height: 110px;
-  border-radius: 9px;
-  cursor: crosshair;
+  height: 110px; border-radius: 9px; cursor: crosshair;
   border: 1px solid #5e459d;
   background: linear-gradient(to top, #000, transparent),
               linear-gradient(to right, white, transparent), #bd35ed;
@@ -112,20 +83,17 @@ h3 { margin: 0 0 15px; font-size: 17px; }
   border: 1px solid #ffffff66; cursor: pointer;
 }
 input[type="text"] {
-  width: 100%; padding: 11px; margin-top: 12px;
-  background: #0b1a42; color: white; border: 1px solid #294b99;
-  border-radius: 8px; font-size: 14px;
+  width: 100%; padding: 11px; margin-top: 12px; background: #0b1a42;
+  color: white; border: 1px solid #294b99; border-radius: 8px; font-size: 14px;
 }
 .btn {
-  display: block; width: 100%; padding: 13px;
-  margin-top: 9px; border-radius: 9px; cursor: pointer;
-  color: white; font-size: 14px; font-weight: 650;
-  background: #10234f; border: 1px solid #2c4a92;
+  display: block; width: 100%; padding: 13px; margin-top: 9px;
+  border-radius: 9px; cursor: pointer; color: white; font-size: 14px;
+  font-weight: 650; background: #10234f; border: 1px solid #2c4a92;
 }
 .btn.primary {
   background: linear-gradient(110deg, #9b32ff, #5d22f3);
-  border-color: #a94eff;
-  box-shadow: 0 5px 18px #702cff38;
+  border-color: #a94eff; box-shadow: 0 5px 18px #702cff38;
 }
 .btn:hover { filter: brightness(1.16); }
 .zoom { display: grid; grid-template-columns: 50px 1fr 50px; margin-top: 10px; }
@@ -139,18 +107,22 @@ input[type="text"] {
 .board-viewport {
   width: 100%; overflow: auto; max-height: 72vh;
   border: 1px solid #b7a6ff; background: #050b22;
+  scrollbar-color: #7540df #081333;
 }
-canvas {
-  display: block; width: 100%; height: auto;
+#pixelCanvas {
+  display: block; width: 100%; height: auto; max-width: none;
   cursor: crosshair; touch-action: none;
 }
 .help { text-align: center; font-size: 12px; color: #d0d9ff; padding: 13px 4px 2px; }
 .right { display: grid; gap: 18px; }
 .selection { padding: 14px; border: 1px solid #1a3c84; border-radius: 9px; }
-.metric { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; font-size: 13px; color: var(--muted); }
+.metric {
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 10px 0; font-size: 13px; color: var(--muted);
+}
 .metric strong { color: white; text-align: right; font-size: 16px; }
 .note { color: var(--muted); font-size: 13px; line-height: 1.6; }
-.status { min-height: 18px; margin-top: 10px; color: #9eb6ff; font-size: 12px; }
+.status { min-height: 18px; margin-top: 10px; color: #9eb6ff; font-size: 12px; overflow-wrap: anywhere; }
 footer {
   max-width: 1500px; margin: auto; padding: 15px 24px 25px;
   display: flex; justify-content: space-between; gap: 12px;
@@ -181,12 +153,15 @@ footer {
   <div class="nav">
     <div class="brand">
       <div class="logo">▦</div>
-      <div><h2>Milion <span>Pikseli</span></h2><small>Wspólnie stwórzmy coś wyjątkowego</small></div>
+      <div>
+        <h2>Million <span>Pixels</span></h2>
+        <small>Let's create something extraordinary together</small>
+      </div>
     </div>
     <nav>
-      <a href="#start">⌂ Strona główna</a>
-      <a href="#plansza">▦ Plansza</a>
-      <a href="#moje-piksele">♙ Moje piksele</a>
+      <a href="#start">⌂ Home</a>
+      <a href="#board">▦ Pixel Board</a>
+      <a href="#my-pixels">♙ My Pixels</a>
       <a href="#faq">ⓘ FAQ</a>
     </nav>
   </div>
@@ -195,215 +170,313 @@ footer {
 <main id="start">
   <section class="hero">
     <div>
-      <div class="eyebrow">WSPÓLNA PLANSZA</div>
-      <h1>Milion <span class="gradient">Pikseli</span></h1>
-      <p>Wybierz obszar, pokoloruj piksele i zostaw swój ślad na naszej wspólnej planszy. Każdy piksel ma znaczenie!</p>
+      <div class="eyebrow">A CANVAS WE CREATE TOGETHER</div>
+      <h1>Million <span class="gradient">Pixels</span></h1>
+      <p>Choose an area, add your colors, and leave your mark on our shared canvas. Every pixel tells a story!</p>
     </div>
     <div class="stats">
-      <div class="stat"><label>Rozmiar planszy</label><strong>600 × 500</strong><small>pikseli</small></div>
-      <div class="stat"><label>Cena za piksel</label><strong>0,50 zł</strong><small>Stała cena</small></div>
-      <div class="stat"><label>Zaznaczone piksele</label><strong id="countTop">0</strong><small id="priceTop">(0,00 zł)</small></div>
+      <div class="stat">
+        <label>Board size</label>
+        <strong>600 × 500</strong>
+        <small>pixels</small>
+      </div>
+      <div class="stat">
+        <label>Price per pixel</label>
+        <strong>0.50 PLN</strong>
+        <small>Fixed price</small>
+      </div>
+      <div class="stat">
+        <label>Selected pixels</label>
+        <strong id="countTop">0</strong>
+        <small id="priceTop">(0.00 PLN)</small>
+      </div>
     </div>
   </section>
 
-  <section class="layout" id="plansza">
+  <section class="layout" id="board">
     <aside class="panel">
       <div class="section">
-        <h3>Wybierz kolor</h3>
-        <div class="color-picker" id="colorPicker" title="Kliknij, aby wybrać kolor"></div>
+        <h3>Choose a color</h3>
+        <div class="color-picker" id="colorPicker" title="Click to choose a color"></div>
         <div class="swatches" id="swatches">
-          <button class="swatch" style="background:#ff1744" data-color="#ff1744" aria-label="Czerwony"></button>
-          <button class="swatch" style="background:#ff9f1c" data-color="#ff9f1c" aria-label="Pomarańczowy"></button>
-          <button class="swatch" style="background:#ffe21a" data-color="#ffe21a" aria-label="Żółty"></button>
-          <button class="swatch" style="background:#00d084" data-color="#00d084" aria-label="Zielony"></button>
-          <button class="swatch" style="background:#00c8f8" data-color="#00c8f8" aria-label="Błękitny"></button>
-          <button class="swatch" style="background:#593dff" data-color="#593dff" aria-label="Fioletowy"></button>
-          <button class="swatch" style="background:#e52bff" data-color="#e52bff" aria-label="Różowy"></button>
-          <button class="swatch" style="background:#f2f5ff" data-color="#f2f5ff" aria-label="Biały"></button>
-          <button class="swatch" style="background:#080d27" data-color="#080d27" aria-label="Granatowy"></button>
+          <button class="swatch" style="background:#ff1744" data-color="#ff1744" aria-label="Red"></button>
+          <button class="swatch" style="background:#ff9f1c" data-color="#ff9f1c" aria-label="Orange"></button>
+          <button class="swatch" style="background:#ffe21a" data-color="#ffe21a" aria-label="Yellow"></button>
+          <button class="swatch" style="background:#00d084" data-color="#00d084" aria-label="Green"></button>
+          <button class="swatch" style="background:#00c8f8" data-color="#00c8f8" aria-label="Cyan"></button>
+          <button class="swatch" style="background:#593dff" data-color="#593dff" aria-label="Purple"></button>
+          <button class="swatch" style="background:#e52bff" data-color="#e52bff" aria-label="Pink"></button>
+          <button class="swatch" style="background:#f2f5ff" data-color="#f2f5ff" aria-label="White"></button>
+          <button class="swatch" style="background:#080d27" data-color="#080d27" aria-label="Navy"></button>
         </div>
-        <input type="text" id="colorHex" value="#B55CF6" maxlength="7" aria-label="Kod koloru HEX">
+        <input type="text" id="colorHex" value="#B55CF6" maxlength="7" aria-label="HEX color code">
       </div>
+
       <div class="section">
-        <h3>Narzędzia</h3>
-        <button class="btn primary" id="previewButton">✧ Pokaż podgląd</button>
-        <button class="btn" id="clearButton">⌫ Wyczyść zaznaczenie</button>
-        <div style="margin-top:20px;font-size:13px;color:#c7d3f8">Powiększenie</div>
+        <h3>Tools</h3>
+        <button class="btn primary" id="previewButton">✧ Preview color</button>
+        <button class="btn" id="clearButton">⌫ Clear selection</button>
+        <div style="margin-top:20px;font-size:13px;color:#c7d3f8">Zoom level</div>
         <div class="zoom">
-          <button id="zoomOut" aria-label="Pomniejsz">−</button>
+          <button id="zoomOut" aria-label="Zoom out">−</button>
           <span id="zoomLabel">100%</span>
-          <button id="zoomIn" aria-label="Powiększ">＋</button>
+          <button id="zoomIn" aria-label="Zoom in">＋</button>
         </div>
-        <div class="status" id="status" role="status">Gotowe.</div>
+        <div class="status" id="status" role="status" aria-live="polite">Ready.</div>
       </div>
     </aside>
 
     <section class="board-shell">
       <div class="board-viewport" id="boardViewport">
-        <canvas id="pixelCanvas" width="600" height="500" aria-label="Plansza pikseli 600 na 500"></canvas>
+        <canvas id="pixelCanvas" width="600" height="500" aria-label="600 by 500 pixel board"></canvas>
       </div>
-      <div class="help">Przytrzymaj lewy przycisk myszy i przeciągnij, aby zaznaczyć obszar.</div>
+      <div class="help">Use the mouse wheel or +/− buttons to zoom. Drag across the board to select an area.</div>
     </section>
 
     <aside class="right">
       <section class="panel section">
-        <h3>▧ Zaznaczenie</h3>
+        <h3>▧ Your selection</h3>
         <div class="selection">
-          <div class="metric"><span>Wymiary</span><strong id="dimensions">0 × 0<br><small>pikseli</small></strong></div>
-          <div class="metric"><span>Liczba pikseli</span><strong id="count">0</strong></div>
-          <div class="metric"><span>Cena orientacyjna</span><strong id="price">0,00 zł</strong></div>
+          <div class="metric">
+            <span>Dimensions</span>
+            <strong id="dimensions">0 × 0<br><small>pixels</small></strong>
+          </div>
+          <div class="metric">
+            <span>Pixel count</span>
+            <strong id="count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Estimated price</span>
+            <strong id="price">0.00 PLN</strong>
+          </div>
         </div>
       </section>
+
       <section class="panel section">
-        <h3><span class="gradient">ϟ</span> Gotowy do zakupu?</h3>
-        <p class="note">Zaznacz obszar, wybierz kolor i kliknij „Pokaż podgląd”.</p>
-        <button class="btn primary" id="previewButton2">◉ Pokaż podgląd</button>
+        <h3><span class="gradient">ϟ</span> Ready to create?</h3>
+        <p class="note">Select an area, choose a color, and click Preview color to see your design.</p>
+        <button class="btn primary" id="previewButton2">◉ Preview color</button>
       </section>
-      <section class="panel section">
-        <h3>ⓘ Informacja</h3>
-        <p class="note">To wersja demonstracyjna. Podgląd koloru jest lokalny. Zmiany nie są zapisywane w bazie, a płatności nie są jeszcze uruchomione.</p>
+
+      <section class="panel section" id="faq">
+        <h3>ⓘ Important information</h3>
+        <p class="note">This is a demo version. Color previews are local to your browser. New changes are not saved to the database, and payments are not yet enabled.</p>
       </section>
     </aside>
   </section>
 </main>
 
-<footer><span><strong>Milion Pikseli</strong> · © 2026</span><span>♥ Dziękujemy, że jesteś z nami!</span></footer>
+<footer id="my-pixels">
+  <span><strong>Million Pixels</strong> · © 2026</span>
+  <span>♥ Thanks for being part of the canvas!</span>
+</footer>
 
 <script>
-const WIDTH = 600, HEIGHT = 500, PRICE_PER_PIXEL = 0.50;
+const WIDTH = 600;
+const HEIGHT = 500;
+const TOTAL_PIXELS = WIDTH * HEIGHT;
+const PRICE_PER_PIXEL = 0.50;
+
 const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
-let selectedColor = '#B55CF6';
-let selection = null, dragStart = null, dragCurrent = null;
-let zoom = 100;
-const savedPixels = new Map();
+const viewport = document.getElementById('boardViewport');
 const statusEl = document.getElementById('status');
 
-function setStatus(message) { statusEl.textContent = message; }
-function validHex(value) { return /^#[0-9a-fA-F]{6}$/.test(value); }
+let selectedColor = '#B55CF6';
+let selection = null;
+let dragStart = null;
+let dragCurrent = null;
+let zoom = 100;
+
+const savedPixels = new Map();
+
+function setStatus(message) {
+  statusEl.textContent = message;
+}
+
+function validHex(value) {
+  return /^#[0-9a-fA-F]{6}$/.test(value);
+}
 
 function setColor(color) {
   if (!validHex(color)) return;
+
   selectedColor = color.toUpperCase();
   document.getElementById('colorHex').value = selectedColor;
   document.getElementById('colorPicker').style.background =
-    `linear-gradient(to top,black,transparent),linear-gradient(to right,white,transparent),${selectedColor}`;
+    `linear-gradient(to top,black,transparent),
+     linear-gradient(to right,white,transparent),${selectedColor}`;
 }
 
 function getCoordinates(event) {
   const rect = canvas.getBoundingClientRect();
+
   return {
-    x: Math.max(0, Math.min(WIDTH - 1, Math.floor((event.clientX - rect.left) / rect.width * WIDTH))),
-    y: Math.max(0, Math.min(HEIGHT - 1, Math.floor((event.clientY - rect.top) / rect.height * HEIGHT)))
+    x: Math.max(0, Math.min(WIDTH - 1,
+      Math.floor((event.clientX - rect.left) / rect.width * WIDTH))),
+    y: Math.max(0, Math.min(HEIGHT - 1,
+      Math.floor((event.clientY - rect.top) / rect.height * HEIGHT)))
   };
 }
 
 function getSelection() {
   if (!selection) return null;
+
   const x1 = Math.min(selection.x1, selection.x2);
   const y1 = Math.min(selection.y1, selection.y2);
   const x2 = Math.max(selection.x1, selection.x2);
   const y2 = Math.max(selection.y1, selection.y2);
-  return {x1,y1,x2,y2,width:x2-x1+1,height:y2-y1+1,count:(x2-x1+1)*(y2-y1+1)};
+
+  return {
+    x1, y1, x2, y2,
+    width: x2 - x1 + 1,
+    height: y2 - y1 + 1,
+    count: (x2 - x1 + 1) * (y2 - y1 + 1)
+  };
 }
 
 function draw() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  ctx.fillStyle = '#10195c';
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Dekoracyjny pikselowy krajobraz jako tło planszy.
+  // Neon gradient background.
   const gradient = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
   gradient.addColorStop(0, '#142a83');
   gradient.addColorStop(0.42, '#76218d');
   gradient.addColorStop(0.7, '#f32b87');
   gradient.addColorStop(1, '#0751b6');
+
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Słońce i sylwetka gór.
+  // Sunset.
   ctx.fillStyle = '#ffbd3e';
   ctx.beginPath();
   ctx.arc(300, 245, 62, 0, Math.PI * 2);
   ctx.fill();
 
+  // Pixel-art mountains.
   ctx.fillStyle = '#070c26';
   ctx.beginPath();
-  ctx.moveTo(0,195); ctx.lineTo(60,215); ctx.lineTo(100,205);
-  ctx.lineTo(150,250); ctx.lineTo(195,265); ctx.lineTo(245,250);
-  ctx.lineTo(300,290); ctx.lineTo(360,265); ctx.lineTo(415,295);
-  ctx.lineTo(475,250); ctx.lineTo(530,275); ctx.lineTo(600,225);
-  ctx.lineTo(600,500); ctx.lineTo(0,500); ctx.closePath(); ctx.fill();
+  ctx.moveTo(0,195);
+  ctx.lineTo(60,215);
+  ctx.lineTo(100,205);
+  ctx.lineTo(150,250);
+  ctx.lineTo(195,265);
+  ctx.lineTo(245,250);
+  ctx.lineTo(300,290);
+  ctx.lineTo(360,265);
+  ctx.lineTo(415,295);
+  ctx.lineTo(475,250);
+  ctx.lineTo(530,275);
+  ctx.lineTo(600,225);
+  ctx.lineTo(600,500);
+  ctx.lineTo(0,500);
+  ctx.closePath();
+  ctx.fill();
 
-  // Kolory zapisane w bazie (jeśli Supabase jest skonfigurowany).
+  // Existing pixels loaded from Supabase.
   for (const [id, color] of savedPixels) {
     ctx.fillStyle = color;
     ctx.fillRect(id % WIDTH, Math.floor(id / WIDTH), 1, 1);
   }
 
-  // Siatka planszy.
+  // Use a finer grid at high zoom levels.
+  const cell = zoom >= 300 ? 1 : 10;
+
   ctx.beginPath();
-  ctx.strokeStyle = 'rgba(230,238,255,.78)';
-  ctx.lineWidth = 0.65;
-  for (let x = 0; x <= WIDTH; x += 10) { ctx.moveTo(x,0); ctx.lineTo(x,HEIGHT); }
-  for (let y = 0; y <= HEIGHT; y += 10) { ctx.moveTo(0,y); ctx.lineTo(WIDTH,y); }
+  ctx.strokeStyle = zoom >= 300
+    ? 'rgba(230,238,255,.55)'
+    : 'rgba(230,238,255,.78)';
+  ctx.lineWidth = zoom >= 300 ? 0.12 : 0.65;
+
+  for (let x = 0; x <= WIDTH; x += cell) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, HEIGHT);
+  }
+
+  for (let y = 0; y <= HEIGHT; y += cell) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(WIDTH, y);
+  }
+
   ctx.stroke();
 
   const s = dragStart && dragCurrent
-    ? {x1:Math.min(dragStart.x,dragCurrent.x),y1:Math.min(dragStart.y,dragCurrent.y),
-       x2:Math.max(dragStart.x,dragCurrent.x),y2:Math.max(dragStart.y,dragCurrent.y)}
+    ? {
+        x1: Math.min(dragStart.x, dragCurrent.x),
+        y1: Math.min(dragStart.y, dragCurrent.y),
+        x2: Math.max(dragStart.x, dragCurrent.x),
+        y2: Math.max(dragStart.y, dragCurrent.y)
+      }
     : getSelection();
 
   if (s) {
     ctx.fillStyle = 'rgba(125,54,255,.38)';
-    ctx.fillRect(s.x1,s.y1,s.x2-s.x1+1,s.y2-s.y1+1);
+    ctx.fillRect(s.x1, s.y1, s.x2 - s.x1 + 1, s.y2 - s.y1 + 1);
+
     ctx.strokeStyle = '#c2a5ff';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(s.x1+.5,s.y1+.5,s.x2-s.x1,s.y2-s.y1);
-    ctx.fillStyle = '#fff';
-    for (const [x,y] of [[s.x1,s.y1],[s.x2,s.y1],[s.x1,s.y2],[s.x2,s.y2]]) {
-      ctx.fillRect(x-2,y-2,5,5);
-    }
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(
+      s.x1 + 0.5, s.y1 + 0.5,
+      s.x2 - s.x1, s.y2 - s.y1
+    );
   }
 }
 
 function updateStats() {
   const s = getSelection();
   const count = s ? s.count : 0;
-  const price = (count * PRICE_PER_PIXEL).toLocaleString('pl-PL', {
-    minimumFractionDigits: 2, maximumFractionDigits: 2
-  }) + ' zł';
-  document.getElementById('count').textContent = count.toLocaleString('pl-PL');
-  document.getElementById('countTop').textContent = count.toLocaleString('pl-PL');
+
+  const price = (count * PRICE_PER_PIXEL).toLocaleString('en-GB', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' PLN';
+
+  document.getElementById('count').textContent =
+    count.toLocaleString('en-GB');
+  document.getElementById('countTop').textContent =
+    count.toLocaleString('en-GB');
   document.getElementById('price').textContent = price;
   document.getElementById('priceTop').textContent = '(' + price + ')';
+
   document.getElementById('dimensions').innerHTML = s
-    ? `${s.width} × ${s.height}<br><small>pikseli</small>`
-    : '0 × 0<br><small>pikseli</small>';
+    ? `${s.width} × ${s.height}<br><small>pixels</small>`
+    : '0 × 0<br><small>pixels</small>';
 }
 
 canvas.addEventListener('pointerdown', event => {
   if (event.button !== 0 && event.pointerType === 'mouse') return;
+
   dragStart = getCoordinates(event);
   dragCurrent = dragStart;
   canvas.setPointerCapture(event.pointerId);
   draw();
 });
+
 canvas.addEventListener('pointermove', event => {
   if (!dragStart) return;
+
   dragCurrent = getCoordinates(event);
   draw();
 });
+
 function finishSelection() {
   if (!dragStart) return;
+
   selection = {
-    x1: dragStart.x, y1: dragStart.y,
-    x2: dragCurrent.x, y2: dragCurrent.y
+    x1: dragStart.x,
+    y1: dragStart.y,
+    x2: dragCurrent.x,
+    y2: dragCurrent.y
   };
-  dragStart = dragCurrent = null;
+
+  dragStart = null;
+  dragCurrent = null;
+
   updateStats();
   draw();
 }
+
 canvas.addEventListener('pointerup', finishSelection);
 canvas.addEventListener('pointercancel', finishSelection);
 canvas.addEventListener('lostpointercapture', finishSelection);
@@ -412,94 +485,172 @@ document.getElementById('swatches').addEventListener('click', event => {
   const button = event.target.closest('[data-color]');
   if (button) setColor(button.dataset.color);
 });
+
 document.getElementById('colorHex').addEventListener('change', event => {
-  if (validHex(event.target.value)) setColor(event.target.value);
-  else {
+  if (validHex(event.target.value)) {
+    setColor(event.target.value);
+  } else {
     event.target.value = selectedColor;
-    setStatus('Wpisz poprawny kod koloru, np. #B55CF6.');
+    setStatus('Enter a valid HEX color, for example #B55CF6.');
   }
 });
+
 document.getElementById('colorPicker').addEventListener('click', event => {
   const rect = event.currentTarget.getBoundingClientRect();
   const hue = Math.round((event.clientX - rect.left) / rect.width * 360);
-  const lightness = Math.round(100 - (event.clientY - rect.top) / rect.height * 100);
+  const lightness = Math.round(
+    100 - (event.clientY - rect.top) / rect.height * 100
+  );
+
   setColor(hslToHex(hue, 100, Math.max(20, Math.min(80, lightness))));
 });
-function hslToHex(h,s,l) {
-  s/=100; l/=100;
-  const a=s*Math.min(l,1-l);
-  const f=n=>{
-    const k=(n+h/30)%12;
-    const c=l-a*Math.max(-1,Math.min(k-3,9-k,1));
-    return Math.round(255*c).toString(16).padStart(2,'0');
+
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const a = s * Math.min(l, 1 - l);
+
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    return Math.round(255 * c).toString(16).padStart(2, '0');
   };
-  return '#'+f(0)+f(8)+f(4);
+
+  return '#' + f(0) + f(8) + f(4);
 }
 
 function preview() {
   const s = getSelection();
-  if (!s) { setStatus('Najpierw zaznacz obszar na planszy.'); return; }
-  for (let y=s.y1; y<=s.y2; y++) {
-    for (let x=s.x1; x<=s.x2; x++) {
-      savedPixels.set(y*WIDTH+x, selectedColor);
+
+  if (!s) {
+    setStatus('Select an area on the board first.');
+    return;
+  }
+
+  for (let y = s.y1; y <= s.y2; y++) {
+    for (let x = s.x1; x <= s.x2; x++) {
+      savedPixels.set(y * WIDTH + x, selectedColor);
     }
   }
+
   draw();
-  setStatus('Podgląd lokalny — zmiany nie zostały zapisane w bazie.');
+  setStatus('Local preview only — changes have not been saved to the database.');
 }
+
 document.getElementById('previewButton').addEventListener('click', preview);
 document.getElementById('previewButton2').addEventListener('click', preview);
+
 document.getElementById('clearButton').addEventListener('click', () => {
-  selection = dragStart = dragCurrent = null;
-  updateStats(); draw(); setStatus('Zaznaczenie wyczyszczone.');
+  selection = null;
+  dragStart = null;
+  dragCurrent = null;
+  updateStats();
+  draw();
+  setStatus('Selection cleared.');
 });
-function setZoom(value) {
-  zoom = Math.max(50, Math.min(200, value));
-  canvas.style.width = zoom + '%';
+
+// Zoom from 50% to 800%.
+function setZoom(value, anchorX = null, anchorY = null) {
+  const oldWidth = canvas.getBoundingClientRect().width;
+  const oldHeight = canvas.getBoundingClientRect().height;
+  const oldScrollLeft = viewport.scrollLeft;
+  const oldScrollTop = viewport.scrollTop;
+
+  zoom = Math.max(50, Math.min(800, value));
+
+  // The canvas is 600 CSS pixels wide at 100% zoom.
+  canvas.style.width = (WIDTH * zoom / 100) + 'px';
+
   document.getElementById('zoomLabel').textContent = zoom + '%';
+
+  draw();
+
+  requestAnimationFrame(() => {
+    const newWidth = canvas.getBoundingClientRect().width;
+    const newHeight = canvas.getBoundingClientRect().height;
+
+    if (anchorX !== null && oldWidth > 0 && oldHeight > 0) {
+      viewport.scrollLeft =
+        (oldScrollLeft + anchorX) * (newWidth / oldWidth) - anchorX;
+      viewport.scrollTop =
+        (oldScrollTop + anchorY) * (newHeight / oldHeight) - anchorY;
+    }
+  });
 }
-document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom+25));
-document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom-25));
+
+document.getElementById('zoomIn').addEventListener('click', () => {
+  setZoom(zoom < 200 ? zoom + 25 : zoom + 100);
+});
+
+document.getElementById('zoomOut').addEventListener('click', () => {
+  setZoom(zoom <= 200 ? zoom - 25 : zoom - 100);
+});
+
+// Mouse wheel zooms towards the cursor.
+viewport.addEventListener('wheel', event => {
+  event.preventDefault();
+
+  const rect = viewport.getBoundingClientRect();
+  const anchorX = event.clientX - rect.left;
+  const anchorY = event.clientY - rect.top;
+
+  const step = event.deltaY < 0
+    ? (zoom < 200 ? 25 : 100)
+    : -(zoom <= 200 ? 25 : 100);
+
+  setZoom(zoom + step, anchorX, anchorY);
+}, { passive: false });
 
 setColor(selectedColor);
 draw();
 updateStats();
 </script>
 
-<!-- Supabase: załaduj zapisane piksele, jeśli podasz dane projektu. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://lailqxqyzymiwlhxrzzw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn';
 
 if (window.supabase && SUPABASE_URL && SUPABASE_KEY) {
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
   (async () => {
     try {
       const { data, error } = await supabaseClient
         .from('pixel_state')
         .select('pixel_id, color')
         .gte('pixel_id', 0)
-        .lt('pixel_id', 300000)
-        .limit(300000);
+        .lt('pixel_id', TOTAL_PIXELS)
+        .limit(TOTAL_PIXELS);
 
       if (error) throw error;
+
       savedPixels.clear();
+
       for (const row of data || []) {
         const id = Number(row.pixel_id);
-        if (Number.isInteger(id) && id >= 0 && id < 300000 &&
-            /^#[0-9a-fA-F]{6}$/.test(row.color)) {
+
+        if (
+          Number.isInteger(id) &&
+          id >= 0 &&
+          id < TOTAL_PIXELS &&
+          /^#[0-9a-fA-F]{6}$/.test(row.color)
+        ) {
           savedPixels.set(id, row.color);
         }
       }
+
       draw();
-      document.getElementById('status').textContent =
-        'Plansza załadowana. Zapisanych pikseli: ' +
-        savedPixels.size.toLocaleString('pl-PL') + '.';
+      setStatus(
+        'Board loaded. Saved pixels: ' +
+        savedPixels.size.toLocaleString('en-GB') + '.'
+      );
     } catch (error) {
-      console.error('Supabase:', error);
-      document.getElementById('status').textContent =
-        'Nie udało się wczytać pikseli z bazy. Sprawdź konsolę przeglądarki.';
+      console.error('Supabase error:', error);
+      setStatus('Could not load pixels from the database. Check the browser console.');
     }
   })();
 }
