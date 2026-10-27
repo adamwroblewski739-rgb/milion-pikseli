@@ -2,530 +2,507 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milion Pikseli</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 24px 14px;
-      font-family: Arial, sans-serif;
-      color: #20242a;
-      background: #f3f5f8;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(28px, 5vw, 42px);
-    }
-
-    .subtitle {
-      color: #606975;
-      margin-bottom: 24px;
-    }
-
-    .panel {
-      max-width: 850px;
-      margin: 0 auto;
-      padding: 20px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 4px 18px #00000010;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .stat {
-      padding: 13px 8px;
-      background: #f0f3f7;
-      border-radius: 9px;
-      font-size: 14px;
-    }
-
-    .stat strong {
-      display: block;
-      margin-top: 7px;
-      font-size: clamp(18px, 3vw, 23px);
-      overflow-wrap: anywhere;
-    }
-
-    .canvas-wrap {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      border: 2px solid #20242a;
-      background: white;
-      line-height: 0;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 6 / 5;
-      cursor: crosshair;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    input[type="color"] {
-      width: 50px;
-      height: 42px;
-      padding: 2px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-      background: white;
-    }
-
-    button {
-      padding: 12px 16px;
-      border: 0;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:focus-visible {
-      outline: 3px solid #86b7ff;
-      outline-offset: 2px;
-    }
-
-    .primary {
-      color: white;
-      background: #1769e0;
-    }
-
-    .secondary {
-      color: #20242a;
-      background: #e8edf3;
-    }
-
-    .instructions {
-      max-width: 600px;
-      margin: 18px auto 0;
-      color: #606975;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    #status {
-      margin-top: 16px;
-      font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .notice {
-      max-width: 600px;
-      margin: 18px auto 0;
-      padding: 12px;
-      border-radius: 8px;
-      background: #fff3d4;
-      color: #684d00;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    @media (min-width: 600px) {
-      .stats {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Milion Pikseli</title>
+<style>
+:root {
+  --bg: #050a25;
+  --panel: #081333;
+  --line: #193c91;
+  --purple: #792cff;
+  --text: #f5f7ff;
+  --muted: #bdcaf5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 30%, #15175a, transparent 55%),
+    #04091f;
+  min-height: 100vh;
+}
+header {
+  border-bottom: 1px solid #4430a5;
+  background: #050a25ee;
+}
+.nav {
+  max-width: 1500px;
+  margin: auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  font-size: 37px;
+  color: #32caff;
+  text-shadow: 0 0 18px #8d35ff;
+}
+.brand h2 { margin: 0; font-size: 24px; }
+.brand h2 span {
+  background: linear-gradient(90deg, #c04cff, #19caff);
+  background-clip: text;
+  color: transparent;
+}
+.brand small { color: var(--muted); }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+nav a {
+  color: #dce5ff;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+nav a:first-child, nav a:hover {
+  background: linear-gradient(110deg, #792cff, #5424e8);
+}
+main { max-width: 1500px; margin: auto; padding: 30px 24px; }
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1.7fr;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.eyebrow { color: #9caaff; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+h1 { font-size: clamp(34px, 4vw, 52px); margin: 8px 0; }
+.gradient {
+  background: linear-gradient(90deg, #c052ff, #22c8ff);
+  background-clip: text;
+  color: transparent;
+}
+.hero p { color: var(--muted); line-height: 1.6; max-width: 500px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.stat, .panel, .board-shell {
+  background: linear-gradient(145deg, #091638, #060d2a);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px #0003;
+}
+.stat { padding: 17px; min-height: 110px; }
+.stat label { color: var(--muted); font-size: 13px; }
+.stat strong { display: block; font-size: 22px; margin: 8px 0 4px; }
+.stat small { color: var(--muted); }
+.layout {
+  display: grid;
+  grid-template-columns: 270px minmax(280px, 1fr) 290px;
+  gap: 20px;
+  align-items: start;
+}
+.panel { overflow: hidden; }
+.section { padding: 18px; border-bottom: 1px solid #172d68; }
+.section:last-child { border-bottom: 0; }
+h3 { margin: 0 0 15px; font-size: 17px; }
+.color-picker {
+  height: 110px;
+  border-radius: 9px;
+  cursor: crosshair;
+  border: 1px solid #5e459d;
+  background: linear-gradient(to top, #000, transparent),
+              linear-gradient(to right, white, transparent), #bd35ed;
+}
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.swatch {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid #ffffff66; cursor: pointer;
+}
+input[type="text"] {
+  width: 100%; padding: 11px; margin-top: 12px;
+  background: #0b1a42; color: white; border: 1px solid #294b99;
+  border-radius: 8px; font-size: 14px;
+}
+.btn {
+  display: block; width: 100%; padding: 13px;
+  margin-top: 9px; border-radius: 9px; cursor: pointer;
+  color: white; font-size: 14px; font-weight: 650;
+  background: #10234f; border: 1px solid #2c4a92;
+}
+.btn.primary {
+  background: linear-gradient(110deg, #9b32ff, #5d22f3);
+  border-color: #a94eff;
+  box-shadow: 0 5px 18px #702cff38;
+}
+.btn:hover { filter: brightness(1.16); }
+.zoom { display: grid; grid-template-columns: 50px 1fr 50px; margin-top: 10px; }
+.zoom button, .zoom span {
+  padding: 10px; text-align: center; color: white;
+  background: #0c1a43; border: 1px solid #29498e;
+}
+.zoom button { cursor: pointer; }
+.zoom span { font-size: 13px; }
+.board-shell { padding: 14px; border-color: #5935c6; min-width: 0; }
+.board-viewport {
+  width: 100%; overflow: auto; max-height: 72vh;
+  border: 1px solid #b7a6ff; background: #050b22;
+}
+canvas {
+  display: block; width: 100%; height: auto;
+  cursor: crosshair; touch-action: none;
+}
+.help { text-align: center; font-size: 12px; color: #d0d9ff; padding: 13px 4px 2px; }
+.right { display: grid; gap: 18px; }
+.selection { padding: 14px; border: 1px solid #1a3c84; border-radius: 9px; }
+.metric { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; font-size: 13px; color: var(--muted); }
+.metric strong { color: white; text-align: right; font-size: 16px; }
+.note { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.status { min-height: 18px; margin-top: 10px; color: #9eb6ff; font-size: 12px; }
+footer {
+  max-width: 1500px; margin: auto; padding: 15px 24px 25px;
+  display: flex; justify-content: space-between; gap: 12px;
+  color: var(--muted); font-size: 12px;
+}
+@media(max-width:1100px) {
+  .hero { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: 240px minmax(280px,1fr); }
+  .right { grid-column: 1 / -1; grid-template-columns: repeat(2,1fr); }
+}
+@media(max-width:720px) {
+  .nav { padding: 14px; flex-wrap: wrap; }
+  nav { width: 100%; }
+  nav a { padding: 8px; }
+  main { padding: 20px 12px; }
+  .stats { grid-template-columns: 1fr; }
+  .stat { min-height: auto; }
+  .layout { grid-template-columns: 1fr; }
+  .board-shell { grid-row: 1; }
+  .right { grid-column: auto; grid-template-columns: 1fr; }
+  .board-viewport { max-height: 60vh; }
+  footer { padding: 15px; flex-direction: column; }
+}
+</style>
 </head>
-
 <body>
-  <h1>Milion Pikseli</h1>
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">▦</div>
+      <div><h2>Milion <span>Pikseli</span></h2><small>Wspólnie stwórzmy coś wyjątkowego</small></div>
+    </div>
+    <nav>
+      <a href="#start">⌂ Strona główna</a>
+      <a href="#plansza">▦ Plansza</a>
+      <a href="#moje-piksele">♙ Moje piksele</a>
+      <a href="#faq">ⓘ FAQ</a>
+    </nav>
+  </div>
+</header>
 
-  <p class="subtitle">
-    Wspólna plansza — wybierz obszar i sprawdź cenę.
-  </p>
-
-  <main class="panel">
+<main id="start">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">WSPÓLNA PLANSZA</div>
+      <h1>Milion <span class="gradient">Pikseli</span></h1>
+      <p>Wybierz obszar, pokoloruj piksele i zostaw swój ślad na naszej wspólnej planszy. Każdy piksel ma znaczenie!</p>
+    </div>
     <div class="stats">
-      <div class="stat">
-        Rozmiar planszy
-        <strong>600 × 500</strong>
+      <div class="stat"><label>Rozmiar planszy</label><strong>600 × 500</strong><small>pikseli</small></div>
+      <div class="stat"><label>Cena za piksel</label><strong>0,50 zł</strong><small>Stała cena</small></div>
+      <div class="stat"><label>Zaznaczone piksele</label><strong id="countTop">0</strong><small id="priceTop">(0,00 zł)</small></div>
+    </div>
+  </section>
+
+  <section class="layout" id="plansza">
+    <aside class="panel">
+      <div class="section">
+        <h3>Wybierz kolor</h3>
+        <div class="color-picker" id="colorPicker" title="Kliknij, aby wybrać kolor"></div>
+        <div class="swatches" id="swatches">
+          <button class="swatch" style="background:#ff1744" data-color="#ff1744" aria-label="Czerwony"></button>
+          <button class="swatch" style="background:#ff9f1c" data-color="#ff9f1c" aria-label="Pomarańczowy"></button>
+          <button class="swatch" style="background:#ffe21a" data-color="#ffe21a" aria-label="Żółty"></button>
+          <button class="swatch" style="background:#00d084" data-color="#00d084" aria-label="Zielony"></button>
+          <button class="swatch" style="background:#00c8f8" data-color="#00c8f8" aria-label="Błękitny"></button>
+          <button class="swatch" style="background:#593dff" data-color="#593dff" aria-label="Fioletowy"></button>
+          <button class="swatch" style="background:#e52bff" data-color="#e52bff" aria-label="Różowy"></button>
+          <button class="swatch" style="background:#f2f5ff" data-color="#f2f5ff" aria-label="Biały"></button>
+          <button class="swatch" style="background:#080d27" data-color="#080d27" aria-label="Granatowy"></button>
+        </div>
+        <input type="text" id="colorHex" value="#B55CF6" maxlength="7" aria-label="Kod koloru HEX">
       </div>
-
-      <div class="stat">
-        Cena za piksel
-        <strong>0,50 zł</strong>
+      <div class="section">
+        <h3>Narzędzia</h3>
+        <button class="btn primary" id="previewButton">✧ Pokaż podgląd</button>
+        <button class="btn" id="clearButton">⌫ Wyczyść zaznaczenie</button>
+        <div style="margin-top:20px;font-size:13px;color:#c7d3f8">Powiększenie</div>
+        <div class="zoom">
+          <button id="zoomOut" aria-label="Pomniejsz">−</button>
+          <span id="zoomLabel">100%</span>
+          <button id="zoomIn" aria-label="Powiększ">＋</button>
+        </div>
+        <div class="status" id="status" role="status">Gotowe.</div>
       </div>
+    </aside>
 
-      <div class="stat">
-        Zaznaczone piksele
-        <strong id="selectedCount">0</strong>
+    <section class="board-shell">
+      <div class="board-viewport" id="boardViewport">
+        <canvas id="pixelCanvas" width="600" height="500" aria-label="Plansza pikseli 600 na 500"></canvas>
       </div>
-
-      <div class="stat">
-        Cena orientacyjna
-        <strong id="selectedPrice">0,00 zł</strong>
-      </div>
-    </div>
-
-    <div class="canvas-wrap">
-      <canvas
-        id="canvas"
-        width="600"
-        height="500"
-        aria-label="Plansza pikselowa. Przeciągnij myszką, aby zaznaczyć obszar."
-      ></canvas>
-    </div>
-
-    <div class="controls">
-      <label for="colorPicker">Kolor podglądu:</label>
-      <input id="colorPicker" type="color" value="#ff0000">
-
-      <button class="primary" id="previewButton" type="button">
-        Pokaż podgląd
-      </button>
-
-      <button class="secondary" id="clearButton" type="button">
-        Wyczyść zaznaczenie
-      </button>
-    </div>
-
-    <p class="instructions">
-      1. Przytrzymaj lewy przycisk myszy na planszy.<br>
-      2. Przeciągnij myszką, aby zaznaczyć prostokąt.<br>
-      3. Puść przycisk — liczba pikseli i cena pokażą się automatycznie.<br>
-      4. Wybierz kolor i kliknij „Pokaż podgląd”.
-    </p>
-
-    <div id="status" role="status" aria-live="polite">
-      Przygotowywanie planszy...
-    </div>
-
-    <div class="notice">
-      To wersja demonstracyjna. Zaznaczenie i podgląd koloru są lokalne
-      i nie zapisują zmian w bazie danych. Cena jest orientacyjna.
-      Płatności nie są jeszcze uruchomione.
-    </div>
-  </main>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const WIDTH = 600;
-      const HEIGHT = 500;
-      const TOTAL_PIXELS = WIDTH * HEIGHT;
-      const PRICE_PER_PIXEL = 0.50;
-
-      const SUPABASE_URL =
-        "https://lailqxqyzymiwlhxrzzw.supabase.co";
-
-      const SUPABASE_KEY =
-        "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
-
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-
-      const colorPicker = document.getElementById("colorPicker");
-      const countElement = document.getElementById("selectedCount");
-      const priceElement = document.getElementById("selectedPrice");
-      const statusElement = document.getElementById("status");
-      const previewButton = document.getElementById("previewButton");
-      const clearButton = document.getElementById("clearButton");
-
-      const pixels = new Map();
-
-      let isSelecting = false;
-      let startPoint = null;
-      let endPoint = null;
-      let previewColor = null;
-
-      function money(value) {
-        return value.toLocaleString("pl-PL", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }) + " zł";
-      }
-
-      function getCoordinates(event) {
-        const rect = canvas.getBoundingClientRect();
-
-        if (!rect.width || !rect.height) {
-          return { x: 0, y: 0 };
-        }
-
-        return {
-          x: Math.max(
-            0,
-            Math.min(
-              WIDTH - 1,
-              Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
-            )
-          ),
-          y: Math.max(
-            0,
-            Math.min(
-              HEIGHT - 1,
-              Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
-            )
-          )
-        };
-      }
-
-      function getSelection() {
-        if (!startPoint || !endPoint) {
-          return null;
-        }
-
-        return {
-          left: Math.min(startPoint.x, endPoint.x),
-          right: Math.max(startPoint.x, endPoint.x),
-          top: Math.min(startPoint.y, endPoint.y),
-          bottom: Math.max(startPoint.y, endPoint.y)
-        };
-      }
-
-      function updateStats() {
-        const selection = getSelection();
-
-        if (!selection) {
-          countElement.textContent = "0";
-          priceElement.textContent = money(0);
-          return;
-        }
-
-        const width = selection.right - selection.left + 1;
-        const height = selection.bottom - selection.top + 1;
-        const count = width * height;
-
-        countElement.textContent = count.toLocaleString("pl-PL");
-        priceElement.textContent = money(count * PRICE_PER_PIXEL);
-      }
-
-      function drawCanvas() {
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        // Rysuj piksele pobrane z bazy.
-        for (const [pixelId, color] of pixels) {
-          const x = pixelId % WIDTH;
-          const y = Math.floor(pixelId / WIDTH);
-
-          ctx.fillStyle = color;
-          ctx.fillRect(x, y, 1, 1);
-        }
-
-        const selection = getSelection();
-
-        if (!selection) {
-          return;
-        }
-
-        const w = selection.right - selection.left + 1;
-        const h = selection.bottom - selection.top + 1;
-
-        // Podgląd wybranego koloru.
-        if (previewColor) {
-          ctx.fillStyle = previewColor;
-          ctx.fillRect(selection.left, selection.top, w, h);
-        } else {
-          ctx.fillStyle = "rgba(0, 120, 255, 0.30)";
-          ctx.fillRect(selection.left, selection.top, w, h);
-        }
-
-        // Wyraźna ramka zaznaczenia.
-        ctx.save();
-        ctx.strokeStyle = "#0057ff";
-        ctx.lineWidth = 2;
-        ctx.setLineDash([]);
-        ctx.strokeRect(
-          selection.left + 0.5,
-          selection.top + 0.5,
-          Math.max(0, w - 1),
-          Math.max(0, h - 1)
-        );
-        ctx.restore();
-      }
-
-      function beginSelection(event) {
-        if (event.button !== undefined && event.button !== 0) {
-          return;
-        }
-
-        event.preventDefault();
-
-        isSelecting = true;
-        startPoint = getCoordinates(event);
-        endPoint = startPoint;
-        previewColor = null;
-
-        try {
-          canvas.setPointerCapture(event.pointerId);
-        } catch (_) {
-          // Zaznaczanie nadal działa, jeśli przejęcie wskaźnika nie jest dostępne.
-        }
-
-        updateStats();
-        drawCanvas();
-      }
-
-      function moveSelection(event) {
-        if (!isSelecting) {
-          return;
-        }
-
-        event.preventDefault();
-        endPoint = getCoordinates(event);
-
-        updateStats();
-        drawCanvas();
-      }
-
-      function finishSelection(event) {
-        if (!isSelecting) {
-          return;
-        }
-
-        if (event && typeof event.clientX === "number") {
-          endPoint = getCoordinates(event);
-        }
-
-        isSelecting = false;
-
-        updateStats();
-        drawCanvas();
-      }
-
-      canvas.addEventListener("pointerdown", beginSelection);
-      canvas.addEventListener("pointermove", moveSelection);
-      canvas.addEventListener("pointerup", finishSelection);
-
-      canvas.addEventListener("pointercancel", () => {
-        isSelecting = false;
-        updateStats();
-        drawCanvas();
-      });
-
-      canvas.addEventListener("lostpointercapture", () => {
-        if (isSelecting) {
-          isSelecting = false;
-          updateStats();
-          drawCanvas();
-        }
-      });
-
-      previewButton.addEventListener("click", () => {
-        if (!getSelection()) {
-          statusElement.textContent =
-            "Najpierw zaznacz obszar planszy myszką.";
-          return;
-        }
-
-        previewColor = colorPicker.value;
-        drawCanvas();
-
-        statusElement.textContent =
-          "Podgląd koloru jest widoczny tylko u Ciebie. Nie zapisano zmian.";
-      });
-
-      clearButton.addEventListener("click", () => {
-        isSelecting = false;
-        startPoint = null;
-        endPoint = null;
-        previewColor = null;
-
-        updateStats();
-        drawCanvas();
-
-        statusElement.textContent = "Zaznaczenie zostało wyczyszczone.";
-      });
-
-      async function loadPixels() {
-        if (!window.supabase) {
-          statusElement.textContent =
-            "Nie udało się załadować biblioteki Supabase. Sprawdź połączenie internetowe.";
-          return;
-        }
-
-        statusElement.textContent = "Pobieranie zapisanych pikseli...";
-
-        try {
-          const client = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-          );
-
-          const { data, error } = await client
-            .from("pixel_state")
-            .select("pixel_id, color")
-            .gte("pixel_id", 0)
-            .lt("pixel_id", TOTAL_PIXELS)
-            .limit(TOTAL_PIXELS);
-
-          if (error) {
-            console.error("Supabase:", error);
-            statusElement.textContent =
-              "Plansza działa, ale nie udało się pobrać zapisanych pikseli.";
-            drawCanvas();
-            return;
-          }
-
-          pixels.clear();
-
-          for (const pixel of data || []) {
-            const id = Number(pixel.pixel_id);
-
-            if (
-              Number.isInteger(id) &&
-              id >= 0 &&
-              id < TOTAL_PIXELS &&
-              typeof pixel.color === "string" &&
-              /^#[0-9a-fA-F]{6}$/.test(pixel.color)
-            ) {
-              pixels.set(id, pixel.color);
-            }
-          }
-
-          drawCanvas();
-
-          statusElement.textContent =
-            "Plansza załadowana. Zapisanych pikseli: " +
-            pixels.size.toLocaleString("pl-PL") + ".";
-        } catch (error) {
-          console.error(error);
-          statusElement.textContent =
-            "Błąd połączenia z bazą. Zaznaczanie planszy powinno nadal działać.";
-          drawCanvas();
+      <div class="help">Przytrzymaj lewy przycisk myszy i przeciągnij, aby zaznaczyć obszar.</div>
+    </section>
+
+    <aside class="right">
+      <section class="panel section">
+        <h3>▧ Zaznaczenie</h3>
+        <div class="selection">
+          <div class="metric"><span>Wymiary</span><strong id="dimensions">0 × 0<br><small>pikseli</small></strong></div>
+          <div class="metric"><span>Liczba pikseli</span><strong id="count">0</strong></div>
+          <div class="metric"><span>Cena orientacyjna</span><strong id="price">0,00 zł</strong></div>
+        </div>
+      </section>
+      <section class="panel section">
+        <h3><span class="gradient">ϟ</span> Gotowy do zakupu?</h3>
+        <p class="note">Zaznacz obszar, wybierz kolor i kliknij „Pokaż podgląd”.</p>
+        <button class="btn primary" id="previewButton2">◉ Pokaż podgląd</button>
+      </section>
+      <section class="panel section">
+        <h3>ⓘ Informacja</h3>
+        <p class="note">To wersja demonstracyjna. Podgląd koloru jest lokalny. Zmiany nie są zapisywane w bazie, a płatności nie są jeszcze uruchomione.</p>
+      </section>
+    </aside>
+  </section>
+</main>
+
+<footer><span><strong>Milion Pikseli</strong> · © 2026</span><span>♥ Dziękujemy, że jesteś z nami!</span></footer>
+
+<script>
+const WIDTH = 600, HEIGHT = 500, PRICE_PER_PIXEL = 0.50;
+const canvas = document.getElementById('pixelCanvas');
+const ctx = canvas.getContext('2d');
+let selectedColor = '#B55CF6';
+let selection = null, dragStart = null, dragCurrent = null;
+let zoom = 100;
+const savedPixels = new Map();
+const statusEl = document.getElementById('status');
+
+function setStatus(message) { statusEl.textContent = message; }
+function validHex(value) { return /^#[0-9a-fA-F]{6}$/.test(value); }
+
+function setColor(color) {
+  if (!validHex(color)) return;
+  selectedColor = color.toUpperCase();
+  document.getElementById('colorHex').value = selectedColor;
+  document.getElementById('colorPicker').style.background =
+    `linear-gradient(to top,black,transparent),linear-gradient(to right,white,transparent),${selectedColor}`;
+}
+
+function getCoordinates(event) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: Math.max(0, Math.min(WIDTH - 1, Math.floor((event.clientX - rect.left) / rect.width * WIDTH))),
+    y: Math.max(0, Math.min(HEIGHT - 1, Math.floor((event.clientY - rect.top) / rect.height * HEIGHT)))
+  };
+}
+
+function getSelection() {
+  if (!selection) return null;
+  const x1 = Math.min(selection.x1, selection.x2);
+  const y1 = Math.min(selection.y1, selection.y2);
+  const x2 = Math.max(selection.x1, selection.x2);
+  const y2 = Math.max(selection.y1, selection.y2);
+  return {x1,y1,x2,y2,width:x2-x1+1,height:y2-y1+1,count:(x2-x1+1)*(y2-y1+1)};
+}
+
+function draw() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = '#10195c';
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  // Dekoracyjny pikselowy krajobraz jako tło planszy.
+  const gradient = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+  gradient.addColorStop(0, '#142a83');
+  gradient.addColorStop(0.42, '#76218d');
+  gradient.addColorStop(0.7, '#f32b87');
+  gradient.addColorStop(1, '#0751b6');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  // Słońce i sylwetka gór.
+  ctx.fillStyle = '#ffbd3e';
+  ctx.beginPath();
+  ctx.arc(300, 245, 62, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#070c26';
+  ctx.beginPath();
+  ctx.moveTo(0,195); ctx.lineTo(60,215); ctx.lineTo(100,205);
+  ctx.lineTo(150,250); ctx.lineTo(195,265); ctx.lineTo(245,250);
+  ctx.lineTo(300,290); ctx.lineTo(360,265); ctx.lineTo(415,295);
+  ctx.lineTo(475,250); ctx.lineTo(530,275); ctx.lineTo(600,225);
+  ctx.lineTo(600,500); ctx.lineTo(0,500); ctx.closePath(); ctx.fill();
+
+  // Kolory zapisane w bazie (jeśli Supabase jest skonfigurowany).
+  for (const [id, color] of savedPixels) {
+    ctx.fillStyle = color;
+    ctx.fillRect(id % WIDTH, Math.floor(id / WIDTH), 1, 1);
+  }
+
+  // Siatka planszy.
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(230,238,255,.78)';
+  ctx.lineWidth = 0.65;
+  for (let x = 0; x <= WIDTH; x += 10) { ctx.moveTo(x,0); ctx.lineTo(x,HEIGHT); }
+  for (let y = 0; y <= HEIGHT; y += 10) { ctx.moveTo(0,y); ctx.lineTo(WIDTH,y); }
+  ctx.stroke();
+
+  const s = dragStart && dragCurrent
+    ? {x1:Math.min(dragStart.x,dragCurrent.x),y1:Math.min(dragStart.y,dragCurrent.y),
+       x2:Math.max(dragStart.x,dragCurrent.x),y2:Math.max(dragStart.y,dragCurrent.y)}
+    : getSelection();
+
+  if (s) {
+    ctx.fillStyle = 'rgba(125,54,255,.38)';
+    ctx.fillRect(s.x1,s.y1,s.x2-s.x1+1,s.y2-s.y1+1);
+    ctx.strokeStyle = '#c2a5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(s.x1+.5,s.y1+.5,s.x2-s.x1,s.y2-s.y1);
+    ctx.fillStyle = '#fff';
+    for (const [x,y] of [[s.x1,s.y1],[s.x2,s.y1],[s.x1,s.y2],[s.x2,s.y2]]) {
+      ctx.fillRect(x-2,y-2,5,5);
+    }
+  }
+}
+
+function updateStats() {
+  const s = getSelection();
+  const count = s ? s.count : 0;
+  const price = (count * PRICE_PER_PIXEL).toLocaleString('pl-PL', {
+    minimumFractionDigits: 2, maximumFractionDigits: 2
+  }) + ' zł';
+  document.getElementById('count').textContent = count.toLocaleString('pl-PL');
+  document.getElementById('countTop').textContent = count.toLocaleString('pl-PL');
+  document.getElementById('price').textContent = price;
+  document.getElementById('priceTop').textContent = '(' + price + ')';
+  document.getElementById('dimensions').innerHTML = s
+    ? `${s.width} × ${s.height}<br><small>pikseli</small>`
+    : '0 × 0<br><small>pikseli</small>';
+}
+
+canvas.addEventListener('pointerdown', event => {
+  if (event.button !== 0 && event.pointerType === 'mouse') return;
+  dragStart = getCoordinates(event);
+  dragCurrent = dragStart;
+  canvas.setPointerCapture(event.pointerId);
+  draw();
+});
+canvas.addEventListener('pointermove', event => {
+  if (!dragStart) return;
+  dragCurrent = getCoordinates(event);
+  draw();
+});
+function finishSelection() {
+  if (!dragStart) return;
+  selection = {
+    x1: dragStart.x, y1: dragStart.y,
+    x2: dragCurrent.x, y2: dragCurrent.y
+  };
+  dragStart = dragCurrent = null;
+  updateStats();
+  draw();
+}
+canvas.addEventListener('pointerup', finishSelection);
+canvas.addEventListener('pointercancel', finishSelection);
+canvas.addEventListener('lostpointercapture', finishSelection);
+
+document.getElementById('swatches').addEventListener('click', event => {
+  const button = event.target.closest('[data-color]');
+  if (button) setColor(button.dataset.color);
+});
+document.getElementById('colorHex').addEventListener('change', event => {
+  if (validHex(event.target.value)) setColor(event.target.value);
+  else {
+    event.target.value = selectedColor;
+    setStatus('Wpisz poprawny kod koloru, np. #B55CF6.');
+  }
+});
+document.getElementById('colorPicker').addEventListener('click', event => {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const hue = Math.round((event.clientX - rect.left) / rect.width * 360);
+  const lightness = Math.round(100 - (event.clientY - rect.top) / rect.height * 100);
+  setColor(hslToHex(hue, 100, Math.max(20, Math.min(80, lightness))));
+});
+function hslToHex(h,s,l) {
+  s/=100; l/=100;
+  const a=s*Math.min(l,1-l);
+  const f=n=>{
+    const k=(n+h/30)%12;
+    const c=l-a*Math.max(-1,Math.min(k-3,9-k,1));
+    return Math.round(255*c).toString(16).padStart(2,'0');
+  };
+  return '#'+f(0)+f(8)+f(4);
+}
+
+function preview() {
+  const s = getSelection();
+  if (!s) { setStatus('Najpierw zaznacz obszar na planszy.'); return; }
+  for (let y=s.y1; y<=s.y2; y++) {
+    for (let x=s.x1; x<=s.x2; x++) {
+      savedPixels.set(y*WIDTH+x, selectedColor);
+    }
+  }
+  draw();
+  setStatus('Podgląd lokalny — zmiany nie zostały zapisane w bazie.');
+}
+document.getElementById('previewButton').addEventListener('click', preview);
+document.getElementById('previewButton2').addEventListener('click', preview);
+document.getElementById('clearButton').addEventListener('click', () => {
+  selection = dragStart = dragCurrent = null;
+  updateStats(); draw(); setStatus('Zaznaczenie wyczyszczone.');
+});
+function setZoom(value) {
+  zoom = Math.max(50, Math.min(200, value));
+  canvas.style.width = zoom + '%';
+  document.getElementById('zoomLabel').textContent = zoom + '%';
+}
+document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom+25));
+document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom-25));
+
+setColor(selectedColor);
+draw();
+updateStats();
+</script>
+
+<!-- Supabase: załaduj zapisane piksele, jeśli podasz dane projektu. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://lailqxqyzymiwlhxrzzw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn';
+
+if (window.supabase && SUPABASE_URL && SUPABASE_KEY) {
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  (async () => {
+    try {
+      const { data, error } = await supabaseClient
+        .from('pixel_state')
+        .select('pixel_id, color')
+        .gte('pixel_id', 0)
+        .lt('pixel_id', 300000)
+        .limit(300000);
+
+      if (error) throw error;
+      savedPixels.clear();
+      for (const row of data || []) {
+        const id = Number(row.pixel_id);
+        if (Number.isInteger(id) && id >= 0 && id < 300000 &&
+            /^#[0-9a-fA-F]{6}$/.test(row.color)) {
+          savedPixels.set(id, row.color);
         }
       }
-
-      // Uruchom planszę od razu — nawet jeśli baza chwilowo nie odpowiada.
-      drawCanvas();
-      updateStats();
-      loadPixels();
-    })();
-  </script>
+      draw();
+      document.getElementById('status').textContent =
+        'Plansza załadowana. Zapisanych pikseli: ' +
+        savedPixels.size.toLocaleString('pl-PL') + '.';
+    } catch (error) {
+      console.error('Supabase:', error);
+      document.getElementById('status').textContent =
+        'Nie udało się wczytać pikseli z bazy. Sprawdź konsolę przeglądarki.';
+    }
+  })();
+}
+</script>
 </body>
 </html>
