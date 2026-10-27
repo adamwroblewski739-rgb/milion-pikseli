@@ -3,275 +3,298 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#050a25">
-<title>Million Pixels — Create Your Mark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Million Pixels</title>
 <style>
 :root {
-  --bg: #050a25;
-  --panel: #081333;
-  --line: #193c91;
-  --text: #f5f7ff;
-  --muted: #bdcaf5;
+  color-scheme: dark;
+  --bg: #080b18;
+  --panel: #12182b;
+  --border: #293454;
+  --text: #f3f5ff;
+  --muted: #a5afcc;
+  --accent: #a78bfa;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
+  background: radial-gradient(ellipse at top, #20234c 0%, #080b18 65%);
   color: var(--text);
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
-  background: radial-gradient(ellipse at 50% 30%, #15175a, transparent 55%), #04091f;
+  font-family: Inter, Arial, sans-serif;
   min-height: 100vh;
 }
-header { border-bottom: 1px solid #4430a5; background: #050a25ee; }
-.nav {
-  max-width: 1500px; margin: auto; padding: 16px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+header {
+  text-align: center;
+  padding: 30px 16px 18px;
 }
-.brand { display: flex; align-items: center; gap: 12px; }
-.logo { font-size: 37px; color: #32caff; text-shadow: 0 0 18px #8d35ff; }
-.brand h2 { margin: 0; font-size: 24px; }
-.brand h2 span {
-  background: linear-gradient(90deg, #c04cff, #19caff);
-  background-clip: text; color: transparent;
+header h1 {
+  font-size: clamp(30px, 5vw, 52px);
+  margin: 0 0 10px;
+  letter-spacing: -1.5px;
+  background: linear-gradient(90deg, #f0abfc, #a78bfa, #67e8f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.brand small { color: var(--muted); }
-nav { display: flex; gap: 8px; flex-wrap: wrap; }
-nav a {
-  color: #dce5ff; text-decoration: none; padding: 12px;
-  border-radius: 9px; font-size: 14px;
+header p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
 }
-nav a:first-child, nav a:hover { background: linear-gradient(110deg, #792cff, #5424e8); }
-main { max-width: 1500px; margin: auto; padding: 30px 24px; }
-.hero {
-  display: grid; grid-template-columns: 1fr 1.7fr;
-  gap: 24px; align-items: center; margin-bottom: 28px;
+main {
+  width: min(1200px, 96%);
+  margin: 0 auto 40px;
 }
-.eyebrow { color: #9caaff; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
-h1 { font-size: clamp(34px, 4vw, 52px); margin: 8px 0; }
-.gradient {
-  background: linear-gradient(90deg, #c052ff, #22c8ff);
-  background-clip: text; color: transparent;
+.panel {
+  background: rgba(18, 24, 43, .94);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 12px 40px #0003;
 }
-.hero p { color: var(--muted); line-height: 1.6; max-width: 500px; }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.stat, .panel, .board-shell {
-  background: linear-gradient(145deg, #091638, #060d2a);
-  border: 1px solid var(--line); border-radius: 14px;
-  box-shadow: 0 12px 30px #0003;
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
-.stat { padding: 17px; min-height: 110px; }
-.stat label { color: var(--muted); font-size: 13px; }
-.stat strong { display: block; font-size: 22px; margin: 8px 0 4px; }
-.stat small { color: var(--muted); }
-.layout {
-  display: grid; grid-template-columns: 270px minmax(280px, 1fr) 290px;
-  gap: 20px; align-items: start;
+button, input {
+  font: inherit;
 }
-.panel { overflow: hidden; }
-.section { padding: 18px; border-bottom: 1px solid #172d68; }
-.section:last-child { border-bottom: 0; }
-h3 { margin: 0 0 15px; font-size: 17px; }
-.color-picker {
-  height: 110px; border-radius: 9px; cursor: crosshair;
-  border: 1px solid #5e459d;
-  background: linear-gradient(to top, #000, transparent),
-              linear-gradient(to right, white, transparent), #bd35ed;
+button {
+  color: var(--text);
+  background: #252d4c;
+  border: 1px solid #3a466d;
+  padding: 10px 14px;
+  border-radius: 9px;
+  cursor: pointer;
 }
-.swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+button:hover {
+  background: #343e66;
+}
+button:focus-visible, input:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 2px;
+}
+.zoom-label {
+  color: var(--muted);
+  min-width: 66px;
+  text-align: center;
+}
+.color-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+#colorPicker {
+  width: 46px;
+  height: 40px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+#hexColor {
+  width: 105px;
+  background: #0b1020;
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  text-transform: uppercase;
+}
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
 .swatch {
-  width: 22px; height: 22px; border-radius: 50%;
-  border: 1px solid #ffffff66; cursor: pointer;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  padding: 0;
+  border: 2px solid #ffffff55;
 }
-input[type="text"] {
-  width: 100%; padding: 11px; margin-top: 12px; background: #0b1a42;
-  color: white; border: 1px solid #294b99; border-radius: 8px; font-size: 14px;
+.swatch.active {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
-.btn {
-  display: block; width: 100%; padding: 13px; margin-top: 9px;
-  border-radius: 9px; cursor: pointer; color: white; font-size: 14px;
-  font-weight: 650; background: #10234f; border: 1px solid #2c4a92;
+.board-frame {
+  background: #080b18;
+  border: 1px solid #3c4770;
+  border-radius: 14px;
+  overflow: hidden;
 }
-.btn.primary {
-  background: linear-gradient(110deg, #9b32ff, #5d22f3);
-  border-color: #a94eff; box-shadow: 0 5px 18px #702cff38;
+.board-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
 }
-.btn:hover { filter: brightness(1.16); }
-.zoom { display: grid; grid-template-columns: 50px 1fr 50px; margin-top: 10px; }
-.zoom button, .zoom span {
-  padding: 10px; text-align: center; color: white;
-  background: #0c1a43; border: 1px solid #29498e;
-}
-.zoom button { cursor: pointer; }
-.zoom span { font-size: 13px; }
-.board-shell { padding: 14px; border-color: #5935c6; min-width: 0; }
-.board-viewport {
-  width: 100%; overflow: auto; max-height: 72vh;
-  border: 1px solid #b7a6ff; background: #050b22;
-  scrollbar-color: #7540df #081333;
+.board-heading strong { font-size: 15px; }
+.board-heading span { color: var(--muted); font-size: 13px; }
+.viewport {
+  width: 100%;
+  height: min(68vh, 620px);
+  min-height: 300px;
+  overflow: auto;
+  background-color: #080b18;
+  background-image:
+    radial-gradient(ellipse at center, #20244a88, transparent 70%);
+  overscroll-behavior: contain;
+  scrollbar-color: #56628e #11162a;
+  cursor: crosshair;
 }
 #pixelCanvas {
-  display: block; width: 100%; height: auto; max-width: none;
-  cursor: crosshair; touch-action: none;
+  display: block;
+  width: 600px;
+  height: 500px;
+  max-width: none;
+  touch-action: pan-x pan-y;
 }
-.help { text-align: center; font-size: 12px; color: #d0d9ff; padding: 13px 4px 2px; }
-.right { display: grid; gap: 18px; }
-.selection { padding: 14px; border: 1px solid #1a3c84; border-radius: 9px; }
-.metric {
-  display: flex; justify-content: space-between; gap: 10px;
-  padding: 10px 0; font-size: 13px; color: var(--muted);
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 2px 0;
 }
-.metric strong { color: white; text-align: right; font-size: 16px; }
-.note { color: var(--muted); font-size: 13px; line-height: 1.6; }
-.status { min-height: 18px; margin-top: 10px; color: #9eb6ff; font-size: 12px; overflow-wrap: anywhere; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+}
+.stat {
+  background: #0c1122;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+  min-width: 0;
+}
+.stat .label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.stat .value {
+  font-size: 22px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.status {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.status.error { color: #fca5a5; }
+.status.success { color: #86efac; }
 footer {
-  max-width: 1500px; margin: auto; padding: 15px 24px 25px;
-  display: flex; justify-content: space-between; gap: 12px;
-  color: var(--muted); font-size: 12px;
+  text-align: center;
+  color: #8d98b9;
+  font-size: 12px;
+  padding: 10px 16px 30px;
 }
-@media(max-width:1100px) {
-  .hero { grid-template-columns: 1fr; }
-  .layout { grid-template-columns: 240px minmax(280px,1fr); }
-  .right { grid-column: 1 / -1; grid-template-columns: repeat(2,1fr); }
-}
-@media(max-width:720px) {
-  .nav { padding: 14px; flex-wrap: wrap; }
-  nav { width: 100%; }
-  nav a { padding: 8px; }
-  main { padding: 20px 12px; }
-  .stats { grid-template-columns: 1fr; }
-  .stat { min-height: auto; }
-  .layout { grid-template-columns: 1fr; }
-  .board-shell { grid-row: 1; }
-  .right { grid-column: auto; grid-template-columns: 1fr; }
-  .board-viewport { max-height: 60vh; }
-  footer { padding: 15px; flex-direction: column; }
+@media (max-width: 600px) {
+  .panel { padding: 12px; }
+  .toolbar { gap: 8px; }
+  .toolbar button { padding: 9px 11px; }
+  .viewport { height: 58vh; min-height: 280px; }
 }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="nav">
-    <div class="brand">
-      <div class="logo">▦</div>
-      <div>
-        <h2>Million <span>Pixels</span></h2>
-        <small>Let's create something extraordinary together</small>
-      </div>
-    </div>
-    <nav>
-      <a href="#start">⌂ Home</a>
-      <a href="#board">▦ Pixel Board</a>
-      <a href="#my-pixels">♙ My Pixels</a>
-      <a href="#faq">ⓘ FAQ</a>
-    </nav>
-  </div>
+  <h1>Million Pixels</h1>
+  <p>One canvas. Hundreds of thousands of possibilities.<br>
+  Choose a color, select pixels and make your mark.</p>
 </header>
 
-<main id="start">
-  <section class="hero">
-    <div>
-      <div class="eyebrow">A CANVAS WE CREATE TOGETHER</div>
-      <h1>Million <span class="gradient">Pixels</span></h1>
-      <p>Choose an area, add your colors, and leave your mark on our shared canvas. Every pixel tells a story!</p>
+<main>
+  <section class="panel">
+    <div class="toolbar">
+      <button id="zoomOut" type="button" aria-label="Zoom out">−</button>
+      <span class="zoom-label" id="zoomLabel">100%</span>
+      <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
+      <button id="resetZoom" type="button">Reset zoom</button>
+      <button id="centerBoard" type="button">Center board</button>
     </div>
-    <div class="stats">
-      <div class="stat">
-        <label>Board size</label>
-        <strong>600 × 500</strong>
-        <small>pixels</small>
-      </div>
-      <div class="stat">
-        <label>Price per pixel</label>
-        <strong>0.50 PLN</strong>
-        <small>Fixed price</small>
-      </div>
-      <div class="stat">
-        <label>Selected pixels</label>
-        <strong id="countTop">0</strong>
-        <small id="priceTop">(0.00 PLN)</small>
-      </div>
+    <p class="hint">Use the mouse wheel or the zoom buttons. At 150% zoom and above, the grid shows individual pixels.</p>
+  </section>
+
+  <section class="panel">
+    <div class="color-control">
+      <strong>Choose a color</strong>
+      <input type="color" id="colorPicker" value="#ff4fd8" aria-label="Choose pixel color">
+      <input id="hexColor" value="#FF4FD8" maxlength="7" aria-label="Hex color code">
+      <div class="swatches" id="swatches"></div>
     </div>
   </section>
 
-  <section class="layout" id="board">
-    <aside class="panel">
-      <div class="section">
-        <h3>Choose a color</h3>
-        <div class="color-picker" id="colorPicker" title="Click to choose a color"></div>
-        <div class="swatches" id="swatches">
-          <button class="swatch" style="background:#ff1744" data-color="#ff1744" aria-label="Red"></button>
-          <button class="swatch" style="background:#ff9f1c" data-color="#ff9f1c" aria-label="Orange"></button>
-          <button class="swatch" style="background:#ffe21a" data-color="#ffe21a" aria-label="Yellow"></button>
-          <button class="swatch" style="background:#00d084" data-color="#00d084" aria-label="Green"></button>
-          <button class="swatch" style="background:#00c8f8" data-color="#00c8f8" aria-label="Cyan"></button>
-          <button class="swatch" style="background:#593dff" data-color="#593dff" aria-label="Purple"></button>
-          <button class="swatch" style="background:#e52bff" data-color="#e52bff" aria-label="Pink"></button>
-          <button class="swatch" style="background:#f2f5ff" data-color="#f2f5ff" aria-label="White"></button>
-          <button class="swatch" style="background:#080d27" data-color="#080d27" aria-label="Navy"></button>
-        </div>
-        <input type="text" id="colorHex" value="#B55CF6" maxlength="7" aria-label="HEX color code">
+  <section class="panel">
+    <div class="board-frame">
+      <div class="board-heading">
+        <strong>Your pixel canvas</strong>
+        <span>600 × 500 pixels · 300,000 total</span>
       </div>
-
-      <div class="section">
-        <h3>Tools</h3>
-        <button class="btn primary" id="previewButton">✧ Preview color</button>
-        <button class="btn" id="clearButton">⌫ Clear selection</button>
-        <div style="margin-top:20px;font-size:13px;color:#c7d3f8">Zoom level</div>
-        <div class="zoom">
-          <button id="zoomOut" aria-label="Zoom out">−</button>
-          <span id="zoomLabel">100%</span>
-          <button id="zoomIn" aria-label="Zoom in">＋</button>
-        </div>
-        <div class="status" id="status" role="status" aria-live="polite">Ready.</div>
+      <div class="viewport" id="viewport">
+        <canvas id="pixelCanvas" width="600" height="500"
+          aria-label="Interactive pixel canvas"></canvas>
       </div>
-    </aside>
+    </div>
+    <p class="hint">
+      Click and drag to select a rectangular area. The selection shows the number
+      of pixels and the estimated price. This demo previews color changes locally;
+      it does not purchase pixels or save edits to the database.
+    </p>
+  </section>
 
-    <section class="board-shell">
-      <div class="board-viewport" id="boardViewport">
-        <canvas id="pixelCanvas" width="600" height="500" aria-label="600 by 500 pixel board"></canvas>
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 14px">Selection details</h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Selection size</div>
+        <div class="value" id="selectionSize">0 × 0</div>
       </div>
-      <div class="help">Use the mouse wheel or +/− buttons to zoom. Drag across the board to select an area.</div>
-    </section>
+      <div class="stat">
+        <div class="label">Selected pixels</div>
+        <div class="value" id="selectedCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Price estimate</div>
+        <div class="value" id="priceEstimate">0.00 PLN</div>
+      </div>
+      <div class="stat">
+        <div class="label">Pixels with saved colors</div>
+        <div class="value" id="coloredCount">0</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button id="applyColor" type="button">Preview color on selection</button>
+      <button id="clearSelection" type="button">Clear selection</button>
+    </div>
+    <p class="hint">Price: 0.50 PLN per pixel. The full canvas would cost 150,000 PLN at this rate.</p>
+  </section>
 
-    <aside class="right">
-      <section class="panel section">
-        <h3>▧ Your selection</h3>
-        <div class="selection">
-          <div class="metric">
-            <span>Dimensions</span>
-            <strong id="dimensions">0 × 0<br><small>pixels</small></strong>
-          </div>
-          <div class="metric">
-            <span>Pixel count</span>
-            <strong id="count">0</strong>
-          </div>
-          <div class="metric">
-            <span>Estimated price</span>
-            <strong id="price">0.00 PLN</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel section">
-        <h3><span class="gradient">ϟ</span> Ready to create?</h3>
-        <p class="note">Select an area, choose a color, and click Preview color to see your design.</p>
-        <button class="btn primary" id="previewButton2">◉ Preview color</button>
-      </section>
-
-      <section class="panel section" id="faq">
-        <h3>ⓘ Important information</h3>
-        <p class="note">This is a demo version. Color previews are local to your browser. New changes are not saved to the database, and payments are not yet enabled.</p>
-      </section>
-    </aside>
+  <section class="panel">
+    <div id="dbStatus" class="status">Connecting to the pixel database…</div>
   </section>
 </main>
 
-<footer id="my-pixels">
-  <span><strong>Million Pixels</strong> · © 2026</span>
-  <span>♥ Thanks for being part of the canvas!</span>
+<footer>
+  Million Pixels · Interactive canvas demo · Prices shown in PLN
 </footer>
 
 <script>
+'use strict';
+
+// Supabase project configuration
+const SUPABASE_URL = 'https://lailqxqyzymiwlhxrzzw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn';
+
 const WIDTH = 600;
 const HEIGHT = 500;
 const TOTAL_PIXELS = WIDTH * HEIGHT;
@@ -279,115 +302,192 @@ const PRICE_PER_PIXEL = 0.50;
 
 const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
-const viewport = document.getElementById('boardViewport');
-const statusEl = document.getElementById('status');
-
-let selectedColor = '#B55CF6';
-let selection = null;
-let dragStart = null;
-let dragCurrent = null;
-let zoom = 100;
+const viewport = document.getElementById('viewport');
 
 const savedPixels = new Map();
+const previewPixels = new Map();
 
-function setStatus(message) {
-  statusEl.textContent = message;
+let zoom = 100;
+let selectedColor = '#ff4fd8';
+let selection = null;
+let dragStart = null;
+let isDragging = false;
+let lastPointer = null;
+
+const palette = [
+  '#ff4fd8', '#ff5f6d', '#ff9f43', '#ffe66d',
+  '#7bed9f', '#2ee6d6', '#54a0ff', '#5f6fff',
+  '#a78bfa', '#ffffff', '#d1d5db', '#111827',
+  '#000000', '#7f1d1d', '#166534', '#1e3a8a'
+];
+
+function setStatus(message, type = '') {
+  const el = document.getElementById('dbStatus');
+  el.textContent = message;
+  el.className = 'status' + (type ? ' ' + type : '');
 }
 
-function validHex(value) {
-  return /^#[0-9a-fA-F]{6}$/.test(value);
+function pixelKey(x, y) {
+  return y * WIDTH + x;
+}
+
+function hexToRgb(hex) {
+  const value = hex.replace('#', '');
+  return {
+    r: parseInt(value.slice(0, 2), 16),
+    g: parseInt(value.slice(2, 4), 16),
+    b: parseInt(value.slice(4, 6), 16)
+  };
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b]
+    .map(v => Math.max(0, Math.min(255, Math.round(v)))
+      .toString(16).padStart(2, '0'))
+    .join('');
 }
 
 function setColor(color) {
-  if (!validHex(color)) return;
-
-  selectedColor = color.toUpperCase();
-  document.getElementById('colorHex').value = selectedColor;
-  document.getElementById('colorPicker').style.background =
-    `linear-gradient(to top,black,transparent),
-     linear-gradient(to right,white,transparent),${selectedColor}`;
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
+  selectedColor = color.toLowerCase();
+  document.getElementById('colorPicker').value = selectedColor;
+  document.getElementById('hexColor').value = selectedColor.toUpperCase();
+  renderSwatches();
 }
 
-function getCoordinates(event) {
-  const rect = canvas.getBoundingClientRect();
+function renderSwatches() {
+  const container = document.getElementById('swatches');
+  container.replaceChildren();
 
-  return {
-    x: Math.max(0, Math.min(WIDTH - 1,
-      Math.floor((event.clientX - rect.left) / rect.width * WIDTH))),
-    y: Math.max(0, Math.min(HEIGHT - 1,
-      Math.floor((event.clientY - rect.top) / rect.height * HEIGHT)))
-  };
+  palette.forEach(color => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'swatch' +
+      (color.toLowerCase() === selectedColor ? ' active' : '');
+    button.style.backgroundColor = color;
+    button.title = color;
+    button.setAttribute('aria-label', 'Select color ' + color);
+    button.addEventListener('click', () => setColor(color));
+    container.appendChild(button);
+  });
 }
 
-function getSelection() {
-  if (!selection) return null;
+function drawBackground() {
+  // Neon sunset gradient
+  const sky = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+  sky.addColorStop(0, '#11153b');
+  sky.addColorStop(0.34, '#59276f');
+  sky.addColorStop(0.62, '#e85b8b');
+  sky.addColorStop(0.82, '#ffb36b');
+  sky.addColorStop(1, '#25184c');
 
-  const x1 = Math.min(selection.x1, selection.x2);
-  const y1 = Math.min(selection.y1, selection.y2);
-  const x2 = Math.max(selection.x1, selection.x2);
-  const y2 = Math.max(selection.y1, selection.y2);
-
-  return {
-    x1, y1, x2, y2,
-    width: x2 - x1 + 1,
-    height: y2 - y1 + 1,
-    count: (x2 - x1 + 1) * (y2 - y1 + 1)
-  };
-}
-
-function draw() {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  // Neon gradient background.
-  const gradient = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
-  gradient.addColorStop(0, '#142a83');
-  gradient.addColorStop(0.42, '#76218d');
-  gradient.addColorStop(0.7, '#f32b87');
-  gradient.addColorStop(1, '#0751b6');
-
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = sky;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Sunset.
-  ctx.fillStyle = '#ffbd3e';
-  ctx.beginPath();
-  ctx.arc(300, 245, 62, 0, Math.PI * 2);
-  ctx.fill();
+  // Atmospheric glow
+  const glow = ctx.createRadialGradient(300, 230, 10, 300, 230, 230);
+  glow.addColorStop(0, 'rgba(255,190,125,0.65)');
+  glow.addColorStop(1, 'rgba(255,90,190,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Pixel-art mountains.
-  ctx.fillStyle = '#070c26';
+  // Sun
+  ctx.save();
+  ctx.shadowColor = '#ffb2cb';
+  ctx.shadowBlur = 25;
+  const sun = ctx.createLinearGradient(0, 130, 0, 290);
+  sun.addColorStop(0, '#fff0a8');
+  sun.addColorStop(1, '#ff6a9c');
+  ctx.fillStyle = sun;
   ctx.beginPath();
-  ctx.moveTo(0,195);
-  ctx.lineTo(60,215);
-  ctx.lineTo(100,205);
-  ctx.lineTo(150,250);
-  ctx.lineTo(195,265);
-  ctx.lineTo(245,250);
-  ctx.lineTo(300,290);
-  ctx.lineTo(360,265);
-  ctx.lineTo(415,295);
-  ctx.lineTo(475,250);
-  ctx.lineTo(530,275);
-  ctx.lineTo(600,225);
-  ctx.lineTo(600,500);
-  ctx.lineTo(0,500);
+  ctx.arc(300, 215, 75, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Sun stripes
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  for (let y = 220; y < 286; y += 13) {
+    ctx.fillRect(220, y, 160, 5);
+  }
+  ctx.restore();
+
+  // Distant mountains
+  ctx.fillStyle = '#39306f';
+  ctx.beginPath();
+  ctx.moveTo(0, 335);
+  ctx.lineTo(95, 240);
+  ctx.lineTo(160, 305);
+  ctx.lineTo(250, 225);
+  ctx.lineTo(360, 330);
+  ctx.lineTo(455, 255);
+  ctx.lineTo(600, 345);
+  ctx.lineTo(600, 500);
+  ctx.lineTo(0, 500);
   ctx.closePath();
   ctx.fill();
 
-  // Existing pixels loaded from Supabase.
-  for (const [id, color] of savedPixels) {
+  // Foreground mountains
+  ctx.fillStyle = '#171b3e';
+  ctx.beginPath();
+  ctx.moveTo(0, 390);
+  ctx.lineTo(105, 315);
+  ctx.lineTo(185, 390);
+  ctx.lineTo(305, 300);
+  ctx.lineTo(405, 390);
+  ctx.lineTo(505, 320);
+  ctx.lineTo(600, 385);
+  ctx.lineTo(600, 500);
+  ctx.lineTo(0, 500);
+  ctx.closePath();
+  ctx.fill();
+
+  // Subtle neon horizon
+  ctx.strokeStyle = 'rgba(255,150,220,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 388);
+  ctx.lineTo(WIDTH, 388);
+  ctx.stroke();
+}
+
+function drawSavedPixels() {
+  // Draw individual pixel colors from Supabase.
+  for (const [key, color] of savedPixels) {
+    const x = key % WIDTH;
+    const y = Math.floor(key / WIDTH);
     ctx.fillStyle = color;
-    ctx.fillRect(id % WIDTH, Math.floor(id / WIDTH), 1, 1);
+    ctx.fillRect(x, y, 1, 1);
   }
 
-  // Use a finer grid at high zoom levels.
-  const cell = zoom >= 300 ? 1 : 10;
+  // Local-only preview edits are shown on top of saved pixels.
+  for (const [key, color] of previewPixels) {
+    const x = key % WIDTH;
+    const y = Math.floor(key / WIDTH);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
+  }
+}
 
+function drawPixelGrid() {
+  // Adaptive pixel grid:
+  // At low zoom, draw a subtle grid every 10 pixels.
+  // From 150% zoom, draw every individual pixel boundary.
+  const cell = zoom >= 150 ? 1 : 10;
+
+  ctx.save();
   ctx.beginPath();
-  ctx.strokeStyle = zoom >= 300
-    ? 'rgba(230,238,255,.55)'
-    : 'rgba(230,238,255,.78)';
-  ctx.lineWidth = zoom >= 300 ? 0.12 : 0.65;
+
+  if (zoom >= 400) {
+    ctx.strokeStyle = 'rgba(5, 8, 25, 0.85)';
+    ctx.lineWidth = 0.45;
+  } else if (zoom >= 150) {
+    ctx.strokeStyle = 'rgba(5, 8, 25, 0.75)';
+    ctx.lineWidth = 0.3;
+  } else {
+    ctx.strokeStyle = 'rgba(230, 238, 255, 0.7)';
+    ctx.lineWidth = 0.5;
+  }
 
   for (let x = 0; x <= WIDTH; x += cell) {
     ctx.moveTo(x, 0);
@@ -400,260 +500,288 @@ function draw() {
   }
 
   ctx.stroke();
+  ctx.restore();
+}
 
-  const s = dragStart && dragCurrent
-    ? {
-        x1: Math.min(dragStart.x, dragCurrent.x),
-        y1: Math.min(dragStart.y, dragCurrent.y),
-        x2: Math.max(dragStart.x, dragCurrent.x),
-        y2: Math.max(dragStart.y, dragCurrent.y)
-      }
-    : getSelection();
+function drawSelection() {
+  if (!selection) return;
 
-  if (s) {
-    ctx.fillStyle = 'rgba(125,54,255,.38)';
-    ctx.fillRect(s.x1, s.y1, s.x2 - s.x1 + 1, s.y2 - s.y1 + 1);
+  const left = Math.min(selection.x1, selection.x2);
+  const top = Math.min(selection.y1, selection.y2);
+  const right = Math.max(selection.x1, selection.x2);
+  const bottom = Math.max(selection.y1, selection.y2);
 
-    ctx.strokeStyle = '#c2a5ff';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(
-      s.x1 + 0.5, s.y1 + 0.5,
-      s.x2 - s.x1, s.y2 - s.y1
-    );
-  }
+  ctx.save();
+  ctx.fillStyle = 'rgba(167, 139, 250, 0.18)';
+  ctx.fillRect(left, top, right - left + 1, bottom - top + 1);
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = Math.max(1 / zoom * 100, 0.7);
+  ctx.setLineDash([3, 2]);
+  ctx.strokeRect(
+    left + 0.5, top + 0.5,
+    right - left, bottom - top
+  );
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  drawBackground();
+  drawSavedPixels();
+  drawPixelGrid();
+  drawSelection();
+  updateStats();
+}
+
+function selectionBounds() {
+  if (!selection) return null;
+  return {
+    left: Math.min(selection.x1, selection.x2),
+    top: Math.min(selection.y1, selection.y2),
+    right: Math.max(selection.x1, selection.x2),
+    bottom: Math.max(selection.y1, selection.y2)
+  };
+}
+
+function selectedPixelCount() {
+  const b = selectionBounds();
+  if (!b) return 0;
+  return (b.right - b.left + 1) * (b.bottom - b.top + 1);
 }
 
 function updateStats() {
-  const s = getSelection();
-  const count = s ? s.count : 0;
+  const b = selectionBounds();
 
-  const price = (count * PRICE_PER_PIXEL).toLocaleString('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }) + ' PLN';
+  if (!b) {
+    document.getElementById('selectionSize').textContent = '0 × 0';
+    document.getElementById('selectedCount').textContent = '0';
+    document.getElementById('priceEstimate').textContent = '0.00 PLN';
+  } else {
+    const w = b.right - b.left + 1;
+    const h = b.bottom - b.top + 1;
+    const count = w * h;
+    document.getElementById('selectionSize').textContent = `${w} × ${h}`;
+    document.getElementById('selectedCount').textContent =
+      count.toLocaleString('en-US');
+    document.getElementById('priceEstimate').textContent =
+      (count * PRICE_PER_PIXEL).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + ' PLN';
+  }
 
-  document.getElementById('count').textContent =
-    count.toLocaleString('en-GB');
-  document.getElementById('countTop').textContent =
-    count.toLocaleString('en-GB');
-  document.getElementById('price').textContent = price;
-  document.getElementById('priceTop').textContent = '(' + price + ')';
-
-  document.getElementById('dimensions').innerHTML = s
-    ? `${s.width} × ${s.height}<br><small>pixels</small>`
-    : '0 × 0<br><small>pixels</small>';
+  const combined = new Set([...savedPixels.keys(), ...previewPixels.keys()]);
+  document.getElementById('coloredCount').textContent =
+    combined.size.toLocaleString('en-US');
 }
 
-canvas.addEventListener('pointerdown', event => {
-  if (event.button !== 0 && event.pointerType === 'mouse') return;
+function canvasPoint(event) {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor((event.clientX - rect.left) * WIDTH / rect.width);
+  const y = Math.floor((event.clientY - rect.top) * HEIGHT / rect.height);
 
-  dragStart = getCoordinates(event);
-  dragCurrent = dragStart;
+  return {
+    x: Math.max(0, Math.min(WIDTH - 1, x)),
+    y: Math.max(0, Math.min(HEIGHT - 1, y))
+  };
+}
+
+function setZoom(nextZoom, anchor = null) {
+  const next = Math.max(50, Math.min(800, nextZoom));
+  if (next === zoom) return;
+
+  const oldZoom = zoom;
+  const oldScrollLeft = viewport.scrollLeft;
+  const oldScrollTop = viewport.scrollTop;
+  const oldRect = viewport.getBoundingClientRect();
+
+  let anchorX = oldRect.width / 2;
+  let anchorY = oldRect.height / 2;
+
+  if (anchor) {
+    anchorX = anchor.x - oldRect.left;
+    anchorY = anchor.y - oldRect.top;
+  }
+
+  const contentX = oldScrollLeft + anchorX;
+  const contentY = oldScrollTop + anchorY;
+  const ratio = next / oldZoom;
+
+  zoom = next;
+  canvas.style.width = (WIDTH * zoom / 100) + 'px';
+  canvas.style.height = (HEIGHT * zoom / 100) + 'px';
+  document.getElementById('zoomLabel').textContent = zoom + '%';
+
+  draw();
+
+  viewport.scrollLeft = contentX * ratio - anchorX;
+  viewport.scrollTop = contentY * ratio - anchorY;
+}
+
+document.getElementById('zoomIn').addEventListener('click', () => {
+  setZoom(zoom + 50);
+});
+
+document.getElementById('zoomOut').addEventListener('click', () => {
+  setZoom(zoom - 50);
+});
+
+document.getElementById('resetZoom').addEventListener('click', () => {
+  setZoom(100);
+});
+
+document.getElementById('centerBoard').addEventListener('click', () => {
+  viewport.scrollLeft = Math.max(0, (canvas.offsetWidth - viewport.clientWidth) / 2);
+  viewport.scrollTop = Math.max(0, (canvas.offsetHeight - viewport.clientHeight) / 2);
+});
+
+viewport.addEventListener('wheel', event => {
+  if (event.ctrlKey || event.metaKey) {
+    event.preventDefault();
+    setZoom(zoom + (event.deltaY < 0 ? 25 : -25), {
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+}, { passive: false });
+
+canvas.addEventListener('pointerdown', event => {
+  if (event.button !== 0) return;
+  const point = canvasPoint(event);
+  dragStart = point;
+  lastPointer = point;
+  isDragging = true;
+  selection = {
+    x1: point.x, y1: point.y,
+    x2: point.x, y2: point.y
+  };
   canvas.setPointerCapture(event.pointerId);
   draw();
 });
 
 canvas.addEventListener('pointermove', event => {
-  if (!dragStart) return;
-
-  dragCurrent = getCoordinates(event);
-  draw();
-});
-
-function finishSelection() {
-  if (!dragStart) return;
+  if (!isDragging) return;
+  const point = canvasPoint(event);
+  if (lastPointer && point.x === lastPointer.x && point.y === lastPointer.y) return;
+  lastPointer = point;
 
   selection = {
     x1: dragStart.x,
     y1: dragStart.y,
-    x2: dragCurrent.x,
-    y2: dragCurrent.y
+    x2: point.x,
+    y2: point.y
   };
-
-  dragStart = null;
-  dragCurrent = null;
-
-  updateStats();
   draw();
-}
-
-canvas.addEventListener('pointerup', finishSelection);
-canvas.addEventListener('pointercancel', finishSelection);
-canvas.addEventListener('lostpointercapture', finishSelection);
-
-document.getElementById('swatches').addEventListener('click', event => {
-  const button = event.target.closest('[data-color]');
-  if (button) setColor(button.dataset.color);
 });
 
-document.getElementById('colorHex').addEventListener('change', event => {
-  if (validHex(event.target.value)) {
-    setColor(event.target.value);
+function endSelection() {
+  isDragging = false;
+  dragStart = null;
+  lastPointer = null;
+}
+
+canvas.addEventListener('pointerup', endSelection);
+canvas.addEventListener('pointercancel', endSelection);
+
+document.getElementById('colorPicker').addEventListener('input', event => {
+  setColor(event.target.value);
+});
+
+document.getElementById('hexColor').addEventListener('change', event => {
+  const value = event.target.value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+    setColor(value);
   } else {
-    event.target.value = selectedColor;
-    setStatus('Enter a valid HEX color, for example #B55CF6.');
+    event.target.value = selectedColor.toUpperCase();
   }
 });
 
-document.getElementById('colorPicker').addEventListener('click', event => {
-  const rect = event.currentTarget.getBoundingClientRect();
-  const hue = Math.round((event.clientX - rect.left) / rect.width * 360);
-  const lightness = Math.round(
-    100 - (event.clientY - rect.top) / rect.height * 100
-  );
-
-  setColor(hslToHex(hue, 100, Math.max(20, Math.min(80, lightness))));
-});
-
-function hslToHex(h, s, l) {
-  s /= 100;
-  l /= 100;
-  const a = s * Math.min(l, 1 - l);
-
-  const f = n => {
-    const k = (n + h / 30) % 12;
-    const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
-    return Math.round(255 * c).toString(16).padStart(2, '0');
-  };
-
-  return '#' + f(0) + f(8) + f(4);
-}
-
-function preview() {
-  const s = getSelection();
-
-  if (!s) {
-    setStatus('Select an area on the board first.');
+document.getElementById('applyColor').addEventListener('click', () => {
+  const b = selectionBounds();
+  if (!b) {
+    setStatus('Select one or more pixels on the canvas first.', 'error');
     return;
   }
 
-  for (let y = s.y1; y <= s.y2; y++) {
-    for (let x = s.x1; x <= s.x2; x++) {
-      savedPixels.set(y * WIDTH + x, selectedColor);
+  for (let y = b.top; y <= b.bottom; y++) {
+    for (let x = b.left; x <= b.right; x++) {
+      previewPixels.set(pixelKey(x, y), selectedColor);
     }
   }
 
   draw();
-  setStatus('Local preview only — changes have not been saved to the database.');
-}
+  setStatus(
+    'Color preview applied locally. These changes are not saved to Supabase.',
+    'success'
+  );
+});
 
-document.getElementById('previewButton').addEventListener('click', preview);
-document.getElementById('previewButton2').addEventListener('click', preview);
-
-document.getElementById('clearButton').addEventListener('click', () => {
+document.getElementById('clearSelection').addEventListener('click', () => {
   selection = null;
-  dragStart = null;
-  dragCurrent = null;
-  updateStats();
   draw();
   setStatus('Selection cleared.');
 });
 
-// Zoom from 50% to 800%.
-function setZoom(value, anchorX = null, anchorY = null) {
-  const oldWidth = canvas.getBoundingClientRect().width;
-  const oldHeight = canvas.getBoundingClientRect().height;
-  const oldScrollLeft = viewport.scrollLeft;
-  const oldScrollTop = viewport.scrollTop;
+async function loadPixels() {
+  const url = SUPABASE_URL +
+    '/rest/v1/pixel_state?select=pixel_id,color&limit=100000';
 
-  zoom = Math.max(50, Math.min(800, value));
-
-  // The canvas is 600 CSS pixels wide at 100% zoom.
-  canvas.style.width = (WIDTH * zoom / 100) + 'px';
-
-  document.getElementById('zoomLabel').textContent = zoom + '%';
-
-  draw();
-
-  requestAnimationFrame(() => {
-    const newWidth = canvas.getBoundingClientRect().width;
-    const newHeight = canvas.getBoundingClientRect().height;
-
-    if (anchorX !== null && oldWidth > 0 && oldHeight > 0) {
-      viewport.scrollLeft =
-        (oldScrollLeft + anchorX) * (newWidth / oldWidth) - anchorX;
-      viewport.scrollTop =
-        (oldScrollTop + anchorY) * (newHeight / oldHeight) - anchorY;
-    }
-  });
-}
-
-document.getElementById('zoomIn').addEventListener('click', () => {
-  setZoom(zoom < 200 ? zoom + 25 : zoom + 100);
-});
-
-document.getElementById('zoomOut').addEventListener('click', () => {
-  setZoom(zoom <= 200 ? zoom - 25 : zoom - 100);
-});
-
-// Mouse wheel zooms towards the cursor.
-viewport.addEventListener('wheel', event => {
-  event.preventDefault();
-
-  const rect = viewport.getBoundingClientRect();
-  const anchorX = event.clientX - rect.left;
-  const anchorY = event.clientY - rect.top;
-
-  const step = event.deltaY < 0
-    ? (zoom < 200 ? 25 : 100)
-    : -(zoom <= 200 ? 25 : 100);
-
-  setZoom(zoom + step, anchorX, anchorY);
-}, { passive: false });
-
-setColor(selectedColor);
-draw();
-updateStats();
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = 'https://lailqxqyzymiwlhxrzzw.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn';
-
-if (window.supabase && SUPABASE_URL && SUPABASE_KEY) {
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-  (async () => {
-    try {
-      const { data, error } = await supabaseClient
-        .from('pixel_state')
-        .select('pixel_id, color')
-        .gte('pixel_id', 0)
-        .lt('pixel_id', TOTAL_PIXELS)
-        .limit(TOTAL_PIXELS);
-
-      if (error) throw error;
-
-      savedPixels.clear();
-
-      for (const row of data || []) {
-        const id = Number(row.pixel_id);
-
-        if (
-          Number.isInteger(id) &&
-          id >= 0 &&
-          id < TOTAL_PIXELS &&
-          /^#[0-9a-fA-F]{6}$/.test(row.color)
-        ) {
-          savedPixels.set(id, row.color);
-        }
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
       }
+    });
 
-      draw();
-      setStatus(
-        'Board loaded. Saved pixels: ' +
-        savedPixels.size.toLocaleString('en-GB') + '.'
-      );
-    } catch (error) {
-      console.error('Supabase error:', error);
-      setStatus('Could not load pixels from the database. Check the browser console.');
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error('HTTP ' + response.status + ': ' + message);
     }
-  })();
+
+    const rows = await response.json();
+    savedPixels.clear();
+
+    for (const row of rows) {
+      const id = Number(row.pixel_id);
+      const color = String(row.color || '');
+
+      if (
+        Number.isInteger(id) &&
+        id >= 0 &&
+        id < TOTAL_PIXELS &&
+        /^#[0-9a-fA-F]{6}$/.test(color)
+      ) {
+        savedPixels.set(id, color);
+      }
+    }
+
+    draw();
+    setStatus(
+      `Connected to Supabase. Loaded ${savedPixels.size.toLocaleString('en-US')} saved pixel colors.`,
+      'success'
+    );
+  } catch (error) {
+    console.error('Could not load pixels:', error);
+    draw();
+    setStatus(
+      'Could not load saved pixels from Supabase. Check the table, RLS policies and browser console. ' +
+      error.message,
+      'error'
+    );
+  }
 }
+
+renderSwatches();
+
+// Set the initial board size explicitly.
+canvas.style.width = WIDTH + 'px';
+canvas.style.height = HEIGHT + 'px';
+
+draw();
+loadPixels();
 </script>
 </body>
 </html>
