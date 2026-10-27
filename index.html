@@ -1,0 +1,117 @@
+
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Milion Pikseli</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px;
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5; color: #171717;
+    }
+    main { max-width: 900px; margin: auto; }
+    h1 { margin-bottom: 8px; }
+    .muted { color: #666; }
+    .board {
+      width: 100%; aspect-ratio: 1;
+      background: white; border: 1px solid #ddd;
+      image-rendering: pixelated; display: block;
+      touch-action: pan-y;
+    }
+    .panel {
+      background: white; border-radius: 12px;
+      padding: 16px; margin: 18px 0;
+    }
+    #status { font-size: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Milion Pikseli</h1>
+  <p class="muted">
+    Jedna wspólna plansza. Milion pikseli. Każdy piksel kosztuje 1 zł.
+  </p>
+
+  <section class="panel">
+    <canvas id="board" class="board"
+            width="1000" height="1000"
+            aria-label="Plansza miliona pikseli"></canvas>
+    <p id="status">Przygotowuję planszę…</p>
+    <p class="muted">
+      To wersja demonstracyjna. Zakupy i zmienianie pikseli
+      nie są jeszcze aktywne.
+    </p>
+  </section>
+</main>
+
+<script type="module">
+  import { createClient } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  // Uzupełnij danymi swojego projektu Supabase.
+  const SUPABASE_URL = "https://lailqxqyzymiwlhxrzzw.supabase.co/rest/v1/";
+  const SUPABASE_KEY = "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
+
+  const status = document.getElementById("status");
+  const canvas = document.getElementById("board");
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 1000, 1000);
+
+  if (SUPABASE_URL.startsWith("WKLEJ_") ||
+      SUPABASE_KEY.startsWith("WKLEJ_")) {
+    status.textContent =
+      "Strona czeka na konfigurację połączenia z bazą.";
+  } else {
+    try {
+      const supabase = createClient(
+        SUPABASE_URL, SUPABASE_KEY
+      );
+
+      async function loadPixels() {
+        status.textContent = "Ładuję zapisane piksele…";
+        const { data, error } = await supabase
+          .from("pixel_state")
+          .select("pixel_id,color");
+
+        if (error) throw error;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, 1000, 1000);
+
+        for (const pixel of data) {
+          const x = pixel.pixel_id % 1000;
+          const y = Math.floor(pixel.pixel_id / 1000);
+          ctx.fillStyle = pixel.color;
+          ctx.fillRect(x, y, 1, 1);
+        }
+
+        status.textContent =
+          "Plansza załadowana. Zapisanych pikseli: " +
+          data.length.toLocaleString("pl-PL");
+      }
+
+      await loadPixels();
+
+      supabase
+        .channel("pixel-state-live")
+        .on("postgres_changes", {
+          event: "*",
+          schema: "public",
+          table: "pixel_state"
+        }, loadPixels)
+        .subscribe();
+
+    } catch (error) {
+      console.error(error);
+      status.textContent =
+        "Nie udało się połączyć z bazą. Sprawdź konfigurację.";
+    }
+  }
+</script>
+</body>
+</html>
