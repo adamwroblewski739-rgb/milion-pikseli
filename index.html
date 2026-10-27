@@ -15,20 +15,20 @@
 
     body {
       margin: 0;
-      padding: 24px 16px;
+      padding: 24px 14px;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
       color: #20242a;
+      background: #f3f5f8;
       text-align: center;
     }
 
     h1 {
-      margin-bottom: 8px;
+      margin: 0 0 8px;
       font-size: clamp(28px, 5vw, 42px);
     }
 
     .subtitle {
-      color: #626b75;
+      color: #606975;
       margin-bottom: 24px;
     }
 
@@ -38,37 +38,35 @@
       padding: 20px;
       background: white;
       border-radius: 14px;
-      box-shadow: 0 4px 18px #0000000c;
+      box-shadow: 0 4px 18px #00000010;
     }
 
     .stats {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
       margin-bottom: 18px;
     }
 
     .stat {
-      background: #f0f3f6;
+      padding: 13px 8px;
+      background: #f0f3f7;
       border-radius: 9px;
-      padding: 12px 18px;
-      min-width: 135px;
+      font-size: 14px;
     }
 
     .stat strong {
       display: block;
-      margin-top: 5px;
-      font-size: 20px;
+      margin-top: 7px;
+      font-size: clamp(18px, 3vw, 23px);
+      overflow-wrap: anywhere;
     }
 
     .canvas-wrap {
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      overflow: hidden;
-      border: 2px solid #252a31;
-      border-radius: 3px;
+      border: 2px solid #20242a;
       background: white;
       line-height: 0;
     }
@@ -80,7 +78,8 @@
       aspect-ratio: 6 / 5;
       cursor: crosshair;
       touch-action: none;
-      image-rendering: pixelated;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .controls {
@@ -93,48 +92,51 @@
     }
 
     input[type="color"] {
-      width: 52px;
+      width: 50px;
       height: 42px;
-      border: 0;
+      padding: 2px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       cursor: pointer;
-      background: transparent;
+      background: white;
     }
 
     button {
+      padding: 12px 16px;
       border: 0;
       border-radius: 8px;
-      padding: 12px 18px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
     }
 
+    button:focus-visible {
+      outline: 3px solid #86b7ff;
+      outline-offset: 2px;
+    }
+
     .primary {
-      background: #1769e0;
       color: white;
+      background: #1769e0;
     }
 
     .secondary {
-      background: #e9edf2;
       color: #20242a;
-    }
-
-    button:hover {
-      opacity: 0.88;
+      background: #e8edf3;
     }
 
     .instructions {
-      margin: 18px auto 0;
       max-width: 600px;
-      color: #626b75;
+      margin: 18px auto 0;
+      color: #606975;
       font-size: 14px;
       line-height: 1.6;
     }
 
     #status {
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 14px;
-      color: #626b75;
+      line-height: 1.5;
       overflow-wrap: anywhere;
     }
 
@@ -143,18 +145,25 @@
       margin: 18px auto 0;
       padding: 12px;
       border-radius: 8px;
-      background: #fff4d6;
+      background: #fff3d4;
       color: #684d00;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 600px) {
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
 
 <body>
   <h1>Milion Pikseli</h1>
+
   <p class="subtitle">
-    Wspólna plansza. Wybierz obszar i zobacz jego cenę.
+    Wspólna plansza — wybierz obszar i sprawdź cenę.
   </p>
 
   <main class="panel">
@@ -175,310 +184,348 @@
       </div>
 
       <div class="stat">
-        Cena zaznaczenia
+        Cena orientacyjna
         <strong id="selectedPrice">0,00 zł</strong>
       </div>
     </div>
 
     <div class="canvas-wrap">
-      <canvas id="canvas" width="600" height="500"></canvas>
+      <canvas
+        id="canvas"
+        width="600"
+        height="500"
+        aria-label="Plansza pikselowa. Przeciągnij myszką, aby zaznaczyć obszar."
+      ></canvas>
     </div>
 
     <div class="controls">
-      <label for="colorPicker">Wybierz kolor:</label>
+      <label for="colorPicker">Kolor podglądu:</label>
       <input id="colorPicker" type="color" value="#ff0000">
 
-      <button class="primary" id="previewButton">
+      <button class="primary" id="previewButton" type="button">
         Pokaż podgląd
       </button>
 
-      <button class="secondary" id="clearButton">
+      <button class="secondary" id="clearButton" type="button">
         Wyczyść zaznaczenie
       </button>
     </div>
 
     <p class="instructions">
-      Przytrzymaj lewy przycisk myszy i przeciągnij, aby zaznaczyć
-      prostokątny obszar. Możesz też zrobić to palcem na telefonie.
-      Wybierz kolor i kliknij „Pokaż podgląd”.
+      1. Przytrzymaj lewy przycisk myszy na planszy.<br>
+      2. Przeciągnij myszką, aby zaznaczyć prostokąt.<br>
+      3. Puść przycisk — liczba pikseli i cena pokażą się automatycznie.<br>
+      4. Wybierz kolor i kliknij „Pokaż podgląd”.
     </p>
 
-    <div id="status">Łączenie z planszą...</div>
+    <div id="status" role="status" aria-live="polite">
+      Przygotowywanie planszy...
+    </div>
 
     <div class="notice">
-      To wersja demonstracyjna. Podgląd koloru jest lokalny — nie zapisuje
-      zmian w bazie i nie pobiera płatności. Cena jest orientacyjna.
+      To wersja demonstracyjna. Zaznaczenie i podgląd koloru są lokalne
+      i nie zapisują zmian w bazie danych. Cena jest orientacyjna.
+      Płatności nie są jeszcze uruchomione.
     </div>
   </main>
 
   <script>
-    const WIDTH = 600;
-    const HEIGHT = 500;
-    const TOTAL_PIXELS = WIDTH * HEIGHT;
-    const PRICE_PER_PIXEL = 0.50;
+    (() => {
+      "use strict";
 
-    const SUPABASE_URL =
-      "https://lailqxqyzymiwlhxrzzw.supabase.co";
+      const WIDTH = 600;
+      const HEIGHT = 500;
+      const TOTAL_PIXELS = WIDTH * HEIGHT;
+      const PRICE_PER_PIXEL = 0.50;
 
-    const SUPABASE_KEY =
-      "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
+      const SUPABASE_URL =
+        "https://lailqxqyzymiwlhxrzzw.supabase.co";
 
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d", {
-      alpha: false
-    });
+      const SUPABASE_KEY =
+        "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
 
-    const colorPicker = document.getElementById("colorPicker");
-    const selectedCountElement = document.getElementById("selectedCount");
-    const selectedPriceElement = document.getElementById("selectedPrice");
-    const statusElement = document.getElementById("status");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
 
-    const pixels = new Map();
+      const colorPicker = document.getElementById("colorPicker");
+      const countElement = document.getElementById("selectedCount");
+      const priceElement = document.getElementById("selectedPrice");
+      const statusElement = document.getElementById("status");
+      const previewButton = document.getElementById("previewButton");
+      const clearButton = document.getElementById("clearButton");
 
-    let isSelecting = false;
-    let startPoint = null;
-    let endPoint = null;
-    let previewColor = null;
+      const pixels = new Map();
 
-    const supabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+      let isSelecting = false;
+      let startPoint = null;
+      let endPoint = null;
+      let previewColor = null;
 
-    function formatMoney(amount) {
-      return amount.toLocaleString("pl-PL", {
-        style: "currency",
-        currency: "PLN"
-      });
-    }
-
-    function getCoordinates(event) {
-      const rect = canvas.getBoundingClientRect();
-
-      const x = Math.max(
-        0,
-        Math.min(
-          WIDTH - 1,
-          Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
-        )
-      );
-
-      const y = Math.max(
-        0,
-        Math.min(
-          HEIGHT - 1,
-          Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
-        )
-      );
-
-      return { x, y };
-    }
-
-    function getSelection() {
-      if (!startPoint || !endPoint) {
-        return null;
+      function money(value) {
+        return value.toLocaleString("pl-PL", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + " zł";
       }
 
-      return {
-        left: Math.min(startPoint.x, endPoint.x),
-        right: Math.max(startPoint.x, endPoint.x),
-        top: Math.min(startPoint.y, endPoint.y),
-        bottom: Math.max(startPoint.y, endPoint.y)
-      };
-    }
+      function getCoordinates(event) {
+        const rect = canvas.getBoundingClientRect();
 
-    function updateStats() {
-      const selection = getSelection();
-
-      if (!selection) {
-        selectedCountElement.textContent = "0";
-        selectedPriceElement.textContent = formatMoney(0);
-        return;
-      }
-
-      const width = selection.right - selection.left + 1;
-      const height = selection.bottom - selection.top + 1;
-      const count = width * height;
-
-      selectedCountElement.textContent =
-        count.toLocaleString("pl-PL");
-
-      selectedPriceElement.textContent =
-        formatMoney(count * PRICE_PER_PIXEL);
-    }
-
-    function drawCanvas() {
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-      for (const [pixelId, color] of pixels) {
-        const x = pixelId % WIDTH;
-        const y = Math.floor(pixelId / WIDTH);
-
-        if (x >= WIDTH || y >= HEIGHT) {
-          continue;
+        if (!rect.width || !rect.height) {
+          return { x: 0, y: 0 };
         }
 
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, 1, 1);
+        return {
+          x: Math.max(
+            0,
+            Math.min(
+              WIDTH - 1,
+              Math.floor((event.clientX - rect.left) * WIDTH / rect.width)
+            )
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              HEIGHT - 1,
+              Math.floor((event.clientY - rect.top) * HEIGHT / rect.height)
+            )
+          )
+        };
       }
 
-      const selection = getSelection();
+      function getSelection() {
+        if (!startPoint || !endPoint) {
+          return null;
+        }
 
-      if (selection && previewColor) {
-        ctx.fillStyle = previewColor;
-
-        ctx.fillRect(
-          selection.left,
-          selection.top,
-          selection.right - selection.left + 1,
-          selection.bottom - selection.top + 1
-        );
+        return {
+          left: Math.min(startPoint.x, endPoint.x),
+          right: Math.max(startPoint.x, endPoint.x),
+          top: Math.min(startPoint.y, endPoint.y),
+          bottom: Math.max(startPoint.y, endPoint.y)
+        };
       }
 
-      if (selection) {
-        ctx.strokeStyle = "#111827";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 3]);
+      function updateStats() {
+        const selection = getSelection();
 
+        if (!selection) {
+          countElement.textContent = "0";
+          priceElement.textContent = money(0);
+          return;
+        }
+
+        const width = selection.right - selection.left + 1;
+        const height = selection.bottom - selection.top + 1;
+        const count = width * height;
+
+        countElement.textContent = count.toLocaleString("pl-PL");
+        priceElement.textContent = money(count * PRICE_PER_PIXEL);
+      }
+
+      function drawCanvas() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        // Rysuj piksele pobrane z bazy.
+        for (const [pixelId, color] of pixels) {
+          const x = pixelId % WIDTH;
+          const y = Math.floor(pixelId / WIDTH);
+
+          ctx.fillStyle = color;
+          ctx.fillRect(x, y, 1, 1);
+        }
+
+        const selection = getSelection();
+
+        if (!selection) {
+          return;
+        }
+
+        const w = selection.right - selection.left + 1;
+        const h = selection.bottom - selection.top + 1;
+
+        // Podgląd wybranego koloru.
+        if (previewColor) {
+          ctx.fillStyle = previewColor;
+          ctx.fillRect(selection.left, selection.top, w, h);
+        } else {
+          ctx.fillStyle = "rgba(0, 120, 255, 0.30)";
+          ctx.fillRect(selection.left, selection.top, w, h);
+        }
+
+        // Wyraźna ramka zaznaczenia.
+        ctx.save();
+        ctx.strokeStyle = "#0057ff";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
         ctx.strokeRect(
           selection.left + 0.5,
           selection.top + 0.5,
-          selection.right - selection.left,
-          selection.bottom - selection.top
+          Math.max(0, w - 1),
+          Math.max(0, h - 1)
         );
-
-        ctx.setLineDash([]);
-      }
-    }
-
-    canvas.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-
-      isSelecting = true;
-      startPoint = getCoordinates(event);
-      endPoint = startPoint;
-      previewColor = null;
-
-      canvas.setPointerCapture(event.pointerId);
-
-      updateStats();
-      drawCanvas();
-    });
-
-    canvas.addEventListener("pointermove", (event) => {
-      if (!isSelecting) {
-        return;
+        ctx.restore();
       }
 
-      endPoint = getCoordinates(event);
-      updateStats();
-      drawCanvas();
-    });
+      function beginSelection(event) {
+        if (event.button !== undefined && event.button !== 0) {
+          return;
+        }
 
-    function finishSelection(event) {
-      if (!isSelecting) {
-        return;
+        event.preventDefault();
+
+        isSelecting = true;
+        startPoint = getCoordinates(event);
+        endPoint = startPoint;
+        previewColor = null;
+
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (_) {
+          // Zaznaczanie nadal działa, jeśli przejęcie wskaźnika nie jest dostępne.
+        }
+
+        updateStats();
+        drawCanvas();
       }
 
-      isSelecting = false;
-      endPoint = getCoordinates(event);
+      function moveSelection(event) {
+        if (!isSelecting) {
+          return;
+        }
 
-      updateStats();
-      drawCanvas();
-    }
+        event.preventDefault();
+        endPoint = getCoordinates(event);
 
-    canvas.addEventListener("pointerup", finishSelection);
-
-    canvas.addEventListener("pointercancel", () => {
-      isSelecting = false;
-    });
-
-    document.getElementById("previewButton").addEventListener("click", () => {
-      if (!getSelection()) {
-        statusElement.textContent =
-          "Najpierw zaznacz obszar planszy.";
-        return;
+        updateStats();
+        drawCanvas();
       }
 
-      previewColor = colorPicker.value;
-      drawCanvas();
+      function finishSelection(event) {
+        if (!isSelecting) {
+          return;
+        }
 
-      statusElement.textContent =
-        "Pokazano lokalny podgląd. Zmiany nie zostały zapisane.";
-    });
+        if (event && typeof event.clientX === "number") {
+          endPoint = getCoordinates(event);
+        }
 
-    document.getElementById("clearButton").addEventListener("click", () => {
-      startPoint = null;
-      endPoint = null;
-      previewColor = null;
+        isSelecting = false;
 
-      updateStats();
-      drawCanvas();
+        updateStats();
+        drawCanvas();
+      }
 
-      statusElement.textContent =
-        "Zaznaczenie zostało wyczyszczone.";
-    });
+      canvas.addEventListener("pointerdown", beginSelection);
+      canvas.addEventListener("pointermove", moveSelection);
+      canvas.addEventListener("pointerup", finishSelection);
 
-    async function loadPixels() {
-      statusElement.textContent = "Pobieranie zapisanych pikseli...";
+      canvas.addEventListener("pointercancel", () => {
+        isSelecting = false;
+        updateStats();
+        drawCanvas();
+      });
 
-      const { data, error } = await supabase
-        .from("pixel_state")
-        .select("pixel_id, color")
-        .gte("pixel_id", 0)
-        .lt("pixel_id", TOTAL_PIXELS);
+      canvas.addEventListener("lostpointercapture", () => {
+        if (isSelecting) {
+          isSelecting = false;
+          updateStats();
+          drawCanvas();
+        }
+      });
 
-      if (error) {
-        console.error("Błąd pobierania pikseli:", error);
+      previewButton.addEventListener("click", () => {
+        if (!getSelection()) {
+          statusElement.textContent =
+            "Najpierw zaznacz obszar planszy myszką.";
+          return;
+        }
+
+        previewColor = colorPicker.value;
+        drawCanvas();
 
         statusElement.textContent =
-          "Nie udało się pobrać planszy. Sprawdź uprawnienia tabeli pixel_state.";
+          "Podgląd koloru jest widoczny tylko u Ciebie. Nie zapisano zmian.";
+      });
 
-        return;
-      }
+      clearButton.addEventListener("click", () => {
+        isSelecting = false;
+        startPoint = null;
+        endPoint = null;
+        previewColor = null;
 
-      pixels.clear();
+        updateStats();
+        drawCanvas();
 
-      for (const pixel of data || []) {
-        const id = Number(pixel.pixel_id);
+        statusElement.textContent = "Zaznaczenie zostało wyczyszczone.";
+      });
 
-        if (
-          Number.isInteger(id) &&
-          id >= 0 &&
-          id < TOTAL_PIXELS &&
-          /^#[0-9a-fA-F]{6}$/.test(pixel.color)
-        ) {
-          pixels.set(id, pixel.color);
+      async function loadPixels() {
+        if (!window.supabase) {
+          statusElement.textContent =
+            "Nie udało się załadować biblioteki Supabase. Sprawdź połączenie internetowe.";
+          return;
+        }
+
+        statusElement.textContent = "Pobieranie zapisanych pikseli...";
+
+        try {
+          const client = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+          );
+
+          const { data, error } = await client
+            .from("pixel_state")
+            .select("pixel_id, color")
+            .gte("pixel_id", 0)
+            .lt("pixel_id", TOTAL_PIXELS)
+            .limit(TOTAL_PIXELS);
+
+          if (error) {
+            console.error("Supabase:", error);
+            statusElement.textContent =
+              "Plansza działa, ale nie udało się pobrać zapisanych pikseli.";
+            drawCanvas();
+            return;
+          }
+
+          pixels.clear();
+
+          for (const pixel of data || []) {
+            const id = Number(pixel.pixel_id);
+
+            if (
+              Number.isInteger(id) &&
+              id >= 0 &&
+              id < TOTAL_PIXELS &&
+              typeof pixel.color === "string" &&
+              /^#[0-9a-fA-F]{6}$/.test(pixel.color)
+            ) {
+              pixels.set(id, pixel.color);
+            }
+          }
+
+          drawCanvas();
+
+          statusElement.textContent =
+            "Plansza załadowana. Zapisanych pikseli: " +
+            pixels.size.toLocaleString("pl-PL") + ".";
+        } catch (error) {
+          console.error(error);
+          statusElement.textContent =
+            "Błąd połączenia z bazą. Zaznaczanie planszy powinno nadal działać.";
+          drawCanvas();
         }
       }
 
+      // Uruchom planszę od razu — nawet jeśli baza chwilowo nie odpowiada.
       drawCanvas();
-
-      statusElement.textContent =
-        "Plansza załadowana. Zapisanych pikseli: " +
-        pixels.size.toLocaleString("pl-PL") +
-        ".";
-    }
-
-    drawCanvas();
-    updateStats();
-    loadPixels();
-
-    supabase
-      .channel("pixel-state-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "pixel_state"
-        },
-        () => {
-          loadPixels();
-        }
-      )
-      .subscribe();
+      updateStats();
+      loadPixels();
+    })();
   </script>
 </body>
 </html>
