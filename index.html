@@ -1,49 +1,91 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
   <title>Million Pixels</title>
-  <meta name="description" content="Explore and select pixels on the Million Pixels canvas.">
+
+  <meta
+    name="description"
+    content="Million Pixels — select and buy pixels on a giant digital canvas."
+  >
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #080b14;
-      --panel: #111827;
-      --border: #283449;
-      --text: #f1f5f9;
+
+      --bg: #070a12;
+      --panel: #101827;
+      --panel-2: #0b1220;
+
+      --border: #263449;
+      --border-light: #3b4b63;
+
+      --text: #f8fafc;
       --muted: #94a3b8;
+
       --cyan: #22d3ee;
+      --cyan-dark: #0e7490;
+
       --purple: #a78bfa;
+      --green: #6ee7b7;
+      --red: #f87171;
+      --yellow: #facc15;
+
+      --header-height: 66px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
     }
 
-    body { min-height: 100vh; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-    button, input, select { font: inherit; }
+    button,
+    input,
+    select {
+      font: inherit;
+    }
 
     button {
-      border: 1px solid #3b4b63;
+      border: 1px solid var(--border-light);
       border-radius: 9px;
       background: #1e293b;
       color: white;
       padding: 10px 12px;
       cursor: pointer;
-      transition: background .15s, border-color .15s;
+
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease;
     }
 
     button:hover {
@@ -51,544 +93,1685 @@
       border-color: #64748b;
     }
 
+    button:active {
+      transform: translateY(1px);
+    }
+
     button:disabled {
-      opacity: .45;
+      opacity: 0.45;
       cursor: not-allowed;
+    }
+
+    button.primary {
+      background: var(--cyan-dark);
+      border-color: #0891b2;
+    }
+
+    button.primary:hover {
+      background: #155e75;
+    }
+
+    button.buy {
+      width: 100%;
+      background: #047857;
+      border-color: #10b981;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 13px;
+    }
+
+    button.buy:hover {
+      background: #059669;
+    }
+
+    button.danger {
+      background: #3b1d2a;
+      border-color: #713044;
     }
 
     input {
       width: 100%;
       min-width: 0;
+
       padding: 10px;
-      border: 1px solid #3b4b63;
+
+      border: 1px solid var(--border-light);
       border-radius: 8px;
-      background: #0b1220;
+
+      background: #080f1c;
       color: white;
     }
 
-    input:focus, button:focus-visible {
+    input:focus,
+    button:focus-visible {
       outline: 2px solid var(--cyan);
       outline-offset: 2px;
     }
 
+    input[type="color"] {
+      width: 52px;
+      height: 42px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       APP
+    ========================================================= */
+
     .app {
       min-height: 100vh;
+
       display: flex;
       flex-direction: column;
     }
 
     header {
+      min-height: var(--header-height);
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       gap: 16px;
-      padding: 16px 22px;
+
+      padding: 13px 22px;
+
       border-bottom: 1px solid var(--border);
-      background: #0b1020;
+
+      background: #0a0f1c;
     }
 
     .brand {
       font-size: clamp(20px, 3vw, 28px);
-      font-weight: 850;
-      letter-spacing: -1px;
+
+      font-weight: 900;
+
+      letter-spacing: -1.2px;
+
+      white-space: nowrap;
     }
 
-    .brand span { color: var(--cyan); }
+    .brand span {
+      color: var(--cyan);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
     .header-note {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
+      line-height: 1.45;
       text-align: right;
     }
 
     .main {
       flex: 1;
+
       min-height: 0;
+
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        320px;
+
       gap: 16px;
+
       padding: 16px;
     }
 
-    .art-panel, .sidebar {
+    /* =========================================================
+       ARTWORK
+    ========================================================= */
+
+    .art-panel,
+    .sidebar {
       min-width: 0;
+
       border: 1px solid var(--border);
+
       border-radius: 14px;
+
       background: var(--panel);
     }
 
     .art-panel {
       display: flex;
       flex-direction: column;
+
+      min-height: 420px;
+
       overflow: hidden;
-      min-height: 350px;
     }
 
     .art-heading {
+      min-height: 48px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       gap: 12px;
-      padding: 12px 15px;
+
+      padding: 11px 15px;
+
       border-bottom: 1px solid var(--border);
     }
 
     .art-heading h2 {
       margin: 0;
+
       font-size: 15px;
     }
 
-    .fit-label {
-      font-size: 12px;
+    .fit-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
       color: var(--cyan);
+
+      font-size: 11px;
+      font-weight: 700;
+
       white-space: nowrap;
     }
 
-    /*
-      The artwork always fits inside the available viewport.
-      There is no manual zoom state to get stuck in.
-    */
+    .fit-dot {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: var(--cyan);
+
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
     .art-viewport {
       position: relative;
+
       flex: 1;
+
       min-height: 0;
+
       width: 100%;
-      overflow: hidden;
+
+      overflow: auto;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px;
+
+      padding: 10px;
+
       background:
-        radial-gradient(ellipse at center, #172033 0%, #080b14 85%);
+        radial-gradient(
+          ellipse at center,
+          #172033 0%,
+          #080b14 80%
+        );
+
+      /*
+        Important:
+        scrolling is allowed when the user zooms.
+      */
+      overscroll-behavior: contain;
     }
 
     .canvas-wrap {
       position: relative;
+
       flex: 0 0 auto;
+
       line-height: 0;
-      box-shadow: 0 0 30px #0008;
-      touch-action: pan-y;
+
+      box-shadow:
+        0 0 35px #000b,
+        0 0 1px #ffffff33;
+
+      touch-action: none;
+
+      user-select: none;
     }
 
     #artCanvas {
       display: block;
+
       width: 100%;
       height: 100%;
+
       image-rendering: pixelated;
+
+      user-select: none;
     }
+
+    /*
+      Grid is CSS, not canvas.
+      This keeps the actual artwork clean.
+    */
 
     #gridOverlay {
       position: absolute;
+
       inset: 0;
+
       pointer-events: none;
+
+      z-index: 3;
+
       background-image:
-        linear-gradient(to right, #07101d9c 1px, transparent 1px),
-        linear-gradient(to bottom, #07101d9c 1px, transparent 1px);
+        linear-gradient(
+          to right,
+          rgba(4, 10, 20, 0.55) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(4, 10, 20, 0.55) 1px,
+          transparent 1px
+        );
+
       background-repeat: repeat;
     }
 
+    /*
+      Selection border.
+    */
+
     #selectionOverlay {
       position: absolute;
+
       display: none;
+
       pointer-events: none;
+
+      z-index: 10;
+
       border: 2px solid var(--cyan);
-      background: #22d3ee2c;
-      box-shadow: inset 0 0 0 1px #07101d;
-      z-index: 2;
+
+      background: rgba(34, 211, 238, 0.10);
+
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.7),
+        0 0 8px rgba(34, 211, 238, 0.35);
     }
 
     #selectionOverlay.multi {
       border-color: var(--purple);
-      background: #a78bfa35;
+
+      background: rgba(167, 139, 250, 0.08);
+
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.7),
+        0 0 10px rgba(167, 139, 250, 0.35);
+    }
+
+    /*
+      This is the important fix for Preview Color.
+
+      Instead of trying to draw one microscopic 1x1 canvas pixel,
+      we create a visible overlay over the entire selected area.
+    */
+
+    #previewOverlay {
+      position: absolute;
+
+      display: none;
+
+      pointer-events: none;
+
+      z-index: 8;
+
+      opacity: 0.72;
+
+      mix-blend-mode: normal;
     }
 
     .canvas-instructions {
       padding: 9px 14px;
+
       border-top: 1px solid var(--border);
-      font-size: 12px;
+
       color: var(--muted);
+
+      font-size: 12px;
+
       text-align: center;
+      line-height: 1.45;
     }
 
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+
     .sidebar {
-      padding: 16px;
+      padding: 15px;
+
       display: flex;
       flex-direction: column;
-      gap: 16px;
+
+      gap: 15px;
+
+      overflow-y: auto;
     }
 
     .section {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+
+      gap: 9px;
     }
 
     .section + .section {
       border-top: 1px solid var(--border);
+
       padding-top: 15px;
     }
 
     .section h3 {
-      font-size: 14px;
       margin: 0;
+
+      font-size: 14px;
     }
 
     .muted {
       color: var(--muted);
+
       font-size: 12px;
+
       line-height: 1.5;
     }
 
     .coordinate-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 9px;
     }
 
     .field {
+      min-width: 0;
+
       display: flex;
       flex-direction: column;
+
       gap: 5px;
-      min-width: 0;
     }
 
     .field label {
-      font-size: 12px;
       color: var(--muted);
+
+      font-size: 11px;
     }
 
     .button-row {
       display: flex;
+
       gap: 8px;
     }
 
-    .button-row > button { flex: 1; }
-
-    .primary {
-      background: #0e7490;
-      border-color: #0891b2;
-    }
-
-    .primary:hover { background: #155e75; }
-
-    .danger {
-      background: #3b1d2a;
-      border-color: #713044;
+    .button-row > button {
+      flex: 1;
     }
 
     .stat-card {
-      padding: 12px;
+      padding: 11px;
+
       border: 1px solid var(--border);
+
       border-radius: 10px;
-      background: #0b1220;
+
+      background: var(--panel-2);
     }
 
     .stat-label {
       color: var(--muted);
-      font-size: 12px;
+
+      font-size: 11px;
     }
 
     .stat-value {
-      margin-top: 5px;
-      font-size: 22px;
+      margin-top: 4px;
+
+      font-size: 19px;
+
       font-weight: 800;
+
       overflow-wrap: anywhere;
     }
 
-    .price { color: #67e8a5; }
+    .price {
+      color: var(--green);
+    }
 
     .color-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+
+      gap: 9px;
     }
 
-    input[type="color"] {
-      width: 48px;
-      height: 40px;
-      padding: 3px;
-      cursor: pointer;
+    .color-row button {
+      flex: 1;
+    }
+
+    .preview-status {
+      min-height: 16px;
+
+      color: var(--cyan);
+
+      font-size: 11px;
     }
 
     .status {
       font-size: 12px;
+
       line-height: 1.5;
+
       overflow-wrap: anywhere;
     }
 
-    .status.ok { color: #6ee7b7; }
-    .status.error { color: #fca5a5; }
-    .status.loading { color: #fcd34d; }
-
-    footer {
-      padding: 13px 18px;
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      border-top: 1px solid var(--border);
+    .status.ok {
+      color: var(--green);
     }
 
-    @media (max-width: 850px) {
+    .status.error {
+      color: #fca5a5;
+    }
+
+    .status.loading {
+      color: #fcd34d;
+    }
+
+    /* =========================================================
+       ZOOM CONTROLS
+    ========================================================= */
+
+    .zoom-controls {
+      display: grid;
+
+      grid-template-columns:
+        42px
+        1fr
+        42px;
+
+      gap: 7px;
+    }
+
+    .zoom-value {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-width: 0;
+
+      border: 1px solid var(--border);
+
+      border-radius: 8px;
+
+      background: #0b1220;
+
+      color: var(--muted);
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       PURCHASE MODAL
+    ========================================================= */
+
+    .modal-backdrop {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 1000;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background: rgba(0, 0, 0, 0.72);
+
+      backdrop-filter: blur(7px);
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(440px, 100%);
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      border: 1px solid var(--border-light);
+
+      border-radius: 16px;
+
+      background: #101827;
+
+      box-shadow: 0 25px 80px #000b;
+
+      padding: 20px;
+    }
+
+    .modal h2 {
+      margin: 0 0 7px;
+
+      font-size: 20px;
+    }
+
+    .modal-close {
+      position: absolute;
+
+      top: 10px;
+      right: 10px;
+
+      width: 36px;
+      height: 36px;
+
+      padding: 0;
+
+      font-size: 20px;
+    }
+
+    .modal-header {
+      position: relative;
+
+      padding-right: 45px;
+    }
+
+    .modal-summary {
+      display: grid;
+
+      gap: 8px;
+
+      margin: 17px 0;
+    }
+
+    .modal-line {
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 10px 0;
+
+      border-bottom: 1px solid var(--border);
+
+      font-size: 13px;
+    }
+
+    .modal-line span:first-child {
+      color: var(--muted);
+    }
+
+    .modal-price {
+      color: var(--green);
+
+      font-size: 23px;
+
+      font-weight: 900;
+    }
+
+    .modal-note {
+      padding: 11px;
+
+      border-radius: 9px;
+
+      background: #172033;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+
+      gap: 8px;
+
+      margin-top: 15px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+      padding: 11px 18px;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+
+      font-size: 11px;
+
+      text-align: center;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 900px) {
       .main {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: 1fr;
       }
 
-      .art-panel { min-height: 55vh; }
+      .art-panel {
+        min-height: 55vh;
+      }
 
       .sidebar {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+
         align-items: start;
       }
 
       .section + .section {
         border-top: none;
+
         padding-top: 0;
       }
     }
 
-    @media (max-width: 520px) {
-      header { padding: 12px; }
-      .main { padding: 8px; gap: 8px; }
-      .sidebar { padding: 12px; gap: 14px; }
-      .art-panel { min-height: 45vh; }
-      .sidebar { grid-template-columns: minmax(0, 1fr); }
-      .header-note { max-width: 125px; }
+    @media (max-width: 560px) {
+      header {
+        padding: 11px 12px;
+      }
+
+      .header-note {
+        max-width: 120px;
+      }
+
+      .main {
+        padding: 8px;
+
+        gap: 8px;
+      }
+
+      .art-panel {
+        min-height: 48vh;
+
+        border-radius: 11px;
+      }
+
+      .sidebar {
+        display: flex;
+
+        padding: 12px;
+      }
+
+      .section + .section {
+        border-top: 1px solid var(--border);
+
+        padding-top: 14px;
+      }
+
+      .fit-status {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
+
 <div class="app">
+
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+
   <header>
-    <div class="brand">MILLION <span>PIXELS</span></div>
-    <div class="header-note">
-      600 × 500 pixels<br>
-      0.50 PLN per pixel
+
+    <div class="brand">
+      MILLION <span>PIXELS</span>
     </div>
+
+    <div class="header-right">
+
+      <div class="header-note">
+        600 × 500 pixels<br>
+        0.50 PLN per pixel
+      </div>
+
+    </div>
+
   </header>
 
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
   <main class="main">
+
+    <!-- =====================================================
+         CANVAS
+    ====================================================== -->
+
     <section class="art-panel">
+
       <div class="art-heading">
+
         <h2>Pixel canvas</h2>
-        <div class="fit-label">FIT TO SCREEN · AUTO</div>
+
+        <div class="fit-status">
+          <span class="fit-dot"></span>
+          FIT TO SCREEN
+        </div>
+
       </div>
 
-      <div class="art-viewport" id="artViewport">
-        <div class="canvas-wrap" id="canvasWrap">
-          <canvas id="artCanvas" width="600" height="500"></canvas>
+
+      <div
+        class="art-viewport"
+        id="artViewport"
+        aria-label="Million Pixels canvas"
+      >
+
+        <div
+          class="canvas-wrap"
+          id="canvasWrap"
+        >
+
+          <canvas
+            id="artCanvas"
+            width="600"
+            height="500"
+          ></canvas>
+
           <div id="gridOverlay"></div>
+
+          <div id="previewOverlay"></div>
+
           <div id="selectionOverlay"></div>
+
         </div>
+
       </div>
+
 
       <div class="canvas-instructions">
-        Click to select a pixel · Drag to select multiple pixels ·
-        The canvas automatically fits the screen
+
+        Click = select pixel · Drag = select area ·
+        Mouse wheel = zoom · Shift + wheel = scroll
+
       </div>
+
     </section>
 
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <aside class="sidebar">
+
+
+      <!-- ===================================================
+           NAVIGATION
+      ==================================================== -->
+
       <section class="section">
+
         <h3>Navigate by coordinates</h3>
+
         <div class="muted">
-          Coordinates start at the top-left corner. X: 0–599, Y: 0–499.
+          Coordinates start at the top-left corner.
+          X: 0–599 · Y: 0–499
         </div>
 
+
         <div class="coordinate-grid">
+
           <div class="field">
             <label for="xStart">X start</label>
-            <input id="xStart" type="number" min="0" max="599" value="0">
+
+            <input
+              id="xStart"
+              type="number"
+              min="0"
+              max="599"
+              step="1"
+              value="0"
+            >
           </div>
+
+
           <div class="field">
             <label for="yStart">Y start</label>
-            <input id="yStart" type="number" min="0" max="499" value="0">
+
+            <input
+              id="yStart"
+              type="number"
+              min="0"
+              max="499"
+              step="1"
+              value="0"
+            >
           </div>
+
+
           <div class="field">
             <label for="xEnd">X end</label>
-            <input id="xEnd" type="number" min="0" max="599" value="0">
+
+            <input
+              id="xEnd"
+              type="number"
+              min="0"
+              max="599"
+              step="1"
+              value="0"
+            >
           </div>
+
+
           <div class="field">
             <label for="yEnd">Y end</label>
-            <input id="yEnd" type="number" min="0" max="499" value="0">
+
+            <input
+              id="yEnd"
+              type="number"
+              min="0"
+              max="499"
+              step="1"
+              value="0"
+            >
           </div>
+
         </div>
 
-        <button class="primary" id="selectCoordinates">Select area</button>
-        <button id="fitButton">Fit to screen</button>
-        <div class="muted">
-          Fit to screen is always enabled. The canvas adjusts automatically
-          when the window or device orientation changes.
-        </div>
+
+        <button
+          class="primary"
+          id="selectCoordinates"
+        >
+          Select area
+        </button>
+
       </section>
 
+
+      <!-- ===================================================
+           ZOOM
+      ==================================================== -->
+
       <section class="section">
+
+        <h3>View</h3>
+
+        <div class="zoom-controls">
+
+          <button
+            id="zoomOut"
+            title="Zoom out"
+          >
+            −
+          </button>
+
+          <div
+            class="zoom-value"
+            id="zoomValue"
+          >
+            Fit to screen
+          </div>
+
+          <button
+            id="zoomIn"
+            title="Zoom in"
+          >
+            +
+          </button>
+
+        </div>
+
+
+        <button id="fitButton">
+          Fit to screen
+        </button>
+
+
+        <div class="muted">
+          The canvas starts in Fit to screen mode.
+          Use the mouse wheel to temporarily zoom in or out.
+          Resizing the window returns to Fit to screen.
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           SELECTION
+      ==================================================== -->
+
+      <section class="section">
+
         <h3>Selection</h3>
 
+
         <div class="stat-card">
-          <div class="stat-label">Coordinates</div>
-          <div class="stat-value" id="coordinatesValue">—</div>
+
+          <div class="stat-label">
+            Coordinates
+          </div>
+
+          <div
+            class="stat-value"
+            id="coordinatesValue"
+          >
+            —
+          </div>
+
         </div>
+
 
         <div class="coordinate-grid">
+
           <div class="stat-card">
-            <div class="stat-label">Area size</div>
-            <div class="stat-value" id="sizeValue">0 × 0</div>
+
+            <div class="stat-label">
+              Area size
+            </div>
+
+            <div
+              class="stat-value"
+              id="sizeValue"
+            >
+              0 × 0
+            </div>
+
           </div>
+
+
           <div class="stat-card">
-            <div class="stat-label">Pixel count</div>
-            <div class="stat-value" id="countValue">0</div>
+
+            <div class="stat-label">
+              Pixel count
+            </div>
+
+            <div
+              class="stat-value"
+              id="countValue"
+            >
+              0
+            </div>
+
           </div>
+
         </div>
+
 
         <div class="stat-card">
-          <div class="stat-label">Estimated total price</div>
-          <div class="stat-value price" id="priceValue">0.00 PLN</div>
+
+          <div class="stat-label">
+            Estimated total price
+          </div>
+
+          <div
+            class="stat-value price"
+            id="priceValue"
+          >
+            0.00 PLN
+          </div>
+
         </div>
+
 
         <div class="button-row">
-          <button id="copyButton">Copy coordinates</button>
-          <button class="danger" id="clearButton">Clear</button>
+
+          <button id="copyButton">
+            Copy coordinates
+          </button>
+
+          <button
+            class="danger"
+            id="clearButton"
+          >
+            Clear
+          </button>
+
         </div>
-        <div class="muted">
-          This is a selection and price estimate only. No payment is taken.
-        </div>
+
       </section>
 
+
+      <!-- ===================================================
+           COLOR PREVIEW
+      ==================================================== -->
+
       <section class="section">
+
         <h3>Color preview</h3>
+
         <div class="muted">
-          Choose a color to preview it on the top-left pixel of your selection.
-          This preview is local only and is not saved to the database.
+          Choose a color and preview it over the selected
+          pixels. The preview is local and is not saved.
         </div>
+
+
         <div class="color-row">
-          <input id="colorPicker" type="color" value="#ff4fd8" aria-label="Preview color">
-          <button id="previewButton">Preview color</button>
+
+          <input
+            id="colorPicker"
+            type="color"
+            value="#ff4fd8"
+            aria-label="Preview color"
+          >
+
+          <button
+            class="primary"
+            id="previewButton"
+          >
+            Preview color
+          </button>
+
         </div>
-        <button id="resetPreviewButton">Reset preview</button>
+
+
+        <button id="resetPreviewButton">
+          Reset preview
+        </button>
+
+
+        <div
+          class="preview-status"
+          id="previewStatus"
+        ></div>
+
       </section>
 
+
+      <!-- ===================================================
+           BUY
+      ==================================================== -->
+
       <section class="section">
-        <h3>Connection</h3>
-        <div class="status loading" id="connectionStatus">Connecting to Supabase…</div>
+
+        <h3>Purchase</h3>
+
+        <div class="muted">
+          Select one or more pixels to prepare your purchase.
+          Price: 0.50 PLN per pixel.
+        </div>
+
+
+        <button
+          class="buy"
+          id="buyButton"
+        >
+          Buy selected pixels
+        </button>
+
       </section>
+
+
+      <!-- ===================================================
+           CONNECTION
+      ==================================================== -->
+
+      <section class="section">
+
+        <h3>Connection</h3>
+
+        <div
+          class="status loading"
+          id="connectionStatus"
+        >
+          Connecting to Supabase…
+        </div>
+
+      </section>
+
     </aside>
+
   </main>
 
+
   <footer>
-    Million Pixels · 600 × 500 canvas · Prices shown in PLN
+    Million Pixels · 600 × 500 canvas · 0.50 PLN per pixel
   </footer>
+
 </div>
+
+
+<!-- =========================================================
+     PURCHASE MODAL
+========================================================= -->
+
+<div
+  class="modal-backdrop"
+  id="purchaseModal"
+>
+
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="purchaseTitle"
+  >
+
+    <div class="modal-header">
+
+      <button
+        class="modal-close"
+        id="closePurchaseModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <h2 id="purchaseTitle">
+        Buy selected pixels
+      </h2>
+
+      <div class="muted">
+        Review your selection before continuing.
+      </div>
+
+    </div>
+
+
+    <div class="modal-summary">
+
+      <div class="modal-line">
+
+        <span>Coordinates</span>
+
+        <strong id="modalCoordinates">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="modal-line">
+
+        <span>Area</span>
+
+        <strong id="modalArea">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="modal-line">
+
+        <span>Pixels</span>
+
+        <strong id="modalCount">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="modal-line">
+
+        <span>Total</span>
+
+        <strong
+          class="modal-price"
+          id="modalPrice"
+        >
+          0.00 PLN
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-note">
+
+      Payment is not connected yet. This button currently
+      prepares the selected pixel order. A real payment
+      provider such as Stripe or PayPal can be connected
+      here later.
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button id="cancelPurchase">
+        Cancel
+      </button>
+
+      <button
+        class="buy"
+        id="continuePurchase"
+      >
+        Continue
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <script>
 (() => {
+
   "use strict";
+
+
+  /* =========================================================
+     CONFIGURATION
+  ========================================================= */
 
   const WIDTH = 600;
   const HEIGHT = 500;
+
   const TOTAL_PIXELS = WIDTH * HEIGHT;
+
   const PRICE_PER_PIXEL = 0.50;
 
-  const SUPABASE_URL = "https://lailqxqyzymiwlhxrzzw.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
 
-  const canvas = document.getElementById("artCanvas");
-  const ctx = canvas.getContext("2d");
-  const viewport = document.getElementById("artViewport");
-  const wrap = document.getElementById("canvasWrap");
-  const grid = document.getElementById("gridOverlay");
-  const selectionOverlay = document.getElementById("selectionOverlay");
+  const SUPABASE_URL =
+    "https://lailqxqyzymiwlhxrzzw.supabase.co";
 
-  const $ = id => document.getElementById(id);
 
-  let scale = 1;
+  const SUPABASE_KEY =
+    "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
+
+
+  /*
+    Zoom configuration.
+
+    Fit-to-screen is the default.
+
+    Wheel zoom can temporarily go from 25% to 1600%.
+  */
+
+  const MIN_ZOOM = 0.25;
+  const MAX_ZOOM = 16;
+
+  const WHEEL_ZOOM_FACTOR = 1.18;
+
+
+  /* =========================================================
+     DOM
+  ========================================================= */
+
+  const canvas =
+    document.getElementById("artCanvas");
+
+  const ctx =
+    canvas.getContext("2d", {
+      alpha: false
+    });
+
+
+  const viewport =
+    document.getElementById("artViewport");
+
+
+  const wrap =
+    document.getElementById("canvasWrap");
+
+
+  const grid =
+    document.getElementById("gridOverlay");
+
+
+  const selectionOverlay =
+    document.getElementById("selectionOverlay");
+
+
+  const previewOverlay =
+    document.getElementById("previewOverlay");
+
+
+  const $ = id =>
+    document.getElementById(id);
+
+
+  /* =========================================================
+     STATE
+  ========================================================= */
+
+  let zoom = 1;
+
+  let fitZoom = 1;
+
+  let isFitMode = true;
+
   let selection = null;
+
   let dragStart = null;
+
   let isDragging = false;
-  let previewPixel = null;
+
   let previewColor = null;
-  const savedColors = new Map();
 
   let supabase = null;
 
+  let resizeFrame = null;
+
+  let lastPointer = null;
+
+
+  /*
+    Database pixel colors.
+  */
+
+  const savedColors = new Map();
+
+
+  /* =========================================================
+     HELPERS
+  ========================================================= */
+
   function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+
+    return Math.max(
+      min,
+      Math.min(max, value)
+    );
+
   }
+
 
   function pixelId(x, y) {
+
     return y * WIDTH + x;
+
   }
+
 
   function validColor(color) {
-    return typeof color === "string" &&
-      /^#[0-9a-fA-F]{6}$/.test(color);
+
+    return (
+      typeof color === "string" &&
+      /^#[0-9a-fA-F]{6}$/.test(color)
+    );
+
   }
 
-  // Draw the background artwork at native pixel resolution.
+
+  function formatMoney(value) {
+
+    return value.toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    ) + " PLN";
+
+  }
+
+
+  /* =========================================================
+     ARTWORK
+  ========================================================= */
+
   function drawArtwork() {
-    const sky = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-    sky.addColorStop(0, "#160d3b");
-    sky.addColorStop(0.30, "#56266e");
-    sky.addColorStop(0.53, "#f15c8e");
-    sky.addColorStop(0.70, "#ffb36b");
-    sky.addColorStop(1, "#111a3c");
+
+    /*
+      Sunset sky.
+    */
+
+    const sky =
+      ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        HEIGHT
+      );
+
+
+    sky.addColorStop(
+      0,
+      "#160d3b"
+    );
+
+
+    sky.addColorStop(
+      0.30,
+      "#56266e"
+    );
+
+
+    sky.addColorStop(
+      0.53,
+      "#f15c8e"
+    );
+
+
+    sky.addColorStop(
+      0.70,
+      "#ffb36b"
+    );
+
+
+    sky.addColorStop(
+      1,
+      "#111a3c"
+    );
+
 
     ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    // Stars
+    ctx.fillRect(
+      0,
+      0,
+      WIDTH,
+      HEIGHT
+    );
+
+
+    /*
+      Stars.
+    */
+
     let seed = 123456;
+
+
     function random() {
-      seed = (seed * 16807) % 2147483647;
-      return (seed - 1) / 2147483646;
+
+      seed =
+        (seed * 16807) %
+        2147483647;
+
+      return (
+        (seed - 1) /
+        2147483646
+      );
+
     }
+
 
     for (let i = 0; i < 180; i++) {
-      const x = Math.floor(random() * WIDTH);
-      const y = Math.floor(random() * 220);
-      const size = random() > 0.8 ? 2 : 1;
-      ctx.fillStyle = random() > 0.5 ? "#ffffffaa" : "#b9d7ff99";
-      ctx.fillRect(x, y, size, size);
+
+      const x =
+        Math.floor(
+          random() * WIDTH
+        );
+
+
+      const y =
+        Math.floor(
+          random() * 220
+        );
+
+
+      const size =
+        random() > 0.8
+          ? 2
+          : 1;
+
+
+      ctx.fillStyle =
+        random() > 0.5
+          ? "#ffffffaa"
+          : "#b9d7ff99";
+
+
+      ctx.fillRect(
+        x,
+        y,
+        size,
+        size
+      );
+
     }
 
-    // Sun
+
+    /*
+      Sun.
+    */
+
     const sunX = 385;
     const sunY = 245;
     const sunR = 72;
 
-    const glow = ctx.createRadialGradient(
-      sunX, sunY, 8, sunX, sunY, sunR + 25
+
+    const glow =
+      ctx.createRadialGradient(
+        sunX,
+        sunY,
+        8,
+        sunX,
+        sunY,
+        sunR + 25
+      );
+
+
+    glow.addColorStop(
+      0,
+      "#fff5b0"
     );
-    glow.addColorStop(0, "#fff5b0");
-    glow.addColorStop(0.55, "#ffbd72");
-    glow.addColorStop(1, "#ff8a6a00");
+
+
+    glow.addColorStop(
+      0.55,
+      "#ffbd72"
+    );
+
+
+    glow.addColorStop(
+      1,
+      "#ff8a6a00"
+    );
+
 
     ctx.fillStyle = glow;
+
+
     ctx.beginPath();
-    ctx.arc(sunX, sunY, sunR + 25, 0, Math.PI * 2);
+
+    ctx.arc(
+      sunX,
+      sunY,
+      sunR + 25,
+      0,
+      Math.PI * 2
+    );
+
     ctx.fill();
 
-    ctx.fillStyle = "#ffe9a5";
+
+    ctx.fillStyle =
+      "#ffe9a5";
+
+
     ctx.beginPath();
-    ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+
+    ctx.arc(
+      sunX,
+      sunY,
+      sunR,
+      0,
+      Math.PI * 2
+    );
+
     ctx.fill();
 
-    // Horizontal sunset stripes
+
+    /*
+      Sunset stripes inside the sun.
+    */
+
     ctx.save();
+
     ctx.beginPath();
-    ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+
+    ctx.arc(
+      sunX,
+      sunY,
+      sunR,
+      0,
+      Math.PI * 2
+    );
+
     ctx.clip();
 
-    for (let y = sunY - 55; y < sunY + 65; y += 13) {
-      ctx.fillStyle = "#f58b91";
-      ctx.fillRect(sunX - sunR, y, sunR * 2, 5);
+
+    for (
+      let y = sunY - 55;
+      y < sunY + 65;
+      y += 13
+    ) {
+
+      ctx.fillStyle =
+        "#f58b91";
+
+      ctx.fillRect(
+        sunX - sunR,
+        y,
+        sunR * 2,
+        5
+      );
+
     }
+
     ctx.restore();
 
-    // Distant mountains
-    ctx.fillStyle = "#31245d";
+
+    /*
+      Distant mountains.
+    */
+
+    ctx.fillStyle =
+      "#31245d";
+
+
     ctx.beginPath();
+
     ctx.moveTo(0, 335);
     ctx.lineTo(95, 245);
     ctx.lineTo(155, 300);
@@ -599,16 +1782,43 @@
     ctx.lineTo(600, 250);
     ctx.lineTo(600, 500);
     ctx.lineTo(0, 500);
+
     ctx.closePath();
+
     ctx.fill();
 
-    // Foreground mountains
-    const mountain = ctx.createLinearGradient(0, 300, 0, HEIGHT);
-    mountain.addColorStop(0, "#20234f");
-    mountain.addColorStop(1, "#080e25");
 
-    ctx.fillStyle = mountain;
+    /*
+      Foreground mountains.
+    */
+
+    const mountain =
+      ctx.createLinearGradient(
+        0,
+        300,
+        0,
+        HEIGHT
+      );
+
+
+    mountain.addColorStop(
+      0,
+      "#20234f"
+    );
+
+
+    mountain.addColorStop(
+      1,
+      "#080e25"
+    );
+
+
+    ctx.fillStyle =
+      mountain;
+
+
     ctx.beginPath();
+
     ctx.moveTo(0, 390);
     ctx.lineTo(105, 315);
     ctx.lineTo(180, 380);
@@ -618,367 +1828,1623 @@
     ctx.lineTo(600, 395);
     ctx.lineTo(600, 500);
     ctx.lineTo(0, 500);
+
     ctx.closePath();
+
     ctx.fill();
 
-    // Neon mountain highlights
+
+    /*
+      Neon highlights.
+    */
+
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#6a8cff";
+
+
+    ctx.strokeStyle =
+      "#6a8cff";
+
+
     ctx.beginPath();
+
     ctx.moveTo(0, 390);
     ctx.lineTo(105, 315);
     ctx.lineTo(180, 380);
+
     ctx.stroke();
 
-    ctx.strokeStyle = "#c16cff";
+
+    ctx.strokeStyle =
+      "#c16cff";
+
+
     ctx.beginPath();
+
     ctx.moveTo(180, 380);
     ctx.lineTo(290, 295);
     ctx.lineTo(390, 385);
+
     ctx.stroke();
 
-    ctx.strokeStyle = "#38d9f8";
+
+    ctx.strokeStyle =
+      "#38d9f8";
+
+
     ctx.beginPath();
+
     ctx.moveTo(390, 385);
     ctx.lineTo(490, 320);
     ctx.lineTo(600, 395);
+
     ctx.stroke();
 
-    // A subtle neon horizon
-    ctx.strokeStyle = "#f7a1d7aa";
+
+    /*
+      Horizon.
+    */
+
+    ctx.strokeStyle =
+      "#f7a1d7aa";
+
     ctx.lineWidth = 1;
+
+
     ctx.beginPath();
-    ctx.moveTo(0, 415);
-    ctx.lineTo(WIDTH, 415);
+
+    ctx.moveTo(
+      0,
+      415
+    );
+
+    ctx.lineTo(
+      WIDTH,
+      415
+    );
+
     ctx.stroke();
+
   }
+
+
+  /* =========================================================
+     REDRAW
+  ========================================================= */
 
   function redraw() {
+
     drawArtwork();
 
-    // Database colors are drawn over the background artwork.
-    for (const [id, color] of savedColors) {
-      const x = id % WIDTH;
-      const y = Math.floor(id / WIDTH);
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, 1, 1);
-    }
 
-    // Preview is intentionally temporary and local.
-    if (previewPixel !== null && validColor(previewColor)) {
-      const x = previewPixel % WIDTH;
-      const y = Math.floor(previewPixel / WIDTH);
-      ctx.fillStyle = previewColor;
-      ctx.fillRect(x, y, 1, 1);
-    }
-  }
+    /*
+      Database colors.
+    */
 
-  /*
-    Always fit the complete canvas to the visible viewport.
-    This function is called at startup, on resize and after orientation changes.
-  */
-  function fitToScreen() {
-    const availableWidth = Math.max(1, viewport.clientWidth - 16);
-    const availableHeight = Math.max(1, viewport.clientHeight - 16);
-
-    scale = Math.max(
-      0.01,
-      Math.min(availableWidth / WIDTH, availableHeight / HEIGHT)
-    );
-
-    const displayWidth = WIDTH * scale;
-    const displayHeight = HEIGHT * scale;
-
-    wrap.style.width = `${displayWidth}px`;
-    wrap.style.height = `${displayHeight}px`;
-
-    grid.style.backgroundSize = `${scale}px ${scale}px`;
-
-    updateSelectionOverlay();
-  }
-
-  function getPoint(event) {
-    const rect = canvas.getBoundingClientRect();
-
-    const x = clamp(
-      Math.floor((event.clientX - rect.left) / rect.width * WIDTH),
-      0,
-      WIDTH - 1
-    );
-
-    const y = clamp(
-      Math.floor((event.clientY - rect.top) / rect.height * HEIGHT),
-      0,
-      HEIGHT - 1
-    );
-
-    return { x, y };
-  }
-
-  function normalizedSelection(a, b) {
-    return {
-      x1: Math.min(a.x, b.x),
-      y1: Math.min(a.y, b.y),
-      x2: Math.max(a.x, b.x),
-      y2: Math.max(a.y, b.y)
-    };
-  }
-
-  function selectionStats() {
-    if (!selection) return null;
-
-    const width = selection.x2 - selection.x1 + 1;
-    const height = selection.y2 - selection.y1 + 1;
-
-    return {
-      width,
-      height,
-      count: width * height,
-      price: width * height * PRICE_PER_PIXEL
-    };
-  }
-
-  function updateSelectionOverlay() {
-    if (!selection) {
-      selectionOverlay.style.display = "none";
-      return;
-    }
-
-    const left = selection.x1 * scale;
-    const top = selection.y1 * scale;
-    const width = (selection.x2 - selection.x1 + 1) * scale;
-    const height = (selection.y2 - selection.y1 + 1) * scale;
-
-    selectionOverlay.style.display = "block";
-    selectionOverlay.style.left = `${left}px`;
-    selectionOverlay.style.top = `${top}px`;
-    selectionOverlay.style.width = `${width}px`;
-    selectionOverlay.style.height = `${height}px`;
-    selectionOverlay.classList.toggle(
-      "multi",
-      selection.x1 !== selection.x2 || selection.y1 !== selection.y2
-    );
-  }
-
-  function updateUI() {
-    if (!selection) {
-      $("coordinatesValue").textContent = "—";
-      $("sizeValue").textContent = "0 × 0";
-      $("countValue").textContent = "0";
-      $("priceValue").textContent = "0.00 PLN";
-      updateSelectionOverlay();
-      return;
-    }
-
-    const stats = selectionStats();
-
-    $("coordinatesValue").textContent =
-      `(${selection.x1}, ${selection.y1}) – (${selection.x2}, ${selection.y2})`;
-
-    $("sizeValue").textContent = `${stats.width} × ${stats.height}`;
-    $("countValue").textContent = stats.count.toLocaleString("en-US");
-    $("priceValue").textContent =
-      `${stats.price.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })} PLN`;
-
-    $("xStart").value = selection.x1;
-    $("yStart").value = selection.y1;
-    $("xEnd").value = selection.x2;
-    $("yEnd").value = selection.y2;
-
-    updateSelectionOverlay();
-  }
-
-  function setSelection(a, b = a) {
-    selection = normalizedSelection(a, b);
-    updateUI();
-  }
-
-  function clearSelection() {
-    selection = null;
-    previewPixel = null;
-    previewColor = null;
-    updateUI();
-    redraw();
-  }
-
-  function readCoordinates() {
-    const x1 = Number($("xStart").value);
-    const y1 = Number($("yStart").value);
-    const x2 = Number($("xEnd").value);
-    const y2 = Number($("yEnd").value);
-
-    const values = [x1, y1, x2, y2];
-
-    if (values.some(value => !Number.isInteger(value))) {
-      alert("Please enter whole-number coordinates.");
-      return null;
-    }
-
-    if (
-      x1 < 0 || x1 >= WIDTH ||
-      x2 < 0 || x2 >= WIDTH ||
-      y1 < 0 || y1 >= HEIGHT ||
-      y2 < 0 || y2 >= HEIGHT
+    for (
+      const [id, color]
+      of savedColors
     ) {
-      alert("Coordinates are outside the canvas.");
-      return null;
-    }
 
-    return normalizedSelection(
-      { x: x1, y: y1 },
-      { x: x2, y: y2 }
-    );
-  }
+      const x =
+        id % WIDTH;
 
-  $("selectCoordinates").addEventListener("click", () => {
-    const result = readCoordinates();
-    if (!result) return;
 
-    selection = result;
-    updateUI();
-  });
+      const y =
+        Math.floor(
+          id / WIDTH
+        );
 
-  $("fitButton").addEventListener("click", fitToScreen);
 
-  $("clearButton").addEventListener("click", clearSelection);
+      ctx.fillStyle =
+        color;
 
-  $("copyButton").addEventListener("click", async () => {
-    if (!selection) {
-      alert("Select a pixel or an area first.");
-      return;
-    }
 
-    const text =
-      `X: ${selection.x1}–${selection.x2}, ` +
-      `Y: ${selection.y1}–${selection.y2}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      $("copyButton").textContent = "Copied!";
-      setTimeout(() => {
-        $("copyButton").textContent = "Copy coordinates";
-      }, 1500);
-    } catch {
-      prompt("Copy these coordinates:", text);
-    }
-  });
-
-  $("previewButton").addEventListener("click", () => {
-    if (!selection) {
-      alert("Select a pixel or an area first.");
-      return;
-    }
-
-    previewPixel = pixelId(selection.x1, selection.y1);
-    previewColor = $("colorPicker").value;
-    redraw();
-  });
-
-  $("resetPreviewButton").addEventListener("click", () => {
-    previewPixel = null;
-    previewColor = null;
-    redraw();
-  });
-
-  // Click selects one pixel; dragging selects a rectangular area.
-  canvas.addEventListener("pointerdown", event => {
-    if (event.button !== 0) return;
-
-    event.preventDefault();
-    dragStart = getPoint(event);
-    isDragging = false;
-
-    try {
-      canvas.setPointerCapture(event.pointerId);
-    } catch (_) {}
-  });
-
-  canvas.addEventListener("pointermove", event => {
-    if (!dragStart) return;
-
-    const point = getPoint(event);
-
-    if (
-      point.x !== dragStart.x ||
-      point.y !== dragStart.y
-    ) {
-      isDragging = true;
-    }
-
-    if (isDragging) {
-      setSelection(dragStart, point);
-    }
-  });
-
-  function finishDrag(event) {
-    if (!dragStart) return;
-
-    const end = getPoint(event);
-    setSelection(dragStart, isDragging ? end : dragStart);
-
-    dragStart = null;
-    isDragging = false;
-  }
-
-  canvas.addEventListener("pointerup", finishDrag);
-  canvas.addEventListener("pointercancel", () => {
-    dragStart = null;
-    isDragging = false;
-  });
-
-  // Keep the canvas fitted to the screen at all times.
-  let resizeFrame = 0;
-
-  function scheduleFit() {
-    cancelAnimationFrame(resizeFrame);
-    resizeFrame = requestAnimationFrame(fitToScreen);
-  }
-
-  window.addEventListener("resize", scheduleFit);
-  window.addEventListener("orientationchange", scheduleFit);
-
-  if ("ResizeObserver" in window) {
-    const observer = new ResizeObserver(scheduleFit);
-    observer.observe(viewport);
-  }
-
-  // Load saved pixel colors from Supabase.
-  async function loadPixelColors() {
-    const status = $("connectionStatus");
-
-    if (!window.supabase) {
-      status.textContent = "Supabase library could not be loaded.";
-      status.className = "status error";
-      return;
-    }
-
-    try {
-      supabase = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+      ctx.fillRect(
+        x,
+        y,
+        1,
+        1
       );
 
-      status.textContent = "Loading saved pixel colors…";
-      status.className = "status loading";
+    }
 
-      const pageSize = 1000;
-      let from = 0;
-      let totalLoaded = 0;
+
+    updatePreviewOverlay();
+
+  }
+
+
+  /* =========================================================
+     ZOOM / FIT
+  ========================================================= */
+
+  function calculateFitZoom() {
+
+    const availableWidth =
+      Math.max(
+        1,
+        viewport.clientWidth - 20
+      );
+
+
+    const availableHeight =
+      Math.max(
+        1,
+        viewport.clientHeight - 20
+      );
+
+
+    return Math.min(
+      availableWidth / WIDTH,
+      availableHeight / HEIGHT
+    );
+
+  }
+
+
+  function applyZoom(
+    newZoom,
+    centerX = null,
+    centerY = null
+  ) {
+
+    const oldZoom =
+      zoom;
+
+
+    newZoom =
+      clamp(
+        newZoom,
+        MIN_ZOOM,
+        MAX_ZOOM
+      );
+
+
+    if (
+      centerX !== null &&
+      centerY !== null
+    ) {
+
+      /*
+        Preserve the point under the cursor.
+      */
+
+      const worldX =
+        (
+          viewport.scrollLeft +
+          centerX
+        ) / oldZoom;
+
+
+      const worldY =
+        (
+          viewport.scrollTop +
+          centerY
+        ) / oldZoom;
+
+
+      zoom =
+        newZoom;
+
+
+      updateCanvasSize();
+
+
+      viewport.scrollLeft =
+        worldX * newZoom -
+        centerX;
+
+
+      viewport.scrollTop =
+        worldY * newZoom -
+        centerY;
+
+    } else {
+
+      zoom =
+        newZoom;
+
+
+      updateCanvasSize();
+
+    }
+
+
+    isFitMode =
+      Math.abs(
+        zoom - fitZoom
+      ) < 0.0001;
+
+
+    updateZoomLabel();
+
+  }
+
+
+  function updateCanvasSize() {
+
+    const displayWidth =
+      WIDTH * zoom;
+
+
+    const displayHeight =
+      HEIGHT * zoom;
+
+
+    wrap.style.width =
+      `${displayWidth}px`;
+
+
+    wrap.style.height =
+      `${displayHeight}px`;
+
+
+    /*
+      The canvas itself remains 600x500.
+      CSS scales it.
+    */
+
+    grid.style.backgroundSize =
+      `${zoom}px ${zoom}px`;
+
+
+    updateSelectionOverlay();
+
+    updatePreviewOverlay();
+
+  }
+
+
+  function fitToScreen() {
+
+    fitZoom =
+      calculateFitZoom();
+
+
+    zoom =
+      fitZoom;
+
+
+    isFitMode =
+      true;
+
+
+    updateCanvasSize();
+
+
+    /*
+      Center the canvas.
+    */
+
+    requestAnimationFrame(() => {
+
+      viewport.scrollLeft =
+        Math.max(
+          0,
+          (
+            viewport.scrollWidth -
+            viewport.clientWidth
+          ) / 2
+        );
+
+
+      viewport.scrollTop =
+        Math.max(
+          0,
+          (
+            viewport.scrollHeight -
+            viewport.clientHeight
+          ) / 2
+        );
+
+    });
+
+
+    updateZoomLabel();
+
+  }
+
+
+  function updateZoomLabel() {
+
+    if (isFitMode) {
+
+      $("zoomValue").textContent =
+        "Fit to screen";
+
+      return;
+
+    }
+
+
+    const percentage =
+      Math.round(
+        zoom * 100
+      );
+
+
+    $("zoomValue").textContent =
+      `${percentage}%`;
+
+  }
+
+
+  $("zoomIn")
+    .addEventListener(
+      "click",
+      () => {
+
+        const rect =
+          viewport.getBoundingClientRect();
+
+
+        applyZoom(
+          zoom * WHEEL_ZOOM_FACTOR,
+          rect.width / 2,
+          rect.height / 2
+        );
+
+      }
+    );
+
+
+  $("zoomOut")
+    .addEventListener(
+      "click",
+      () => {
+
+        const rect =
+          viewport.getBoundingClientRect();
+
+
+        applyZoom(
+          zoom / WHEEL_ZOOM_FACTOR,
+          rect.width / 2,
+          rect.height / 2
+        );
+
+      }
+    );
+
+
+  $("fitButton")
+    .addEventListener(
+      "click",
+      fitToScreen
+    );
+
+
+  /*
+    Mouse wheel zoom.
+
+    Normal wheel:
+      zoom
+
+    Shift + wheel:
+      scroll horizontally/vertically
+  */
+
+  viewport.addEventListener(
+    "wheel",
+    event => {
+
+      if (event.shiftKey) {
+
+        event.preventDefault();
+
+
+        viewport.scrollLeft +=
+          event.deltaY;
+
+
+        viewport.scrollTop +=
+          event.deltaX;
+
+        return;
+
+      }
+
+
+      /*
+        Ctrl + wheel is usually browser zoom.
+        Do not interfere with it.
+      */
+
+      if (event.ctrlKey) {
+        return;
+      }
+
+
+      event.preventDefault();
+
+
+      const rect =
+        viewport.getBoundingClientRect();
+
+
+      const mouseX =
+        event.clientX -
+        rect.left;
+
+
+      const mouseY =
+        event.clientY -
+        rect.top;
+
+
+      const factor =
+        event.deltaY < 0
+          ? WHEEL_ZOOM_FACTOR
+          : 1 / WHEEL_ZOOM_FACTOR;
+
+
+      applyZoom(
+        zoom * factor,
+        mouseX,
+        mouseY
+      );
+
+    },
+    {
+      passive: false
+    }
+  );
+
+
+  /* =========================================================
+     CANVAS COORDINATES
+  ========================================================= */
+
+  function getPoint(event) {
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+
+    const relativeX =
+      (
+        event.clientX -
+        rect.left
+      ) / rect.width;
+
+
+    const relativeY =
+      (
+        event.clientY -
+        rect.top
+      ) / rect.height;
+
+
+    const x =
+      clamp(
+        Math.floor(
+          relativeX * WIDTH
+        ),
+        0,
+        WIDTH - 1
+      );
+
+
+    const y =
+      clamp(
+        Math.floor(
+          relativeY * HEIGHT
+        ),
+        0,
+        HEIGHT - 1
+      );
+
+
+    return {
+      x,
+      y
+    };
+
+  }
+
+
+  function normalizedSelection(
+    a,
+    b
+  ) {
+
+    return {
+
+      x1:
+        Math.min(
+          a.x,
+          b.x
+        ),
+
+      y1:
+        Math.min(
+          a.y,
+          b.y
+        ),
+
+      x2:
+        Math.max(
+          a.x,
+          b.x
+        ),
+
+      y2:
+        Math.max(
+          a.y,
+          b.y
+        )
+
+    };
+
+  }
+
+
+  /* =========================================================
+     SELECTION
+  ========================================================= */
+
+  function selectionStats() {
+
+    if (!selection) {
+      return null;
+    }
+
+
+    const width =
+      selection.x2 -
+      selection.x1 +
+      1;
+
+
+    const height =
+      selection.y2 -
+      selection.y1 +
+      1;
+
+
+    const count =
+      width * height;
+
+
+    return {
+
+      width,
+
+      height,
+
+      count,
+
+      price:
+        count *
+        PRICE_PER_PIXEL
+
+    };
+
+  }
+
+
+  function setSelection(
+    a,
+    b = a
+  ) {
+
+    selection =
+      normalizedSelection(
+        a,
+        b
+      );
+
+
+    updateSelectionUI();
+
+    updateSelectionOverlay();
+
+    updatePreviewOverlay();
+
+  }
+
+
+  function clearSelection() {
+
+    selection =
+      null;
+
+
+    previewColor =
+      null;
+
+
+    updateSelectionUI();
+
+    updateSelectionOverlay();
+
+    updatePreviewOverlay();
+
+
+    $("previewStatus").textContent =
+      "";
+
+  }
+
+
+  function updateSelectionUI() {
+
+    if (!selection) {
+
+      $("coordinatesValue")
+        .textContent =
+        "—";
+
+
+      $("sizeValue")
+        .textContent =
+        "0 × 0";
+
+
+      $("countValue")
+        .textContent =
+        "0";
+
+
+      $("priceValue")
+        .textContent =
+        "0.00 PLN";
+
+
+      $("buyButton")
+        .disabled =
+        true;
+
+
+      return;
+
+    }
+
+
+    const stats =
+      selectionStats();
+
+
+    $("coordinatesValue")
+      .textContent =
+      `(${selection.x1}, ${selection.y1}) – ` +
+      `(${selection.x2}, ${selection.y2})`;
+
+
+    $("sizeValue")
+      .textContent =
+      `${stats.width} × ${stats.height}`;
+
+
+    $("countValue")
+      .textContent =
+      stats.count.toLocaleString(
+        "en-US"
+      );
+
+
+    $("priceValue")
+      .textContent =
+      formatMoney(
+        stats.price
+      );
+
+
+    $("xStart").value =
+      selection.x1;
+
+
+    $("yStart").value =
+      selection.y1;
+
+
+    $("xEnd").value =
+      selection.x2;
+
+
+    $("yEnd").value =
+      selection.y2;
+
+
+    $("buyButton")
+      .disabled =
+      false;
+
+  }
+
+
+  function updateSelectionOverlay() {
+
+    if (!selection) {
+
+      selectionOverlay.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    const left =
+      selection.x1 *
+      zoom;
+
+
+    const top =
+      selection.y1 *
+      zoom;
+
+
+    const width =
+      (
+        selection.x2 -
+        selection.x1 +
+        1
+      ) * zoom;
+
+
+    const height =
+      (
+        selection.y2 -
+        selection.y1 +
+        1
+      ) * zoom;
+
+
+    selectionOverlay.style.display =
+      "block";
+
+
+    selectionOverlay.style.left =
+      `${left}px`;
+
+
+    selectionOverlay.style.top =
+      `${top}px`;
+
+
+    selectionOverlay.style.width =
+      `${width}px`;
+
+
+    selectionOverlay.style.height =
+      `${height}px`;
+
+
+    const multiple =
+      selection.x1 !== selection.x2 ||
+      selection.y1 !== selection.y2;
+
+
+    selectionOverlay.classList
+      .toggle(
+        "multi",
+        multiple
+      );
+
+  }
+
+
+  /* =========================================================
+     PREVIEW COLOR
+  ========================================================= */
+
+  function updatePreviewOverlay() {
+
+    if (
+      !selection ||
+      !validColor(previewColor)
+    ) {
+
+      previewOverlay.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    const left =
+      selection.x1 *
+      zoom;
+
+
+    const top =
+      selection.y1 *
+      zoom;
+
+
+    const width =
+      (
+        selection.x2 -
+        selection.x1 +
+        1
+      ) * zoom;
+
+
+    const height =
+      (
+        selection.y2 -
+        selection.y1 +
+        1
+      ) * zoom;
+
+
+    previewOverlay.style.display =
+      "block";
+
+
+    previewOverlay.style.left =
+      `${left}px`;
+
+
+    previewOverlay.style.top =
+      `${top}px`;
+
+
+    previewOverlay.style.width =
+      `${width}px`;
+
+
+    previewOverlay.style.height =
+      `${height}px`;
+
+
+    previewOverlay.style.background =
+      previewColor;
+
+  }
+
+
+  $("previewButton")
+    .addEventListener(
+      "click",
+      () => {
+
+        if (!selection) {
+
+          alert(
+            "Please select a pixel or an area first."
+          );
+
+          return;
+
+        }
+
+
+        previewColor =
+          $("colorPicker").value;
+
+
+        updatePreviewOverlay();
+
+
+        $("previewStatus")
+          .textContent =
+          `Previewing ${previewColor} over ` +
+          `${selectionStats().count.toLocaleString("en-US")} pixel(s).`;
+
+      }
+    );
+
+
+  $("colorPicker")
+    .addEventListener(
+      "input",
+      () => {
+
+        /*
+          Live update after a selection has
+          already been previewed.
+        */
+
+        if (
+          selection &&
+          previewColor
+        ) {
+
+          previewColor =
+            $("colorPicker").value;
+
+
+          updatePreviewOverlay();
+
+        }
+
+      }
+    );
+
+
+  $("resetPreviewButton")
+    .addEventListener(
+      "click",
+      () => {
+
+        previewColor =
+          null;
+
+
+        updatePreviewOverlay();
+
+
+        $("previewStatus")
+          .textContent =
+          "Preview cleared.";
+
+      }
+    );
+
+
+  /* =========================================================
+     DRAG SELECTION
+  ========================================================= */
+
+  canvas.addEventListener(
+    "pointerdown",
+    event => {
+
+      if (
+        event.button !== 0 &&
+        event.pointerType !== "touch"
+      ) {
+        return;
+      }
+
+
+      event.preventDefault();
+
+
+      const point =
+        getPoint(event);
+
+
+      dragStart =
+        point;
+
+
+      lastPointer =
+        point;
+
+
+      isDragging =
+        false;
+
+
+      try {
+
+        canvas.setPointerCapture(
+          event.pointerId
+        );
+
+      } catch (_) {}
+
+    }
+  );
+
+
+  canvas.addEventListener(
+    "pointermove",
+    event => {
+
+      if (!dragStart) {
+        return;
+      }
+
+
+      const point =
+        getPoint(event);
+
+
+      lastPointer =
+        point;
+
+
+      if (
+        point.x !== dragStart.x ||
+        point.y !== dragStart.y
+      ) {
+
+        isDragging =
+          true;
+
+      }
+
+
+      if (isDragging) {
+
+        setSelection(
+          dragStart,
+          point
+        );
+
+      }
+
+    }
+  );
+
+
+  function finishPointer(event) {
+
+    if (!dragStart) {
+      return;
+    }
+
+
+    const end =
+      getPoint(event);
+
+
+    setSelection(
+      dragStart,
+      isDragging
+        ? end
+        : dragStart
+    );
+
+
+    dragStart =
+      null;
+
+
+    lastPointer =
+      null;
+
+
+    isDragging =
+      false;
+
+  }
+
+
+  canvas.addEventListener(
+    "pointerup",
+    finishPointer
+  );
+
+
+  canvas.addEventListener(
+    "pointercancel",
+    () => {
+
+      dragStart =
+        null;
+
+
+      lastPointer =
+        null;
+
+
+      isDragging =
+        false;
+
+    }
+  );
+
+
+  canvas.addEventListener(
+    "lostpointercapture",
+    () => {
+
+      dragStart =
+        null;
+
+
+      lastPointer =
+        null;
+
+
+      isDragging =
+        false;
+
+    }
+  );
+
+
+  /* =========================================================
+     COORDINATE NAVIGATION
+  ========================================================= */
+
+  function readCoordinates() {
+
+    const x1 =
+      Number(
+        $("xStart").value
+      );
+
+
+    const y1 =
+      Number(
+        $("yStart").value
+      );
+
+
+    const x2 =
+      Number(
+        $("xEnd").value
+      );
+
+
+    const y2 =
+      Number(
+        $("yEnd").value
+      );
+
+
+    const values =
+      [x1, y1, x2, y2];
+
+
+    if (
+      values.some(
+        value =>
+          !Number.isInteger(value)
+      )
+    ) {
+
+      alert(
+        "Please enter whole-number coordinates."
+      );
+
+      return null;
+
+    }
+
+
+    if (
+      x1 < 0 ||
+      x1 >= WIDTH ||
+      x2 < 0 ||
+      x2 >= WIDTH ||
+      y1 < 0 ||
+      y1 >= HEIGHT ||
+      y2 < 0 ||
+      y2 >= HEIGHT
+    ) {
+
+      alert(
+        "Coordinates are outside the canvas."
+      );
+
+      return null;
+
+    }
+
+
+    return normalizedSelection(
+      {
+        x: x1,
+        y: y1
+      },
+      {
+        x: x2,
+        y: y2
+      }
+    );
+
+  }
+
+
+  $("selectCoordinates")
+    .addEventListener(
+      "click",
+      () => {
+
+        const result =
+          readCoordinates();
+
+
+        if (!result) {
+          return;
+        }
+
+
+        selection =
+          result;
+
+
+        updateSelectionUI();
+
+        updateSelectionOverlay();
+
+        updatePreviewOverlay();
+
+
+        /*
+          Do NOT force zoom here.
+          The user requested Fit-to-screen as default.
+        */
+
+        requestAnimationFrame(() => {
+
+          if (isFitMode) {
+            fitToScreen();
+          }
+
+        });
+
+      }
+    );
+
+
+  /* =========================================================
+     COPY
+  ========================================================= */
+
+  $("copyButton")
+    .addEventListener(
+      "click",
+      async () => {
+
+        if (!selection) {
+
+          alert(
+            "Please select a pixel or an area first."
+          );
+
+          return;
+
+        }
+
+
+        const text =
+          `X: ${selection.x1}–${selection.x2}, ` +
+          `Y: ${selection.y1}–${selection.y2}`;
+
+
+        try {
+
+          await navigator.clipboard
+            .writeText(text);
+
+
+          $("copyButton")
+            .textContent =
+            "Copied!";
+
+
+          setTimeout(
+            () => {
+
+              $("copyButton")
+                .textContent =
+                "Copy coordinates";
+
+            },
+            1500
+          );
+
+        } catch (_) {
+
+          window.prompt(
+            "Copy these coordinates:",
+            text
+          );
+
+        }
+
+      }
+    );
+
+
+  /* =========================================================
+     CLEAR
+  ========================================================= */
+
+  $("clearButton")
+    .addEventListener(
+      "click",
+      clearSelection
+    );
+
+
+  /* =========================================================
+     PURCHASE MODAL
+  ========================================================= */
+
+  function openPurchaseModal() {
+
+    if (!selection) {
+
+      alert(
+        "Please select one or more pixels first."
+      );
+
+      return;
+
+    }
+
+
+    const stats =
+      selectionStats();
+
+
+    $("modalCoordinates")
+      .textContent =
+      `(${selection.x1}, ${selection.y1}) – ` +
+      `(${selection.x2}, ${selection.y2})`;
+
+
+    $("modalArea")
+      .textContent =
+      `${stats.width} × ${stats.height}`;
+
+
+    $("modalCount")
+      .textContent =
+      stats.count.toLocaleString(
+        "en-US"
+      );
+
+
+    $("modalPrice")
+      .textContent =
+      formatMoney(
+        stats.price
+      );
+
+
+    $("purchaseModal")
+      .classList
+      .add("open");
+
+  }
+
+
+  function closePurchaseModal() {
+
+    $("purchaseModal")
+      .classList
+      .remove("open");
+
+  }
+
+
+  $("buyButton")
+    .addEventListener(
+      "click",
+      openPurchaseModal
+    );
+
+
+  $("closePurchaseModal")
+    .addEventListener(
+      "click",
+      closePurchaseModal
+    );
+
+
+  $("cancelPurchase")
+    .addEventListener(
+      "click",
+      closePurchaseModal
+    );
+
+
+  $("purchaseModal")
+    .addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          $("purchaseModal")
+        ) {
+
+          closePurchaseModal();
+
+        }
+
+      }
+    );
+
+
+  $("continuePurchase")
+    .addEventListener(
+      "click",
+      () => {
+
+        /*
+          Payment integration intentionally stops here.
+
+          Later this button can call:
+          - Stripe Checkout
+          - PayPal
+          - another payment provider
+          - your own backend/serverless function
+
+          Do NOT put secret payment keys in this HTML.
+        */
+
+        alert(
+          "Your pixel selection is ready. " +
+          "The payment system still needs to be connected."
+        );
+
+      }
+    );
+
+
+  /* =========================================================
+     RESIZE / FIT
+  ========================================================= */
+
+  function scheduleFit() {
+
+    cancelAnimationFrame(
+      resizeFrame
+    );
+
+
+    resizeFrame =
+      requestAnimationFrame(
+        () => {
+
+          /*
+            Every real viewport change returns
+            the canvas to Fit-to-screen.
+          */
+
+          fitToScreen();
+
+        }
+      );
+
+  }
+
+
+  window.addEventListener(
+    "resize",
+    scheduleFit
+  );
+
+
+  window.addEventListener(
+    "orientationchange",
+    scheduleFit
+  );
+
+
+  /*
+    ResizeObserver is especially useful when the
+    sidebar/layout changes without a window resize.
+  */
+
+  if (
+    "ResizeObserver" in window
+  ) {
+
+    const observer =
+      new ResizeObserver(
+        entries => {
+
+          for (
+            const entry
+            of entries
+          ) {
+
+            if (
+              entry.target ===
+              viewport
+            ) {
+
+              scheduleFit();
+
+            }
+
+          }
+
+        }
+      );
+
+
+    observer.observe(
+      viewport
+    );
+
+  }
+
+
+  /* =========================================================
+     SUPABASE
+  ========================================================= */
+
+  async function loadPixelColors() {
+
+    const status =
+      $("connectionStatus");
+
+
+    if (!window.supabase) {
+
+      status.textContent =
+        "Supabase library could not be loaded.";
+
+      status.className =
+        "status error";
+
+      return;
+
+    }
+
+
+    try {
+
+      supabase =
+        window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
+
+
+      status.textContent =
+        "Loading saved pixel colors…";
+
+
+      status.className =
+        "status loading";
+
+
+      /*
+        Pagination.
+
+        This avoids the common Supabase
+        1000-row response limit.
+      */
+
+      const pageSize =
+        1000;
+
+
+      let from =
+        0;
+
+
+      let totalLoaded =
+        0;
+
 
       while (true) {
-        const { data, error } = await supabase
-          .from("pixel_state")
-          .select("pixel_id, color")
-          .order("pixel_id", { ascending: true })
-          .range(from, from + pageSize - 1);
 
-        if (error) throw error;
+        const {
+          data,
+          error
+        } =
+          await supabase
+            .from("pixel_state")
+            .select(
+              "pixel_id, color"
+            )
+            .order(
+              "pixel_id",
+              {
+                ascending: true
+              }
+            )
+            .range(
+              from,
+              from + pageSize - 1
+            );
 
-        for (const row of data || []) {
-          const id = Number(row.pixel_id);
+
+        if (error) {
+          throw error;
+        }
+
+
+        const rows =
+          data || [];
+
+
+        for (
+          const row
+          of rows
+        ) {
+
+          const id =
+            Number(
+              row.pixel_id
+            );
+
 
           if (
             Number.isInteger(id) &&
@@ -986,36 +3452,100 @@
             id < TOTAL_PIXELS &&
             validColor(row.color)
           ) {
-            savedColors.set(id, row.color);
+
+            savedColors.set(
+              id,
+              row.color
+            );
+
           }
+
         }
 
-        totalLoaded += (data || []).length;
 
-        if (!data || data.length < pageSize) break;
+        totalLoaded +=
+          rows.length;
 
-        from += pageSize;
+
+        if (
+          rows.length <
+          pageSize
+        ) {
+
+          break;
+
+        }
+
+
+        from +=
+          pageSize;
+
       }
+
 
       redraw();
 
+
       status.textContent =
-        `Connected · ${totalLoaded.toLocaleString("en-US")} saved pixel records loaded.`;
-      status.className = "status ok";
+        `Connected · ` +
+        `${totalLoaded.toLocaleString("en-US")} ` +
+        `saved pixel records loaded.`;
+
+
+      status.className =
+        "status ok";
+
     } catch (error) {
-      console.error("Supabase error:", error);
+
+      console.error(
+        "Supabase error:",
+        error
+      );
+
+
       status.textContent =
-        "Could not load saved colors. Check the Supabase connection, table permissions and RLS policies.";
-      status.className = "status error";
+        "Could not load saved colors. " +
+        "Check Supabase, table permissions and RLS policies.";
+
+
+      status.className =
+        "status error";
+
     }
+
   }
 
-  // Initialize
+
+  /* =========================================================
+     INITIALIZATION
+  ========================================================= */
+
   drawArtwork();
-  fitToScreen();
-  updateUI();
+
+
+  updateSelectionUI();
+
+
+  /*
+    Important:
+    Fit immediately after layout exists.
+  */
+
+  requestAnimationFrame(
+    () => {
+
+      fitToScreen();
+
+    }
+  );
+
+
   loadPixelColors();
+
+
 })();
 </script>
+
 </body>
 </html>
+```
