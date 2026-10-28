@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,12 +6,9 @@
   <title>Million Pixels</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -26,10 +22,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* =========================
-       TOP BAR
-    ========================== */
 
     #topBar {
       flex: 0 0 auto;
@@ -50,10 +42,7 @@
       white-space: nowrap;
     }
 
-    button,
-    input {
-      font: inherit;
-    }
+    button, input { font: inherit; }
 
     button {
       border: 1px solid #3b3b52;
@@ -70,18 +59,14 @@
       border-color: #66668a;
     }
 
-    button:active {
-      transform: translateY(1px);
-    }
+    button:active { transform: translateY(1px); }
 
     button.primary {
       background: #6d32ff;
       border-color: #874fff;
     }
 
-    button.primary:hover {
-      background: #7d42ff;
-    }
+    button.primary:hover { background: #7d42ff; }
 
     button.buy {
       background: #00a86b;
@@ -89,9 +74,7 @@
       font-weight: bold;
     }
 
-    button.buy:hover {
-      background: #00bf79;
-    }
+    button.buy:hover { background: #00bf79; }
 
     button:disabled {
       opacity: 0.45;
@@ -137,10 +120,6 @@
       white-space: nowrap;
     }
 
-    /* =========================
-       MAIN AREA
-    ========================== */
-
     #main {
       flex: 1 1 auto;
       min-height: 0;
@@ -159,12 +138,6 @@
       cursor: crosshair;
     }
 
-    /*
-      Important:
-      The canvas is NEVER allowed to become smaller
-      than the viewport's Fit-to-Screen size.
-    */
-
     #canvasHolder {
       position: relative;
       flex: 0 0 auto;
@@ -182,17 +155,12 @@
       touch-action: none;
     }
 
-    /*
-      Grid overlay
-    */
-
     #gridOverlay {
       position: absolute;
       left: 0;
       top: 0;
       pointer-events: none;
       z-index: 3;
-
       background-image:
         linear-gradient(
           to right,
@@ -204,13 +172,19 @@
           rgba(255, 255, 255, 0.10) 1px,
           transparent 1px
         );
-
       background-repeat: repeat;
     }
 
-    /*
-      Preview overlay
-    */
+    /* Canvas used to highlight the exact selected pixels */
+    #selectionCanvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      pointer-events: none;
+      z-index: 9;
+      image-rendering: pixelated;
+    }
 
     #previewOverlay {
       position: absolute;
@@ -224,10 +198,6 @@
       opacity: 0.72;
     }
 
-    /*
-      Selection overlay
-    */
-
     #selectionOverlay {
       position: absolute;
       display: none;
@@ -239,22 +209,16 @@
         0 0 12px rgba(255, 255, 255, 0.55);
     }
 
-    /*
-      Selection info
-    */
-
     #selectionPanel {
       position: absolute;
       left: 14px;
       bottom: 14px;
       z-index: 50;
-
       background: rgba(10, 10, 18, 0.93);
       border: 1px solid #38384e;
       border-radius: 10px;
       padding: 12px 14px;
       min-width: 240px;
-
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(8px);
     }
@@ -273,9 +237,7 @@
       font-size: 13px;
     }
 
-    .statRow strong {
-      color: white;
-    }
+    .statRow strong { color: white; }
 
     #selectionButtons {
       display: flex;
@@ -289,16 +251,11 @@
       padding: 7px;
     }
 
-    /*
-      Instructions
-    */
-
     #help {
       position: absolute;
       right: 14px;
       bottom: 14px;
       z-index: 50;
-
       max-width: 360px;
       background: rgba(10, 10, 18, 0.88);
       border: 1px solid #303044;
@@ -309,10 +266,6 @@
       line-height: 1.45;
       pointer-events: none;
     }
-
-    /* =========================
-       MODAL
-    ========================== */
 
     #purchaseModal {
       position: fixed;
@@ -325,9 +278,7 @@
       padding: 20px;
     }
 
-    #purchaseModal.open {
-      display: flex;
-    }
+    #purchaseModal.open { display: flex; }
 
     #purchaseBox {
       width: min(440px, 100%);
@@ -338,9 +289,7 @@
       box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
     }
 
-    #purchaseBox h2 {
-      margin: 0 0 18px;
-    }
+    #purchaseBox h2 { margin: 0 0 18px; }
 
     .purchaseInfo {
       background: #181824;
@@ -357,9 +306,7 @@
       color: #bcbcd0;
     }
 
-    .purchaseInfo strong {
-      color: white;
-    }
+    .purchaseInfo strong { color: white; }
 
     .modalButtons {
       display: flex;
@@ -367,9 +314,7 @@
       margin-top: 16px;
     }
 
-    .modalButtons button {
-      flex: 1;
-    }
+    .modalButtons button { flex: 1; }
 
     #purchaseNote {
       color: #85859d;
@@ -377,10 +322,6 @@
       line-height: 1.45;
       margin-top: 12px;
     }
-
-    /* =========================
-       MOBILE
-    ========================== */
 
     @media (max-width: 900px) {
       #topBar {
@@ -404,39 +345,20 @@
         bottom: 7px;
       }
 
-      #help {
-        display: none;
-      }
+      #help { display: none; }
     }
 
     @media (max-width: 600px) {
-      #topBar h1 {
-        width: 100%;
-      }
-
-      .coordinateInput {
-        width: 55px;
-      }
-
-      button {
-        padding: 7px 9px;
-      }
-
-      #selectionPanel {
-        min-width: 210px;
-      }
+      #topBar h1 { width: 100%; }
+      .coordinateInput { width: 55px; }
+      button { padding: 7px 9px; }
+      #selectionPanel { min-width: 210px; }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- =========================
-       TOP BAR
-  ========================== -->
-
   <div id="topBar">
-
     <h1>Million Pixels</h1>
 
     <div class="controlGroup">
@@ -447,80 +369,32 @@
     </div>
 
     <div class="controlGroup">
-      <input
-        id="xInput"
-        class="coordinateInput"
-        type="number"
-        min="0"
-        max="599"
-        value="0"
-        placeholder="X"
-      />
-
-      <input
-        id="yInput"
-        class="coordinateInput"
-        type="number"
-        min="0"
-        max="499"
-        value="0"
-        placeholder="Y"
-      />
-
+      <input id="xInput" class="coordinateInput" type="number"
+        min="0" max="599" value="0" placeholder="X" />
+      <input id="yInput" class="coordinateInput" type="number"
+        min="0" max="499" value="0" placeholder="Y" />
       <button id="jumpButton">Go</button>
     </div>
 
     <input id="colorPicker" type="color" value="#ff0055" />
-
-    <button id="previewButton">
-      Preview Color
-    </button>
-
-    <button id="buyButton" class="buy" disabled>
-      Buy Selected Pixels
-    </button>
-
-    <div id="status">
-      Loading pixels...
-    </div>
-
+    <button id="previewButton">Preview Color</button>
+    <button id="buyButton" class="buy" disabled>Buy Selected Pixels</button>
+    <div id="status">Loading pixels...</div>
   </div>
 
-  <!-- =========================
-       MAIN
-  ========================== -->
-
   <main id="main">
-
     <div id="artViewport">
-
       <div id="canvasHolder">
-
-        <canvas
-          id="pixelCanvas"
-          width="600"
-          height="500"
-        ></canvas>
-
+        <canvas id="pixelCanvas" width="600" height="500"></canvas>
+        <canvas id="selectionCanvas" width="600" height="500"></canvas>
         <div id="gridOverlay"></div>
-
         <div id="previewOverlay"></div>
-
         <div id="selectionOverlay"></div>
-
       </div>
-
     </div>
 
-    <!-- =========================
-         SELECTION PANEL
-    ========================== -->
-
     <div id="selectionPanel">
-
-      <div class="title">
-        Selection
-      </div>
+      <div class="title">Selection</div>
 
       <div class="statRow">
         <span>Coordinates</span>
@@ -543,57 +417,42 @@
       </div>
 
       <div id="selectionButtons">
-        <button id="copyButton">
-          Copy
-        </button>
-
-        <button id="clearButton">
-          Clear
-        </button>
+        <button id="copyButton">Copy</button>
+        <button id="clearButton">Clear</button>
       </div>
-
     </div>
 
     <div id="help">
-      <strong>Controls:</strong><br>
-      Drag to select pixels · Wheel to zoom · Shift + wheel to scroll ·
+      <strong>How to select pixels:</strong><br>
+      Click a pixel to select it.<br>
+      Hold <strong>Ctrl</strong> and click individual pixels to add or remove them.<br>
+      Click and drag to select a rectangular area.<br>
+      Wheel to zoom · Shift + wheel to scroll.<br>
       Fit to Screen resets the view.
     </div>
-
   </main>
 
-  <!-- =========================
-       PURCHASE MODAL
-  ========================== -->
-
   <div id="purchaseModal">
-
     <div id="purchaseBox">
-
       <h2>Purchase Pixels</h2>
 
       <div class="purchaseInfo">
-
         <div>
           <span>Coordinates</span>
           <strong id="purchaseCoordinates">—</strong>
         </div>
-
         <div>
           <span>Size</span>
           <strong id="purchaseSize">—</strong>
         </div>
-
         <div>
           <span>Pixels</span>
           <strong id="purchaseCount">0</strong>
         </div>
-
         <div>
           <span>Price</span>
           <strong id="purchasePrice">0.00 PLN</strong>
         </div>
-
       </div>
 
       <div id="purchaseNote">
@@ -603,30 +462,17 @@
       </div>
 
       <div class="modalButtons">
-
-        <button id="closePurchase">
-          Cancel
-        </button>
-
-        <button id="continuePurchase" class="buy">
-          Continue
-        </button>
-
+        <button id="closePurchase">Cancel</button>
+        <button id="continuePurchase" class="buy">Continue</button>
       </div>
-
     </div>
-
   </div>
 
-
   <script>
-    /* ============================================================
-       CONFIGURATION
-    ============================================================ */
+    /* CONFIGURATION */
 
     const CANVAS_WIDTH = 600;
     const CANVAS_HEIGHT = 500;
-
     const PIXEL_PRICE = 0.50;
 
     const SUPABASE_URL =
@@ -635,188 +481,103 @@
     const SUPABASE_KEY =
       "sb_publishable_51LYjqeOCzBNph2FyrQPGg_FaPjtVJn";
 
-    const SUPABASE_TABLE =
-      "pixel_state";
+    const SUPABASE_TABLE = "pixel_state";
 
+    /* DOM */
 
-    /* ============================================================
-       DOM
-    ============================================================ */
+    const viewport = document.getElementById("artViewport");
+    const holder = document.getElementById("canvasHolder");
 
-    const viewport =
-      document.getElementById("artViewport");
+    const canvas = document.getElementById("pixelCanvas");
+    const ctx = canvas.getContext("2d");
 
-    const holder =
-      document.getElementById("canvasHolder");
+    const selectionCanvas = document.getElementById("selectionCanvas");
+    const selectionCtx = selectionCanvas.getContext("2d");
 
-    const canvas =
-      document.getElementById("pixelCanvas");
+    const grid = document.getElementById("gridOverlay");
+    const selectionOverlay = document.getElementById("selectionOverlay");
+    const previewOverlay = document.getElementById("previewOverlay");
 
-    const ctx =
-      canvas.getContext("2d");
+    const zoomLabel = document.getElementById("zoomLabel");
+    const status = document.getElementById("status");
 
-    const grid =
-      document.getElementById("gridOverlay");
+    const xInput = document.getElementById("xInput");
+    const yInput = document.getElementById("yInput");
+    const colorPicker = document.getElementById("colorPicker");
 
-    const selectionOverlay =
-      document.getElementById("selectionOverlay");
+    const previewButton = document.getElementById("previewButton");
+    const buyButton = document.getElementById("buyButton");
 
-    const previewOverlay =
-      document.getElementById("previewOverlay");
+    const selectionCoordinates = document.getElementById("selectionCoordinates");
+    const selectionSize = document.getElementById("selectionSize");
+    const selectionCount = document.getElementById("selectionCount");
+    const selectionPrice = document.getElementById("selectionPrice");
 
-    const zoomLabel =
-      document.getElementById("zoomLabel");
+    const copyButton = document.getElementById("copyButton");
+    const clearButton = document.getElementById("clearButton");
 
-    const status =
-      document.getElementById("status");
+    const zoomInButton = document.getElementById("zoomIn");
+    const zoomOutButton = document.getElementById("zoomOut");
+    const fitButton = document.getElementById("fitButton");
+    const jumpButton = document.getElementById("jumpButton");
 
-    const xInput =
-      document.getElementById("xInput");
+    const purchaseModal = document.getElementById("purchaseModal");
+    const closePurchase = document.getElementById("closePurchase");
+    const continuePurchase = document.getElementById("continuePurchase");
 
-    const yInput =
-      document.getElementById("yInput");
+    const purchaseCoordinates = document.getElementById("purchaseCoordinates");
+    const purchaseSize = document.getElementById("purchaseSize");
+    const purchaseCount = document.getElementById("purchaseCount");
+    const purchasePrice = document.getElementById("purchasePrice");
 
-    const colorPicker =
-      document.getElementById("colorPicker");
-
-    const previewButton =
-      document.getElementById("previewButton");
-
-    const buyButton =
-      document.getElementById("buyButton");
-
-    const selectionCoordinates =
-      document.getElementById("selectionCoordinates");
-
-    const selectionSize =
-      document.getElementById("selectionSize");
-
-    const selectionCount =
-      document.getElementById("selectionCount");
-
-    const selectionPrice =
-      document.getElementById("selectionPrice");
-
-    const copyButton =
-      document.getElementById("copyButton");
-
-    const clearButton =
-      document.getElementById("clearButton");
-
-    const zoomInButton =
-      document.getElementById("zoomIn");
-
-    const zoomOutButton =
-      document.getElementById("zoomOut");
-
-    const fitButton =
-      document.getElementById("fitButton");
-
-    const jumpButton =
-      document.getElementById("jumpButton");
-
-    const purchaseModal =
-      document.getElementById("purchaseModal");
-
-    const closePurchase =
-      document.getElementById("closePurchase");
-
-    const continuePurchase =
-      document.getElementById("continuePurchase");
-
-    const purchaseCoordinates =
-      document.getElementById("purchaseCoordinates");
-
-    const purchaseSize =
-      document.getElementById("purchaseSize");
-
-    const purchaseCount =
-      document.getElementById("purchaseCount");
-
-    const purchasePrice =
-      document.getElementById("purchasePrice");
-
-
-    /* ============================================================
-       ZOOM SYSTEM
-    ============================================================ */
-
-    /*
-      IMPORTANT FIX
-
-      fitZoom is ALWAYS the minimum possible zoom.
-
-      This means:
-
-      - zoom can go UP freely
-      - zoom can go DOWN only to fitZoom
-      - the artwork can NEVER become smaller than the viewport
-      - therefore black empty space cannot appear around it
-    */
+    /* ZOOM SYSTEM */
 
     let zoom = 1;
-
     let fitZoom = 1;
 
     const MAX_ZOOM = 20;
-
     const WHEEL_ZOOM_FACTOR = 1.18;
 
     let isFitMode = true;
 
-
-    /* ============================================================
-       SELECTION
-    ============================================================ */
+    /* SELECTION */
 
     let selection = null;
+    const selectedPixels = new Set();
 
     let isDragging = false;
-
     let dragStart = null;
 
     let previewColor = null;
 
+    /*
+      Ctrl-click is handled separately so it toggles one pixel
+      without clearing the rest of the current selection.
+    */
+    let ctrlClickStart = null;
+    let ctrlClickMoved = false;
 
-    /* ============================================================
-       SUPABASE DATA
-    ============================================================ */
+    /* SUPABASE DATA */
 
     const savedColors = new Map();
 
-
-    /* ============================================================
-       HELPER FUNCTIONS
-    ============================================================ */
+    /* HELPERS */
 
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
     }
 
-
     function formatZoom(value) {
       return `${Math.round(value * 100)}%`;
     }
 
-
-    function hexToRgb(hex) {
-
-      const clean = hex.replace("#", "");
-
-      return {
-        r: parseInt(clean.substring(0, 2), 16),
-        g: parseInt(clean.substring(2, 4), 16),
-        b: parseInt(clean.substring(4, 6), 16)
-      };
+    function pixelId(x, y) {
+      return y * CANVAS_WIDTH + x;
     }
 
-
-    /* ============================================================
-       ARTWORK
-    ============================================================ */
+    /* ARTWORK */
 
     function drawArtwork() {
-
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
 
@@ -826,55 +587,28 @@
       );
 
       for (let y = 0; y < CANVAS_HEIGHT; y++) {
-
         for (let x = 0; x < CANVAS_WIDTH; x++) {
-
           const nx = x / CANVAS_WIDTH;
           const ny = y / CANVAS_HEIGHT;
-
-          /*
-            Neon sunset background
-          */
 
           let r =
             10 +
             Math.floor(100 * (1 - ny)) +
             Math.floor(70 * Math.sin(nx * Math.PI));
 
-          let g =
-            5 +
-            Math.floor(35 * (1 - ny));
+          let g = 5 + Math.floor(35 * (1 - ny));
+          let b = 30 + Math.floor(120 * (1 - ny));
 
-          let b =
-            30 +
-            Math.floor(120 * (1 - ny));
-
-          /*
-            Sun
-          */
-
-          const sunX = 0.50;
-          const sunY = 0.36;
-
-          const dx = nx - sunX;
-          const dy = ny - sunY;
-
-          const distance =
-            Math.sqrt(dx * dx + dy * dy);
+          const dx = nx - 0.50;
+          const dy = ny - 0.36;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 0.11) {
-
-            const strength =
-              1 - distance / 0.11;
-
+            const strength = 1 - distance / 0.11;
             r += Math.floor(240 * strength);
             g += Math.floor(110 * strength);
             b += Math.floor(40 * strength);
           }
-
-          /*
-            Mountains
-          */
 
           const mountain1 =
             0.68 -
@@ -887,46 +621,33 @@
             0.08 * Math.sin(nx * 27);
 
           if (ny > mountain1) {
-
             r = Math.floor(r * 0.18);
             g = Math.floor(g * 0.12);
             b = Math.floor(b * 0.25);
           }
 
           if (ny > mountain2) {
-
             r = Math.floor(r * 0.12);
             g = Math.floor(g * 0.10);
             b = Math.floor(b * 0.20);
           }
 
-          /*
-            Water
-          */
-
           if (ny > 0.78) {
-
-            const reflection =
-              Math.max(
-                0,
-                1 - Math.abs(nx - 0.5) * 3
-              );
+            const reflection = Math.max(
+              0,
+              1 - Math.abs(nx - 0.5) * 3
+            );
 
             r += Math.floor(20 * reflection);
             g += Math.floor(15 * reflection);
             b += Math.floor(30 * reflection);
           }
 
-          /*
-            Clamp
-          */
-
           r = clamp(r, 0, 255);
           g = clamp(g, 0, 255);
           b = clamp(b, 0, 255);
 
-          const index =
-            (y * CANVAS_WIDTH + x) * 4;
+          const index = (y * CANVAS_WIDTH + x) * 4;
 
           image.data[index] = r;
           image.data[index + 1] = g;
@@ -937,13 +658,10 @@
 
       ctx.putImageData(image, 0, 0);
 
-      /*
-        Apply saved pixel colors from Supabase.
-      */
+      /* Apply saved pixel colors from Supabase. */
 
-      for (const [pixelId, color] of savedColors) {
-
-        const id = Number(pixelId);
+      for (const [pixelIdValue, color] of savedColors) {
+        const id = Number(pixelIdValue);
 
         if (
           !Number.isInteger(id) ||
@@ -953,42 +671,19 @@
           continue;
         }
 
-        const x =
-          id % CANVAS_WIDTH;
-
-        const y =
-          Math.floor(id / CANVAS_WIDTH);
+        const x = id % CANVAS_WIDTH;
+        const y = Math.floor(id / CANVAS_WIDTH);
 
         ctx.fillStyle = color;
-
-        ctx.fillRect(
-          x,
-          y,
-          1,
-          1
-        );
+        ctx.fillRect(x, y, 1, 1);
       }
     }
 
-
-    /* ============================================================
-       VIEW / CANVAS SIZE
-    ============================================================ */
+    /* VIEW / CANVAS SIZE */
 
     function updateCanvasSize() {
-
-      const width =
-        CANVAS_WIDTH * zoom;
-
-      const height =
-        CANVAS_HEIGHT * zoom;
-
-      /*
-        The holder is never smaller than the viewport.
-
-        This is another important part of the fix:
-        even at minimum zoom the artwork fills the viewport.
-      */
+      const width = CANVAS_WIDTH * zoom;
+      const height = CANVAS_HEIGHT * zoom;
 
       holder.style.width =
         `${Math.max(width, viewport.clientWidth)}px`;
@@ -996,245 +691,115 @@
       holder.style.height =
         `${Math.max(height, viewport.clientHeight)}px`;
 
-      canvas.style.width =
-        `${width}px`;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
 
-      canvas.style.height =
-        `${height}px`;
+      selectionCanvas.style.width = `${width}px`;
+      selectionCanvas.style.height = `${height}px`;
+      selectionCanvas.width = CANVAS_WIDTH;
+      selectionCanvas.height = CANVAS_HEIGHT;
 
-      grid.style.width =
-        `${width}px`;
+      grid.style.width = `${width}px`;
+      grid.style.height = `${height}px`;
+      grid.style.backgroundSize = `${zoom}px ${zoom}px`;
 
-      grid.style.height =
-        `${height}px`;
-
-      grid.style.backgroundSize =
-        `${zoom}px ${zoom}px`;
-
-      selectionOverlay.style.transformOrigin =
-        "0 0";
-
-      previewOverlay.style.transformOrigin =
-        "0 0";
+      selectionOverlay.style.transformOrigin = "0 0";
+      previewOverlay.style.transformOrigin = "0 0";
 
       updateSelectionOverlay();
-
       updatePreviewOverlay();
 
-      zoomLabel.textContent =
-        formatZoom(zoom);
+      zoomLabel.textContent = formatZoom(zoom);
     }
 
-
-    /* ============================================================
-       CALCULATE FIT ZOOM
-    ============================================================ */
+    /* CALCULATE FIT ZOOM */
 
     function calculateFitZoom() {
-
-      const availableWidth =
-        Math.max(
-          1,
-          viewport.clientWidth
-        );
-
-      const availableHeight =
-        Math.max(
-          1,
-          viewport.clientHeight
-        );
-
-      /*
-        Small margin so the artwork fits cleanly
-        without black borders.
-      */
-
-      const horizontalZoom =
-        availableWidth / CANVAS_WIDTH;
-
-      const verticalZoom =
-        availableHeight / CANVAS_HEIGHT;
-
-      /*
-        Use MAXIMUM instead of minimum.
-
-        Why?
-
-        The goal is to FILL the viewport completely.
-
-        If the viewport is wider than the artwork's aspect
-        ratio, height determines the scale.
-
-        If it is taller, width determines it.
-
-        Using max() guarantees there are no empty black
-        surfaces inside the viewport.
-      */
+      const availableWidth = Math.max(1, viewport.clientWidth);
+      const availableHeight = Math.max(1, viewport.clientHeight);
 
       return Math.max(
-        horizontalZoom,
-        verticalZoom
+        availableWidth / CANVAS_WIDTH,
+        availableHeight / CANVAS_HEIGHT
       );
     }
 
-
-    /* ============================================================
-       FIT TO SCREEN
-    ============================================================ */
+    /* FIT TO SCREEN */
 
     function fitToScreen() {
-
-      fitZoom =
-        calculateFitZoom();
-
-      zoom =
-        fitZoom;
-
+      fitZoom = calculateFitZoom();
+      zoom = fitZoom;
       isFitMode = true;
 
       updateCanvasSize();
 
-      /*
-        Center the artwork in the viewport.
-      */
-
       requestAnimationFrame(() => {
+        const contentWidth = CANVAS_WIDTH * zoom;
+        const contentHeight = CANVAS_HEIGHT * zoom;
 
-        const contentWidth =
-          CANVAS_WIDTH * zoom;
+        viewport.scrollLeft = Math.max(
+          0,
+          (contentWidth - viewport.clientWidth) / 2
+        );
 
-        const contentHeight =
-          CANVAS_HEIGHT * zoom;
-
-        const scrollLeft =
-          Math.max(
-            0,
-            (contentWidth - viewport.clientWidth) / 2
-          );
-
-        const scrollTop =
-          Math.max(
-            0,
-            (contentHeight - viewport.clientHeight) / 2
-          );
-
-        viewport.scrollLeft =
-          scrollLeft;
-
-        viewport.scrollTop =
-          scrollTop;
+        viewport.scrollTop = Math.max(
+          0,
+          (contentHeight - viewport.clientHeight) / 2
+        );
       });
 
-      status.textContent =
-        "Fit to Screen";
+      status.textContent = "Fit to Screen";
     }
 
-
-    /* ============================================================
-       APPLY ZOOM
-    ============================================================ */
+    /* APPLY ZOOM */
 
     function applyZoom(
       requestedZoom,
       pointerX = viewport.clientWidth / 2,
       pointerY = viewport.clientHeight / 2
     ) {
+      const newZoom = clamp(requestedZoom, fitZoom, MAX_ZOOM);
 
-      /*
-        CRITICAL:
-
-        Minimum zoom is ALWAYS fitZoom.
-
-        Therefore the user can zoom in,
-        but cannot zoom out below Fit to Screen.
-      */
-
-      const newZoom =
-        clamp(
-          requestedZoom,
-          fitZoom,
-          MAX_ZOOM
-        );
-
-      if (
-        Math.abs(newZoom - zoom) < 0.0001
-      ) {
+      if (Math.abs(newZoom - zoom) < 0.0001) {
         return;
       }
 
-      /*
-        Coordinates inside the artwork before zoom.
-      */
+      const oldScrollLeft = viewport.scrollLeft;
+      const oldScrollTop = viewport.scrollTop;
 
-      const oldScrollLeft =
-        viewport.scrollLeft;
+      const canvasX = (oldScrollLeft + pointerX) / zoom;
+      const canvasY = (oldScrollTop + pointerY) / zoom;
 
-      const oldScrollTop =
-        viewport.scrollTop;
-
-      const canvasX =
-        (oldScrollLeft + pointerX) / zoom;
-
-      const canvasY =
-        (oldScrollTop + pointerY) / zoom;
-
-      zoom =
-        newZoom;
-
-      isFitMode =
-        Math.abs(zoom - fitZoom) < 0.0001;
+      zoom = newZoom;
+      isFitMode = Math.abs(zoom - fitZoom) < 0.0001;
 
       updateCanvasSize();
 
-      /*
-        Keep the point under the mouse cursor
-        in the same place after zoom.
-      */
+      viewport.scrollLeft = Math.max(
+        0,
+        canvasX * zoom - pointerX
+      );
 
-      const newScrollLeft =
-        canvasX * zoom - pointerX;
+      viewport.scrollTop = Math.max(
+        0,
+        canvasY * zoom - pointerY
+      );
 
-      const newScrollTop =
-        canvasY * zoom - pointerY;
-
-      viewport.scrollLeft =
-        Math.max(0, newScrollLeft);
-
-      viewport.scrollTop =
-        Math.max(0, newScrollTop);
-
-      status.textContent =
-        isFitMode
-          ? "Fit to Screen"
-          : `Zoom ${formatZoom(zoom)}`;
+      status.textContent = isFitMode
+        ? "Fit to Screen"
+        : `Zoom ${formatZoom(zoom)}`;
     }
 
-
-    /* ============================================================
-       WHEEL ZOOM
-    ============================================================ */
+    /* WHEEL ZOOM */
 
     viewport.addEventListener(
       "wheel",
       (event) => {
-
-        /*
-          Shift + wheel = normal scrolling.
-        */
-
         if (event.shiftKey) {
-
           event.preventDefault();
-
-          viewport.scrollLeft +=
-            event.deltaY;
-
+          viewport.scrollLeft += event.deltaY;
           return;
         }
-
-        /*
-          Ctrl + wheel is reserved for browser zoom.
-        */
 
         if (event.ctrlKey) {
           return;
@@ -1242,155 +807,65 @@
 
         event.preventDefault();
 
-        const rect =
-          viewport.getBoundingClientRect();
+        const rect = viewport.getBoundingClientRect();
 
-        const pointerX =
-          event.clientX - rect.left;
+        const pointerX = event.clientX - rect.left;
+        const pointerY = event.clientY - rect.top;
 
-        const pointerY =
-          event.clientY - rect.top;
+        const requestedZoom = event.deltaY < 0
+          ? zoom * WHEEL_ZOOM_FACTOR
+          : zoom / WHEEL_ZOOM_FACTOR;
 
-        let requestedZoom;
-
-        if (event.deltaY < 0) {
-
-          /*
-            Wheel up = zoom IN
-          */
-
-          requestedZoom =
-            zoom * WHEEL_ZOOM_FACTOR;
-
-        } else {
-
-          /*
-            Wheel down = zoom OUT
-          */
-
-          requestedZoom =
-            zoom / WHEEL_ZOOM_FACTOR;
-        }
-
-        applyZoom(
-          requestedZoom,
-          pointerX,
-          pointerY
-        );
+        applyZoom(requestedZoom, pointerX, pointerY);
       },
-      {
-        passive: false
-      }
+      { passive: false }
     );
 
+    /* ZOOM BUTTONS */
 
-    /* ============================================================
-       ZOOM BUTTONS
-    ============================================================ */
+    zoomInButton.addEventListener("click", () => {
+      applyZoom(zoom * WHEEL_ZOOM_FACTOR);
+    });
 
-    zoomInButton.addEventListener(
-      "click",
-      () => {
+    zoomOutButton.addEventListener("click", () => {
+      applyZoom(zoom / WHEEL_ZOOM_FACTOR);
+    });
 
-        applyZoom(
-          zoom * WHEEL_ZOOM_FACTOR
-        );
-      }
-    );
+    fitButton.addEventListener("click", fitToScreen);
 
-
-    zoomOutButton.addEventListener(
-      "click",
-      () => {
-
-        applyZoom(
-          zoom / WHEEL_ZOOM_FACTOR
-        );
-      }
-    );
-
-
-    fitButton.addEventListener(
-      "click",
-      () => {
-
-        fitToScreen();
-      }
-    );
-
-
-    /* ============================================================
-       RESIZE
-    ============================================================ */
+    /* RESIZE */
 
     let resizeTimer = null;
 
-    window.addEventListener(
-      "resize",
-      () => {
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
 
-        clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        fitZoom = calculateFitZoom();
 
-        resizeTimer =
-          setTimeout(() => {
+        if (isFitMode || zoom < fitZoom) {
+          zoom = fitZoom;
+          isFitMode = true;
+        }
 
-            /*
-              Recalculate Fit every time the viewport changes.
-            */
+        updateCanvasSize();
+      }, 100);
+    });
 
-            const oldFitZoom =
-              fitZoom;
-
-            fitZoom =
-              calculateFitZoom();
-
-            /*
-              If current zoom was the old minimum,
-              remain in Fit mode.
-
-              If user had zoomed in, preserve that zoom
-              unless the new Fit size is larger.
-            */
-
-            if (
-              isFitMode ||
-              zoom < fitZoom
-            ) {
-
-              zoom =
-                fitZoom;
-
-              isFitMode =
-                true;
-            }
-
-            updateCanvasSize();
-
-          }, 100);
-      }
-    );
-
-
-    /* ============================================================
-       POINTER SELECTION
-    ============================================================ */
+    /* POINTER / PIXEL HELPERS */
 
     function getPixelFromPointer(event) {
+      const rect = canvas.getBoundingClientRect();
 
-      const rect =
-        canvas.getBoundingClientRect();
+      const x = Math.floor(
+        (event.clientX - rect.left) /
+        (rect.width / CANVAS_WIDTH)
+      );
 
-      const x =
-        Math.floor(
-          (event.clientX - rect.left) /
-          (rect.width / CANVAS_WIDTH)
-        );
-
-      const y =
-        Math.floor(
-          (event.clientY - rect.top) /
-          (rect.height / CANVAS_HEIGHT)
-        );
+      const y = Math.floor(
+        (event.clientY - rect.top) /
+        (rect.height / CANVAS_HEIGHT)
+      );
 
       return {
         x: clamp(x, 0, CANVAS_WIDTH - 1),
@@ -1398,23 +873,11 @@
       };
     }
 
-
-    function normalizeSelection(
-      start,
-      end
-    ) {
-
-      const x1 =
-        Math.min(start.x, end.x);
-
-      const y1 =
-        Math.min(start.y, end.y);
-
-      const x2 =
-        Math.max(start.x, end.x);
-
-      const y2 =
-        Math.max(start.y, end.y);
+    function normalizeSelection(start, end) {
+      const x1 = Math.min(start.x, end.x);
+      const y1 = Math.min(start.y, end.y);
+      const x2 = Math.max(start.x, end.x);
+      const y2 = Math.max(start.y, end.y);
 
       return {
         x1,
@@ -1423,147 +886,192 @@
         y2,
         width: x2 - x1 + 1,
         height: y2 - y1 + 1,
-        count:
-          (x2 - x1 + 1) *
-          (y2 - y1 + 1)
+        count: (x2 - x1 + 1) * (y2 - y1 + 1)
       };
     }
 
+    /*
+      Calculate the bounding rectangle for display only.
+      The actual selected pixels remain in selectedPixels.
+    */
 
-    canvas.addEventListener(
-      "pointerdown",
-      (event) => {
+    function updateSelectionFromSet() {
+      if (selectedPixels.size === 0) {
+        selection = null;
+        return;
+      }
 
-        if (event.button !== 0) {
-          return;
+      let minX = CANVAS_WIDTH;
+      let minY = CANVAS_HEIGHT;
+      let maxX = -1;
+      let maxY = -1;
+
+      for (const id of selectedPixels) {
+        const x = id % CANVAS_WIDTH;
+        const y = Math.floor(id / CANVAS_WIDTH);
+
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+
+      selection = {
+        x1: minX,
+        y1: minY,
+        x2: maxX,
+        y2: maxY,
+        width: maxX - minX + 1,
+        height: maxY - minY + 1,
+        count: selectedPixels.size
+      };
+    }
+
+    function addRectangleToSet(start, end) {
+      const rectangle = normalizeSelection(start, end);
+
+      for (let y = rectangle.y1; y <= rectangle.y2; y++) {
+        for (let x = rectangle.x1; x <= rectangle.x2; x++) {
+          selectedPixels.add(pixelId(x, y));
+        }
+      }
+    }
+
+    /* POINTER SELECTION */
+
+    canvas.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const point = getPixelFromPointer(event);
+
+      /*
+        Ctrl + click toggles a single pixel without clearing
+        the rest of the selection.
+      */
+
+      if (event.ctrlKey) {
+        ctrlClickStart = point;
+        ctrlClickMoved = false;
+        isDragging = false;
+
+        canvas.setPointerCapture(event.pointerId);
+        return;
+      }
+
+      /*
+        Normal click or drag replaces the previous selection.
+      */
+
+      selectedPixels.clear();
+      previewColor = null;
+
+      dragStart = point;
+      isDragging = true;
+
+      canvas.setPointerCapture(event.pointerId);
+
+      addRectangleToSet(point, point);
+      updateSelectionFromSet();
+      updateSelection();
+    });
+
+    canvas.addEventListener("pointermove", (event) => {
+      if (ctrlClickStart) {
+        const point = getPixelFromPointer(event);
+
+        if (
+          point.x !== ctrlClickStart.x ||
+          point.y !== ctrlClickStart.y
+        ) {
+          ctrlClickMoved = true;
         }
 
-        event.preventDefault();
+        return;
+      }
 
-        const point =
-          getPixelFromPointer(event);
+      if (!isDragging) {
+        return;
+      }
 
-        dragStart =
-          point;
+      const point = getPixelFromPointer(event);
 
-        isDragging =
-          true;
+      selectedPixels.clear();
+      addRectangleToSet(dragStart, point);
 
-        canvas.setPointerCapture(
-          event.pointerId
-        );
+      updateSelectionFromSet();
+      updateSelection();
+    });
 
-        selection =
-          normalizeSelection(
-            point,
-            point
+    canvas.addEventListener("pointerup", (event) => {
+      try {
+        canvas.releasePointerCapture(event.pointerId);
+      } catch (_) {}
+
+      if (ctrlClickStart) {
+        if (!ctrlClickMoved) {
+          const id = pixelId(
+            ctrlClickStart.x,
+            ctrlClickStart.y
           );
 
-        updateSelection();
-      }
-    );
+          if (selectedPixels.has(id)) {
+            selectedPixels.delete(id);
+          } else {
+            selectedPixels.add(id);
+          }
 
+          previewColor = null;
 
-    canvas.addEventListener(
-      "pointermove",
-      (event) => {
-
-        if (!isDragging) {
-          return;
+          updateSelectionFromSet();
+          updateSelection();
         }
 
-        const point =
-          getPixelFromPointer(event);
-
-        selection =
-          normalizeSelection(
-            dragStart,
-            point
-          );
-
-        updateSelection();
+        ctrlClickStart = null;
+        ctrlClickMoved = false;
+        return;
       }
-    );
 
-
-    canvas.addEventListener(
-      "pointerup",
-      (event) => {
-
-        if (!isDragging) {
-          return;
-        }
-
-        isDragging =
-          false;
-
-        try {
-          canvas.releasePointerCapture(
-            event.pointerId
-          );
-        } catch (_) {}
-
-        const point =
-          getPixelFromPointer(event);
-
-        selection =
-          normalizeSelection(
-            dragStart,
-            point
-          );
-
-        updateSelection();
+      if (!isDragging) {
+        return;
       }
-    );
 
+      isDragging = false;
 
-    canvas.addEventListener(
-      "pointercancel",
-      () => {
+      const point = getPixelFromPointer(event);
 
-        isDragging =
-          false;
-      }
-    );
+      selectedPixels.clear();
+      addRectangleToSet(dragStart, point);
 
+      updateSelectionFromSet();
+      updateSelection();
+    });
 
-    canvas.addEventListener(
-      "lostpointercapture",
-      () => {
+    canvas.addEventListener("pointercancel", () => {
+      isDragging = false;
+      ctrlClickStart = null;
+      ctrlClickMoved = false;
+    });
 
-        isDragging =
-          false;
-      }
-    );
+    canvas.addEventListener("lostpointercapture", () => {
+      isDragging = false;
+    });
 
-
-    /* ============================================================
-       UPDATE SELECTION
-    ============================================================ */
+    /* UPDATE SELECTION INFORMATION */
 
     function updateSelection() {
-
       updateSelectionOverlay();
-
       updatePreviewOverlay();
 
-      if (!selection) {
-
-        selectionCoordinates.textContent =
-          "—";
-
-        selectionSize.textContent =
-          "—";
-
-        selectionCount.textContent =
-          "0";
-
-        selectionPrice.textContent =
-          "0.00 PLN";
-
-        buyButton.disabled =
-          true;
-
+      if (!selection || selectedPixels.size === 0) {
+        selectionCoordinates.textContent = "—";
+        selectionSize.textContent = "—";
+        selectionCount.textContent = "0";
+        selectionPrice.textContent = "0.00 PLN";
+        buyButton.disabled = true;
         return;
       }
 
@@ -1574,403 +1082,260 @@
         `${selection.width} × ${selection.height}`;
 
       selectionCount.textContent =
-        selection.count.toLocaleString();
+        selectedPixels.size.toLocaleString();
 
       selectionPrice.textContent =
-        `${(
-          selection.count * PIXEL_PRICE
-        ).toFixed(2)} PLN`;
+        `${(selectedPixels.size * PIXEL_PRICE).toFixed(2)} PLN`;
 
-      buyButton.disabled =
-        false;
+      buyButton.disabled = false;
     }
 
-
-    /* ============================================================
-       SELECTION OVERLAY
-    ============================================================ */
+    /* EXACT PIXEL SELECTION OVERLAY */
 
     function updateSelectionOverlay() {
+      selectionCtx.clearRect(
+        0,
+        0,
+        CANVAS_WIDTH,
+        CANVAS_HEIGHT
+      );
 
-      if (!selection) {
+      /*
+        Do not show a rectangle around the bounding box:
+        only the individually selected pixels are highlighted.
+      */
 
-        selectionOverlay.style.display =
-          "none";
+      selectionOverlay.style.display = "none";
 
+      if (selectedPixels.size === 0) {
         return;
       }
 
-      selectionOverlay.style.display =
-        "block";
+      selectionCtx.fillStyle = previewColor ||
+        "rgba(255, 255, 255, 0.38)";
 
-      selectionOverlay.style.left =
-        `${selection.x1 * zoom}px`;
+      for (const id of selectedPixels) {
+        const x = id % CANVAS_WIDTH;
+        const y = Math.floor(id / CANVAS_WIDTH);
 
-      selectionOverlay.style.top =
-        `${selection.y1 * zoom}px`;
-
-      selectionOverlay.style.width =
-        `${selection.width * zoom}px`;
-
-      selectionOverlay.style.height =
-        `${selection.height * zoom}px`;
+        selectionCtx.fillRect(x, y, 1, 1);
+      }
     }
 
-
-    /* ============================================================
-       PREVIEW OVERLAY
-    ============================================================ */
+    /* PREVIEW OVERLAY */
 
     function updatePreviewOverlay() {
+      /*
+        The old rectangular preview is hidden.
+        The color preview is drawn only on selected pixels.
+      */
 
-      if (
-        !selection ||
-        !previewColor
-      ) {
+      previewOverlay.style.display = "none";
+      updateSelectionOverlay();
+    }
 
-        previewOverlay.style.display =
-          "none";
+    /* PREVIEW COLOR */
 
+    previewButton.addEventListener("click", () => {
+      if (selectedPixels.size === 0) {
+        alert("Select pixels first.");
         return;
       }
 
-      previewOverlay.style.display =
-        "block";
+      previewColor = colorPicker.value;
 
-      previewOverlay.style.left =
-        `${selection.x1 * zoom}px`;
+      updateSelectionOverlay();
 
-      previewOverlay.style.top =
-        `${selection.y1 * zoom}px`;
+      status.textContent = `Preview: ${previewColor}`;
+    });
 
-      previewOverlay.style.width =
-        `${selection.width * zoom}px`;
-
-      previewOverlay.style.height =
-        `${selection.height * zoom}px`;
-
-      previewOverlay.style.background =
-        previewColor;
-    }
-
-
-    /* ============================================================
-       PREVIEW COLOR
-    ============================================================ */
-
-    previewButton.addEventListener(
-      "click",
-      () => {
-
-        if (!selection) {
-
-          alert(
-            "Select pixels first."
-          );
-
-          return;
-        }
-
-        previewColor =
-          colorPicker.value;
-
-        updatePreviewOverlay();
-
-        status.textContent =
-          `Preview: ${previewColor}`;
+    colorPicker.addEventListener("input", () => {
+      if (!previewColor) {
+        return;
       }
-    );
 
+      previewColor = colorPicker.value;
+      updateSelectionOverlay();
+    });
 
-    /*
-      Changing the color picker immediately changes
-      an active preview.
-    */
+    /* CLEAR SELECTION */
 
-    colorPicker.addEventListener(
-      "input",
-      () => {
+    clearButton.addEventListener("click", () => {
+      selectedPixels.clear();
+      selection = null;
+      previewColor = null;
 
-        if (!previewColor) {
-          return;
-        }
+      updateSelection();
+    });
 
-        previewColor =
-          colorPicker.value;
+    /* COPY SELECTION */
 
-        updatePreviewOverlay();
+    copyButton.addEventListener("click", async () => {
+      if (!selection || selectedPixels.size === 0) {
+        return;
       }
-    );
 
+      const text =
+        `${selection.x1},${selection.y1} → ` +
+        `${selection.x2},${selection.y2} ` +
+        `(${selectedPixels.size} pixels)`;
 
-    /* ============================================================
-       CLEAR SELECTION
-    ============================================================ */
-
-    clearButton.addEventListener(
-      "click",
-      () => {
-
-        selection =
-          null;
-
-        previewColor =
-          null;
-
-        updateSelection();
+      try {
+        await navigator.clipboard.writeText(text);
+        status.textContent = "Selection copied.";
+      } catch (_) {
+        status.textContent = text;
       }
-    );
+    });
 
+    /* COORDINATE NAVIGATION */
 
-    /* ============================================================
-       COPY SELECTION
-    ============================================================ */
-
-    copyButton.addEventListener(
-      "click",
-      async () => {
-
-        if (!selection) {
-          return;
-        }
-
-        const text =
-          `${selection.x1},${selection.y1} → ` +
-          `${selection.x2},${selection.y2} ` +
-          `(${selection.count} pixels)`;
-
-        try {
-
-          await navigator.clipboard.writeText(
-            text
-          );
-
-          status.textContent =
-            "Selection copied.";
-
-        } catch (_) {
-
-          status.textContent =
-            text;
-        }
-      }
-    );
-
-
-    /* ============================================================
-       COORDINATE NAVIGATION
-    ============================================================ */
-
-    jumpButton.addEventListener(
-      "click",
-      () => {
-
-        const x =
-          clamp(
-            parseInt(xInput.value, 10) || 0,
-            0,
-            CANVAS_WIDTH - 1
-          );
-
-        const y =
-          clamp(
-            parseInt(yInput.value, 10) || 0,
-            0,
-            CANVAS_HEIGHT - 1
-          );
-
-        xInput.value =
-          x;
-
-        yInput.value =
-          y;
-
-        selection =
-          normalizeSelection(
-            { x, y },
-            { x, y }
-          );
-
-        updateSelection();
-
-        /*
-          Center selected pixel.
-        */
-
-        const pixelCenterX =
-          x * zoom + zoom / 2;
-
-        const pixelCenterY =
-          y * zoom + zoom / 2;
-
-        viewport.scrollLeft =
-          Math.max(
-            0,
-            pixelCenterX -
-            viewport.clientWidth / 2
-          );
-
-        viewport.scrollTop =
-          Math.max(
-            0,
-            pixelCenterY -
-            viewport.clientHeight / 2
-          );
-      }
-    );
-
-
-    /* ============================================================
-       PURCHASE MODAL
-    ============================================================ */
-
-    buyButton.addEventListener(
-      "click",
-      () => {
-
-        if (!selection) {
-          return;
-        }
-
-        purchaseCoordinates.textContent =
-          `${selection.x1},${selection.y1} → ` +
-          `${selection.x2},${selection.y2}`;
-
-        purchaseSize.textContent =
-          `${selection.width} × ${selection.height}`;
-
-        purchaseCount.textContent =
-          selection.count.toLocaleString();
-
-        purchasePrice.textContent =
-          `${(
-            selection.count * PIXEL_PRICE
-          ).toFixed(2)} PLN`;
-
-        purchaseModal.classList.add(
-          "open"
-        );
-      }
-    );
-
-
-    closePurchase.addEventListener(
-      "click",
-      () => {
-
-        purchaseModal.classList.remove(
-          "open"
-        );
-      }
-    );
-
-
-    purchaseModal.addEventListener(
-      "click",
-      (event) => {
-
-        if (
-          event.target ===
-          purchaseModal
-        ) {
-
-          purchaseModal.classList.remove(
-            "open"
-          );
-        }
-      }
-    );
-
-
-
-continuePurchase.addEventListener("click", async () => {
-  if (!selection) {
-    alert("Select pixels first.");
-    return;
-  }
-
-
-
-  const pixelIds = [];
-
-  for (let y = selection.y1; y <= selection.y2; y++) {
-    for (let x = selection.x1; x <= selection.x2; x++) {
-      pixelIds.push(y * CANVAS_WIDTH + x);
-    }
-  }
-
-  const color = colorPicker.value;
-
-  continuePurchase.disabled = true;
-  const originalText = continuePurchase.textContent;
-  continuePurchase.textContent = "Connecting to Stripe...";
-
-  try {
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/hyper-task`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`
-        },
-        body: JSON.stringify({
-          pixel_ids: pixelIds,
-          color: color
-        })
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        result.error || result.message ||
-        `Checkout request failed (HTTP ${response.status})`
+    jumpButton.addEventListener("click", () => {
+      const x = clamp(
+        parseInt(xInput.value, 10) || 0,
+        0,
+        CANVAS_WIDTH - 1
       );
-    }
 
-    if (!result.url || typeof result.url !== "string") {
-      throw new Error("Stripe checkout URL was not returned.");
-    }
+      const y = clamp(
+        parseInt(yInput.value, 10) || 0,
+        0,
+        CANVAS_HEIGHT - 1
+      );
 
-    window.location.assign(result.url);
-  } catch (error) {
-    console.error("Checkout error:", error);
-    alert("Could not start checkout: " + error.message);
-  } finally {
-    continuePurchase.disabled = false;
-    continuePurchase.textContent = originalText;
-  }
-});
+      xInput.value = x;
+      yInput.value = y;
 
+      selectedPixels.clear();
+      selectedPixels.add(pixelId(x, y));
+      previewColor = null;
 
+      updateSelectionFromSet();
+      updateSelection();
 
-    /* ============================================================
-       SUPABASE
-    ============================================================ */
+      const pixelCenterX = x * zoom + zoom / 2;
+      const pixelCenterY = y * zoom + zoom / 2;
+
+      viewport.scrollLeft = Math.max(
+        0,
+        pixelCenterX - viewport.clientWidth / 2
+      );
+
+      viewport.scrollTop = Math.max(
+        0,
+        pixelCenterY - viewport.clientHeight / 2
+      );
+    });
+
+    /* PURCHASE MODAL */
+
+    buyButton.addEventListener("click", () => {
+      if (!selection || selectedPixels.size === 0) {
+        return;
+      }
+
+      purchaseCoordinates.textContent =
+        `${selection.x1},${selection.y1} → ${selection.x2},${selection.y2}`;
+
+      purchaseSize.textContent =
+        `${selection.width} × ${selection.height}`;
+
+      purchaseCount.textContent =
+        selectedPixels.size.toLocaleString();
+
+      purchasePrice.textContent =
+        `${(selectedPixels.size * PIXEL_PRICE).toFixed(2)} PLN`;
+
+      purchaseModal.classList.add("open");
+    });
+
+    closePurchase.addEventListener("click", () => {
+      purchaseModal.classList.remove("open");
+    });
+
+    purchaseModal.addEventListener("click", (event) => {
+      if (event.target === purchaseModal) {
+        purchaseModal.classList.remove("open");
+      }
+    });
+
+    /* STRIPE CHECKOUT */
+
+    continuePurchase.addEventListener("click", async () => {
+      if (selectedPixels.size === 0) {
+        alert("Select pixels first.");
+        return;
+      }
+
+      /*
+        Send only the selected pixel IDs.
+        Do not send every pixel inside the bounding rectangle.
+      */
+
+      const pixelIds = Array.from(selectedPixels);
+      const color = colorPicker.value;
+
+      continuePurchase.disabled = true;
+
+      const originalText = continuePurchase.textContent;
+      continuePurchase.textContent = "Connecting to Stripe...";
+
+      try {
+        const response = await fetch(
+          `${SUPABASE_URL}/functions/v1/hyper-task`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_KEY,
+              "Authorization": `Bearer ${SUPABASE_KEY}`
+            },
+            body: JSON.stringify({
+              pixel_ids: pixelIds,
+              color: color
+            })
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ||
+            result.message ||
+            `Checkout request failed (HTTP ${response.status})`
+          );
+        }
+
+        if (!result.url || typeof result.url !== "string") {
+          throw new Error("Stripe checkout URL was not returned.");
+        }
+
+        window.location.assign(result.url);
+
+      } catch (error) {
+        console.error("Checkout error:", error);
+        alert("Could not start checkout: " + error.message);
+
+      } finally {
+        continuePurchase.disabled = false;
+        continuePurchase.textContent = originalText;
+      }
+    });
+
+    /* SUPABASE */
 
     async function loadSavedPixels() {
-
-      status.textContent =
-        "Loading pixels from Supabase...";
+      status.textContent = "Loading pixels from Supabase...";
 
       savedColors.clear();
 
-      const pageSize =
-        1000;
-
-      let from =
-        0;
-
-      let loaded =
-        0;
+      const pageSize = 1000;
+      let from = 0;
+      let loaded = 0;
 
       try {
-
         while (true) {
-
           const url =
             `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}` +
             `?select=pixel_id,color` +
@@ -1978,65 +1343,43 @@ continuePurchase.addEventListener("click", async () => {
             `&offset=${from}` +
             `&limit=${pageSize}`;
 
-          const response =
-            await fetch(
-              url,
-              {
-                method: "GET",
-
-                headers: {
-                  apikey: SUPABASE_KEY,
-                  Authorization:
-                    `Bearer ${SUPABASE_KEY}`
-                }
-              }
-            );
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              apikey: SUPABASE_KEY,
+              Authorization: `Bearer ${SUPABASE_KEY}`
+            }
+          });
 
           if (!response.ok) {
-
-            throw new Error(
-              `Supabase HTTP ${response.status}`
-            );
+            throw new Error(`Supabase HTTP ${response.status}`);
           }
 
-          const rows =
-            await response.json();
+          const rows = await response.json();
 
           if (!Array.isArray(rows)) {
             break;
           }
 
           for (const row of rows) {
-
-            const pixelId =
-              Number(row.pixel_id);
-
-            const color =
-              row.color;
+            const pixelIdValue = Number(row.pixel_id);
+            const color = row.color;
 
             if (
-              Number.isInteger(pixelId) &&
+              Number.isInteger(pixelIdValue) &&
               typeof color === "string" &&
               /^#[0-9a-fA-F]{6}$/.test(color)
             ) {
-
-              savedColors.set(
-                pixelId,
-                color
-              );
-
+              savedColors.set(pixelIdValue, color);
               loaded++;
             }
           }
 
-          if (
-            rows.length < pageSize
-          ) {
+          if (rows.length < pageSize) {
             break;
           }
 
-          from +=
-            pageSize;
+          from += pageSize;
         }
 
         drawArtwork();
@@ -2045,7 +1388,6 @@ continuePurchase.addEventListener("click", async () => {
           `Loaded ${loaded.toLocaleString()} saved pixels.`;
 
       } catch (error) {
-
         console.error(error);
 
         drawArtwork();
@@ -2055,40 +1397,18 @@ continuePurchase.addEventListener("click", async () => {
       }
     }
 
-
-    /* ============================================================
-       INITIALIZATION
-    ============================================================ */
+    /* INITIALIZATION */
 
     function initialize() {
-
-      /*
-        Draw immediately so the page is visible.
-      */
-
       drawArtwork();
 
-      /*
-        Wait until browser has calculated the viewport dimensions.
-      */
-
       requestAnimationFrame(() => {
-
         fitToScreen();
-
-        /*
-          Load saved pixel data afterwards.
-        */
-
         loadSavedPixels();
       });
     }
 
-
     initialize();
-
   </script>
-
 </body>
 </html>
-```
