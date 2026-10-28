@@ -1882,16 +1882,73 @@
     );
 
 
-    continuePurchase.addEventListener(
-      "click",
-      () => {
 
-        alert(
-          "Payment is not connected yet. " +
-          "The selected pixels are ready for checkout."
-        );
+continuePurchase.addEventListener("click", async () => {
+  if (!selection) {
+    alert("Select pixels first.");
+    return;
+  }
+
+  // The checkout function currently accepts up to 500 pixels.
+  if (selection.count > 500) {
+    alert("Please select no more than 500 pixels per purchase.");
+    return;
+  }
+
+  const pixelIds = [];
+
+  for (let y = selection.y1; y <= selection.y2; y++) {
+    for (let x = selection.x1; x <= selection.x2; x++) {
+      pixelIds.push(y * CANVAS_WIDTH + x);
+    }
+  }
+
+  const color = colorPicker.value;
+
+  continuePurchase.disabled = true;
+  const originalText = continuePurchase.textContent;
+  continuePurchase.textContent = "Connecting to Stripe...";
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/create-checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({
+          pixel_ids: pixelIds,
+          color: color
+        })
       }
     );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || result.message ||
+        `Checkout request failed (HTTP ${response.status})`
+      );
+    }
+
+    if (!result.url || typeof result.url !== "string") {
+      throw new Error("Stripe checkout URL was not returned.");
+    }
+
+    window.location.assign(result.url);
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Could not start checkout: " + error.message);
+  } finally {
+    continuePurchase.disabled = false;
+    continuePurchase.textContent = originalText;
+  }
+});
+
 
 
     /* ============================================================
